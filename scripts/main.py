@@ -98,7 +98,7 @@ def main():
     # 保存パスを設定（プロジェクトルート/generated_docs/に保存）
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     output_dir = os.path.join(project_root, 'generated_docs')
-    output_path = os.path.join(output_dir, 'KPMG_Workbench戦略評価レポート_完全版.docx')
+    output_path = os.path.join(output_dir, 'KPMG_Workbench戦略評価レポート_改善版.docx')
 
     # ディレクトリが存在しない場合は作成
     os.makedirs(output_dir, exist_ok=True)

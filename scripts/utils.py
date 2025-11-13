@@ -37,6 +37,11 @@ def add_hyperlink(paragraph, text, url):
     u.set(qn('w:val'), 'single')
     rPr.append(u)
 
+    # 明示的に太字を無効化
+    b = OxmlElement('w:b')
+    b.set(qn('w:val'), '0')
+    rPr.append(b)
+
     new_run.append(rPr)
     new_run.text = text
     hyperlink.append(new_run)

@@ -7,9 +7,14 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from utils import add_hyperlink
-from docx.shared import Pt, RGBColor
+from docx.shared import Pt, RGBColor, Inches
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+
+# KPMG品牌颜色
+KPMG_BLUE = RGBColor(0, 94, 184)  # KPMG品牌蓝色
+KPMG_DARK_BLUE = RGBColor(0, 51, 141)  # KPMG深蓝色
 
 
 def set_run_font(run, font_name='Arial', east_asia_font='Meiryo UI'):
@@ -35,8 +40,44 @@ def set_run_font(run, font_name='Arial', east_asia_font='Meiryo UI'):
     rFonts.set(qn('w:eastAsia'), east_asia_font)
 
 
+def set_table_style(table, has_header=True):
+    """KPMGスタイルのテーブル設定
+
+    Args:
+        table: python-docx テーブルオブジェクト
+        has_header: ヘッダー行があるかどうか（デフォルト: True）
+    """
+    # テーブルスタイルを適用
+    table.style = 'Light Grid Accent 1'
+
+    # ヘッダー行にKPMG青色の背景を設定
+    if has_header and len(table.rows) > 0:
+        header_cells = table.rows[0].cells
+        for cell in header_cells:
+            # 背景色を設定
+            shading_elm = OxmlElement('w:shd')
+            shading_elm.set(qn('w:fill'), '005EB8')  # KPMG Blue
+            cell._element.get_or_add_tcPr().append(shading_elm)
+
+            # ヘッダーテキストを白色・太字に設定
+            for paragraph in cell.paragraphs:
+                for run in paragraph.runs:
+                    run.font.bold = True
+                    run.font.color.rgb = RGBColor(255, 255, 255)
+                    set_run_font(run)
+
+    # すべてのデータ行の太字を解除（第一列の自動太字を防ぐ）
+    start_row = 1 if has_header else 0
+    for row_idx in range(start_row, len(table.rows)):
+        for cell in table.rows[row_idx].cells:
+            for paragraph in cell.paragraphs:
+                for run in paragraph.runs:
+                    run.font.bold = False
+                    set_run_font(run)
+
+
 def add_heading_with_font(doc, text, level):
-    """日本語フォント付き見出しを追加
+    """日本語フォント付き見出しを追加（KPMG青色スタイル）
 
     Args:
         doc: python-docx文書オブジェクト
@@ -47,9 +88,11 @@ def add_heading_with_font(doc, text, level):
         作成された段落オブジェクト
     """
     heading = doc.add_heading(text, level)
-    # 見出しの全てのRunにフォントを設定
+    # 見出しの全てのRunにフォントとKPMG青色を設定
     for run in heading.runs:
         set_run_font(run)
+        if level <= 2:  # レベル1と2の見出しにKPMG青色を適用
+            run.font.color.rgb = KPMG_BLUE
     return heading
 
 
@@ -86,14 +129,14 @@ def add_dimension_0(doc):
 
     doc.add_paragraph()
     add_heading_with_font(doc, '事前トレーニング要件', 3)
-    doc.add_paragraph('• 実務経験のあるエンジニア、技術者、またはプロダクトスペシャリストであること', style='List Bullet')
+    doc.add_paragraph(' 実務経験のあるエンジニア、技術者、またはプロダクトスペシャリストであること', style='List Bullet')
 
     p3 = doc.add_paragraph(style='List Bullet')
     add_hyperlink(p3, 'GitHub EMU',
                   'https://handbook.code.kpmg.com/KPMG-Code/GitHub/Organization%20onboarding/')
     p3.add_run(' にオンボーディングされていること')
 
-    doc.add_paragraph('• GitHub EMUリポジトリに少なくとも1つのPull Requestを提出していること', style='List Bullet')
+    doc.add_paragraph('GitHub EMUリポジトリに少なくとも1つのPull Requestを提出していること', style='List Bullet')
 
     doc.add_paragraph()
     add_heading_with_font(doc, '推奨認証（必須ではない）', 3)
@@ -101,7 +144,6 @@ def add_dimension_0(doc):
 
     # 統合認証テーブル（2列）
     cert_table = doc.add_table(rows=6, cols=2)
-    cert_table.style = 'Light Grid Accent 1'
 
     # ヘッダー行
     headers = cert_table.rows[0].cells
@@ -140,6 +182,9 @@ def add_dimension_0(doc):
             p_pm = row.cells[1].paragraphs[0]
             add_hyperlink(p_pm, pm_certs[i][0], pm_certs[i][1])
 
+    # KPMGスタイルを適用
+    set_table_style(cert_table)
+
     doc.add_page_break()
 
     # 学習パス完了ステップ（統合版）
@@ -163,9 +208,9 @@ def add_dimension_0(doc):
     run2.font.color.rgb = RGBColor(192, 0, 0)  # 赤色
     set_run_font(run2)
 
-    doc.add_paragraph('• 2つ以上の認証を完了（上記の推奨認証表を参照）', style='List Bullet')
-    doc.add_paragraph('• 最速: GitHub Foundations + Responsible AI（7～11時間）', style='List Bullet')
-    doc.add_paragraph('• 最有用: Azure AI-900 + GitHub Foundations（10～16時間）', style='List Bullet')
+    doc.add_paragraph('2つ以上の認証を完了（上記の推奨認証表を参照）', style='List Bullet')
+    doc.add_paragraph('GitHub Foundations + Responsible AI（7～11時間）', style='List Bullet')
+    doc.add_paragraph('Azure AI-900 + GitHub Foundations（10～16時間）', style='List Bullet')
 
     doc.add_paragraph()
 
@@ -186,8 +231,8 @@ def add_dimension_0(doc):
                   'https://handbook.code.kpmg.com/KPMG-Code/GitHub/Organization%20onboarding/')
     p.add_run(' にオンボーディング完了')
 
-    doc.add_paragraph('• 任意のリポジトリに最低1つのPull Requestを提出', style='List Bullet')
-    doc.add_paragraph('• 所要時間: 1～2時間', style='List Bullet')
+    doc.add_paragraph('任意のリポジトリに最低1つのPull Requestを提出', style='List Bullet')
+    doc.add_paragraph('所要時間: 1～2時間', style='List Bullet')
 
     doc.add_paragraph()
 
@@ -207,13 +252,12 @@ def add_dimension_0(doc):
     doc.add_paragraph('以下のいずれかのLearning Pathを選択し、完了してください：')
 
     learning_table = doc.add_table(rows=5, cols=3)
-    learning_table.style = 'Light Grid Accent 1'
 
     # ヘッダー行
     learning_headers = learning_table.rows[0].cells
     learning_headers[0].text = '項目'
-    learning_headers[1].text = 'Developer Learning Path（開発者向け）'
-    learning_headers[2].text = 'Product Management Learning Path（PM向け）'
+    learning_headers[1].text = '開発者向け'
+    learning_headers[2].text = 'PM向け'
 
     # Program ID行
     row1 = learning_table.rows[1].cells
@@ -242,6 +286,9 @@ def add_dimension_0(doc):
     row4[0].text = '備考'
     row4[1].text = '重点: モジュール2・9の部署モード確認'
     row4[2].text = ''
+
+    # KPMGスタイルを適用
+    set_table_style(learning_table)
 
     doc.add_paragraph()
     p = doc.add_paragraph()
@@ -301,7 +348,6 @@ def add_dimension_0(doc):
 
     # 日本地区Approverテーブル
     approver_table = doc.add_table(rows=4, cols=3)
-    approver_table.style = 'Light Grid Accent 1'
 
     # ヘッダー行
     approver_headers = approver_table.rows[0].cells
@@ -322,13 +368,15 @@ def add_dimension_0(doc):
         row[1].text = dept
         row[2].text = email
 
+    # KPMGスタイルを適用
+    set_table_style(approver_table)
+
     doc.add_page_break()
 
     # 時間コスト評価
     add_heading_with_font(doc, '0.3 時間コスト評価', 2)
 
     table = doc.add_table(rows=5, cols=3)
-    table.style = 'Light Grid Accent 1'
 
     headers = table.rows[0].cells
     headers[0].text = '学習モジュール'
@@ -347,5 +395,8 @@ def add_dimension_0(doc):
         row[0].text = module
         row[1].text = est
         row[2].text = actual
+
+    # KPMGスタイルを適用
+    set_table_style(table)
 
     doc.add_page_break()

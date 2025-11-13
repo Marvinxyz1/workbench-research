@@ -1,4 +1,6 @@
-# Word临时文件
+# Word文档和临时文件
+*.docx
+*.doc
 ~$*.doc*
 ~$*.xls*
 ~$*.ppt*
