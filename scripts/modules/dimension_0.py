@@ -74,12 +74,12 @@ def add_dimension_0(doc):
 
     doc.add_paragraph('✓ 以下のいずれかの学習パスを完了し、KPMG Workbench Knowledge Badgeを取得すること：', style='List Bullet')
 
-    p1 = doc.add_paragraph('  • ', style='List Bullet 2')
+    p1 = doc.add_paragraph(style='List Bullet 2')
     add_hyperlink(p1, 'Developer Learning Path',
                   'https://spo-global.kpmg.com/sites/GO-OI-BUS-GTK-WB/SitePages/KPMG-Workbench-learning-and-development-development-track.aspx')
     p1.add_run(' （開発者向け）')
 
-    p2 = doc.add_paragraph('  • ', style='List Bullet 2')
+    p2 = doc.add_paragraph(style='List Bullet 2')
     add_hyperlink(p2, 'Product Management Learning Path',
                   'https://spo-global.kpmg.com/sites/GO-OI-BUS-GTK-WB/SitePages/KPMG-Workbench-learning-and-development-product-management-track.aspx')
     p2.add_run(' （プロダクトマネージャー向け）')
@@ -88,7 +88,7 @@ def add_dimension_0(doc):
     add_heading_with_font(doc, '事前トレーニング要件', 3)
     doc.add_paragraph('• 実務経験のあるエンジニア、技術者、またはプロダクトスペシャリストであること', style='List Bullet')
 
-    p3 = doc.add_paragraph('• ', style='List Bullet')
+    p3 = doc.add_paragraph(style='List Bullet')
     add_hyperlink(p3, 'GitHub EMU',
                   'https://handbook.code.kpmg.com/KPMG-Code/GitHub/Organization%20onboarding/')
     p3.add_run(' にオンボーディングされていること')
@@ -99,14 +99,17 @@ def add_dimension_0(doc):
     add_heading_with_font(doc, '推奨認証（必須ではない）', 3)
     doc.add_paragraph('Knowledge Badge トレーニングを開始する前に、以下の認証のうち2つ以上を完了することが推奨されます：')
 
-    add_heading_with_font(doc, '開発者向け推奨認証:', 4)
+    # 統合認証テーブル（2列）
+    cert_table = doc.add_table(rows=6, cols=2)
+    cert_table.style = 'Light Grid Accent 1'
 
-    # 開発者向け認証テーブル
-    dev_cert_table = doc.add_table(rows=6, cols=1)
-    dev_cert_table.style = 'Light Grid Accent 1'
+    # ヘッダー行
+    headers = cert_table.rows[0].cells
+    headers[0].text = '開発者向け推奨認証'
+    headers[1].text = 'プロダクトマネージャー向け推奨認証'
 
+    # 開発者向け認証リスト
     dev_certs = [
-        ('認証名', ''),
         ('Azure Fundamentals AZ-900', 'https://learn.microsoft.com/en-us/credentials/certifications/azure-fundamentals/?practice-assessment-type=certification'),
         ('Azure AI Fundamentals AI-900', 'https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-fundamentals/?practice-assessment-type=certification'),
         ('GitHub Foundations', 'https://learn.microsoft.com/en-us/collections/o1njfe825p602p'),
@@ -114,23 +117,8 @@ def add_dimension_0(doc):
         ('Responsible AI', 'https://app.pluralsight.com/library/courses/artificial-intelligence-essentials-responsible-ai/table-of-contents')
     ]
 
-    for i, (cert_name, url) in enumerate(dev_certs):
-        cell = dev_cert_table.rows[i].cells[0]
-        if i == 0:  # ヘッダー行
-            cell.text = cert_name
-        else:
-            p = cell.paragraphs[0]
-            add_hyperlink(p, cert_name, url)
-
-    doc.add_paragraph()
-    add_heading_with_font(doc, 'プロダクトマネージャー向け推奨認証:', 4)
-
-    # PM向け認証テーブル
-    pm_cert_table = doc.add_table(rows=6, cols=1)
-    pm_cert_table.style = 'Light Grid Accent 1'
-
+    # PM向け認証リスト
     pm_certs = [
-        ('認証名', ''),
         ('Azure Fundamentals AZ-900', 'https://learn.microsoft.com/en-us/credentials/certifications/azure-fundamentals/?practice-assessment-type=certification'),
         ('Professional Scrum Master PSM I', 'https://www.scrum.org/assessments/professional-scrum-master-i-certification'),
         ('Professional Scrum Product Owner PSPO I', 'https://www.scrum.org/assessments/professional-scrum-product-owner-i-certification'),
@@ -138,13 +126,19 @@ def add_dimension_0(doc):
         ('Responsible AI', 'https://app.pluralsight.com/library/courses/artificial-intelligence-essentials-responsible-ai/table-of-contents')
     ]
 
-    for i, (cert_name, url) in enumerate(pm_certs):
-        cell = pm_cert_table.rows[i].cells[0]
-        if i == 0:  # ヘッダー行
-            cell.text = cert_name
-        else:
-            p = cell.paragraphs[0]
-            add_hyperlink(p, cert_name, url)
+    # データ行を埋める
+    for i in range(5):
+        row = cert_table.rows[i + 1]
+
+        # 開発者向け列
+        if i < len(dev_certs):
+            p_dev = row.cells[0].paragraphs[0]
+            add_hyperlink(p_dev, dev_certs[i][0], dev_certs[i][1])
+
+        # PM向け列
+        if i < len(pm_certs):
+            p_pm = row.cells[1].paragraphs[0]
+            add_hyperlink(p_pm, pm_certs[i][0], pm_certs[i][1])
 
     doc.add_page_break()
 
