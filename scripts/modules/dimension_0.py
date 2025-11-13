@@ -115,7 +115,7 @@ def add_dimension_0(doc):
     doc.add_paragraph()
     add_heading_with_font(doc, '必須要件', 3)
 
-    doc.add_paragraph('✓ 以下のいずれかの学習パスを完了し、KPMG Workbench Knowledge Badgeを取得すること：', style='List Bullet')
+    doc.add_paragraph('以下のいずれかの学習パスを完了し、KPMG Workbench Knowledge Badgeを取得すること：', style='List Bullet')
 
     p1 = doc.add_paragraph(style='List Bullet 2')
     add_hyperlink(p1, 'Developer Learning Path',
@@ -129,7 +129,7 @@ def add_dimension_0(doc):
 
     doc.add_paragraph()
     add_heading_with_font(doc, '事前トレーニング要件', 3)
-    doc.add_paragraph(' 実務経験のあるエンジニア、技術者、またはプロダクトスペシャリストであること', style='List Bullet')
+    doc.add_paragraph('実務経験のあるエンジニア、技術者、またはプロダクトスペシャリストであること', style='List Bullet')
 
     p3 = doc.add_paragraph(style='List Bullet')
     add_hyperlink(p3, 'GitHub EMU',
@@ -185,7 +185,7 @@ def add_dimension_0(doc):
     # KPMGスタイルを適用
     set_table_style(cert_table)
 
-    doc.add_page_break()
+    doc.add_paragraph()  # 適度な間隔を追加
 
     # 学習パス完了ステップ（統合版）
     add_heading_with_font(doc, '0.2 学習パス完了ステップ（完全版）', 2)
@@ -226,7 +226,7 @@ def add_dimension_0(doc):
     run2.font.color.rgb = RGBColor(192, 0, 0)  # 赤色
     set_run_font(run2)
 
-    p = doc.add_paragraph('• ')
+    p = doc.add_paragraph(style='List Bullet')
     add_hyperlink(p, 'GitHub EMU',
                   'https://handbook.code.kpmg.com/KPMG-Code/GitHub/Organization%20onboarding/')
     p.add_run(' にオンボーディング完了')
@@ -313,9 +313,9 @@ def add_dimension_0(doc):
     run2.font.color.rgb = RGBColor(192, 0, 0)  # 赤色
     set_run_font(run2)
 
-    doc.add_paragraph('• 全モジュール完了後、Assessment（試験）を受験', style='List Bullet')
-    doc.add_paragraph('• 形式: 選択式問題（12問、30分）', style='List Bullet')
-    doc.add_paragraph('• 合格基準: 70%以上', style='List Bullet')
+    doc.add_paragraph('全モジュール完了後、Assessment（試験）を受験', style='List Bullet')
+    doc.add_paragraph('形式: 選択式問題（12問、30分）', style='List Bullet')
+    doc.add_paragraph('合格基準: 70%以上', style='List Bullet')
 
     doc.add_paragraph()
 
@@ -331,13 +331,14 @@ def add_dimension_0(doc):
     run2.font.color.rgb = RGBColor(192, 0, 0)  # 赤色
     set_run_font(run2)
 
-    p = doc.add_paragraph('• Assessment合格後、')
+    p = doc.add_paragraph(style='List Bullet')
+    p.add_run('Assessment合格後、')
     add_hyperlink(p, 'Developer Onboarding Request Form',
                   'https://kpmggoprod.service-now.com/sp?id=sc_cat_item&sys_id=623c6518c314a61088532485e0013117&sysparm_category=3cae446893230a10324c76847aba1033')
     p.add_run(' からAPIキーをリクエスト')
 
-    doc.add_paragraph('• 添付必須: Badge証明書 + Member Firm承認者のメール', style='List Bullet')
-    doc.add_paragraph('• 発行期間: 2～3営業日', style='List Bullet')
+    doc.add_paragraph('添付必須: Badge証明書 + Member Firm承認者のメール', style='List Bullet')
+    doc.add_paragraph('発行期間: 2～3営業日', style='List Bullet')
 
     doc.add_paragraph()
     p_approver = doc.add_paragraph()
@@ -371,7 +372,7 @@ def add_dimension_0(doc):
     # KPMGスタイルを適用
     set_table_style(approver_table)
 
-    doc.add_page_break()
+    doc.add_paragraph()  # 適度な間隔を追加
 
     # 時間コスト評価
     add_heading_with_font(doc, '0.3 時間コスト評価', 2)
