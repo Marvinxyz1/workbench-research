@@ -53,6 +53,25 @@ def set_heading_style(doc):
     """
     styles = doc.styles
 
+    # Titleスタイル（level 0 見出し用）
+    title = styles['Title']
+    title.font.name = 'Arial'
+    title.font.size = Pt(24)
+    title.font.bold = True
+    title.font.color.rgb = RGBColor(0, 51, 102)
+    # 東アジアフォント設定
+    rPr = title._element.rPr
+    if rPr is None:
+        rPr = OxmlElement('w:rPr')
+        title._element.insert(0, rPr)
+    rFonts = rPr.find(qn('w:rFonts'))
+    if rFonts is None:
+        rFonts = OxmlElement('w:rFonts')
+        rPr.insert(0, rFonts)
+    rFonts.set(qn('w:ascii'), 'Arial')
+    rFonts.set(qn('w:hAnsi'), 'Arial')
+    rFonts.set(qn('w:eastAsia'), 'Meiryo UI')
+
     # 見出し1スタイル
     h1 = styles['Heading 1']
     h1.font.name = 'Arial'

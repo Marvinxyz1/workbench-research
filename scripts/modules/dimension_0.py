@@ -7,6 +7,7 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from utils import add_hyperlink
+from docx.shared import Pt, RGBColor
 
 
 def add_dimension_0(doc):
@@ -56,133 +57,183 @@ def add_dimension_0(doc):
     doc.add_paragraph('Knowledge Badge トレーニングを開始する前に、以下の認証のうち2つ以上を完了することが推奨されます：')
 
     doc.add_heading('開発者向け推奨認証:', 4)
-    p = doc.add_paragraph('• ')
-    add_hyperlink(p, 'Azure Fundamentals AZ-900',
-                  'https://learn.microsoft.com/en-us/credentials/certifications/azure-fundamentals/?practice-assessment-type=certification')
 
-    p = doc.add_paragraph('• ')
-    add_hyperlink(p, 'Azure AI Fundamentals AI-900',
-                  'https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-fundamentals/?practice-assessment-type=certification')
+    # 開発者向け認証テーブル
+    dev_cert_table = doc.add_table(rows=6, cols=1)
+    dev_cert_table.style = 'Light Grid Accent 1'
 
-    p = doc.add_paragraph('• ')
-    add_hyperlink(p, 'GitHub Foundations',
-                  'https://learn.microsoft.com/en-us/collections/o1njfe825p602p')
+    dev_certs = [
+        ('認証名', ''),
+        ('Azure Fundamentals AZ-900', 'https://learn.microsoft.com/en-us/credentials/certifications/azure-fundamentals/?practice-assessment-type=certification'),
+        ('Azure AI Fundamentals AI-900', 'https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-fundamentals/?practice-assessment-type=certification'),
+        ('GitHub Foundations', 'https://learn.microsoft.com/en-us/collections/o1njfe825p602p'),
+        ('GitHub Actions', 'https://learn.microsoft.com/en-us/collections/n5p4a5z7keznp5'),
+        ('Responsible AI', 'https://app.pluralsight.com/library/courses/artificial-intelligence-essentials-responsible-ai/table-of-contents')
+    ]
 
-    p = doc.add_paragraph('• ')
-    add_hyperlink(p, 'GitHub Actions',
-                  'https://learn.microsoft.com/en-us/collections/n5p4a5z7keznp5')
+    for i, (cert_name, url) in enumerate(dev_certs):
+        cell = dev_cert_table.rows[i].cells[0]
+        if i == 0:  # ヘッダー行
+            cell.text = cert_name
+        else:
+            p = cell.paragraphs[0]
+            add_hyperlink(p, cert_name, url)
 
-    p = doc.add_paragraph('• ')
-    add_hyperlink(p, 'Responsible AI',
-                  'https://app.pluralsight.com/library/courses/artificial-intelligence-essentials-responsible-ai/table-of-contents')
-
+    doc.add_paragraph()
     doc.add_heading('プロダクトマネージャー向け推奨認証:', 4)
-    p = doc.add_paragraph('• ')
-    add_hyperlink(p, 'Azure Fundamentals AZ-900',
-                  'https://learn.microsoft.com/en-us/credentials/certifications/azure-fundamentals/?practice-assessment-type=certification')
 
-    p = doc.add_paragraph('• ')
-    add_hyperlink(p, 'Professional Scrum Master PSM I',
-                  'https://www.scrum.org/assessments/professional-scrum-master-i-certification')
+    # PM向け認証テーブル
+    pm_cert_table = doc.add_table(rows=6, cols=1)
+    pm_cert_table.style = 'Light Grid Accent 1'
 
-    p = doc.add_paragraph('• ')
-    add_hyperlink(p, 'Professional Scrum Product Owner PSPO I',
-                  'https://www.scrum.org/assessments/professional-scrum-product-owner-i-certification')
+    pm_certs = [
+        ('認証名', ''),
+        ('Azure Fundamentals AZ-900', 'https://learn.microsoft.com/en-us/credentials/certifications/azure-fundamentals/?practice-assessment-type=certification'),
+        ('Professional Scrum Master PSM I', 'https://www.scrum.org/assessments/professional-scrum-master-i-certification'),
+        ('Professional Scrum Product Owner PSPO I', 'https://www.scrum.org/assessments/professional-scrum-product-owner-i-certification'),
+        ('GitHub Foundations', 'https://learn.microsoft.com/en-us/collections/o1njfe825p602p'),
+        ('Responsible AI', 'https://app.pluralsight.com/library/courses/artificial-intelligence-essentials-responsible-ai/table-of-contents')
+    ]
 
-    p = doc.add_paragraph('• ')
-    add_hyperlink(p, 'GitHub Foundations',
-                  'https://learn.microsoft.com/en-us/collections/o1njfe825p602p')
-
-    p = doc.add_paragraph('• ')
-    add_hyperlink(p, 'Responsible AI',
-                  'https://app.pluralsight.com/library/courses/artificial-intelligence-essentials-responsible-ai/table-of-contents')
+    for i, (cert_name, url) in enumerate(pm_certs):
+        cell = pm_cert_table.rows[i].cells[0]
+        if i == 0:  # ヘッダー行
+            cell.text = cert_name
+        else:
+            p = cell.paragraphs[0]
+            add_hyperlink(p, cert_name, url)
 
     doc.add_page_break()
 
-    # Developer Learning Path詳細
-    doc.add_heading('0.2 Developer Learning Path 詳細', 2)
-    p = doc.add_paragraph('プログラム名: GX25_PRO_KPMG Workbench for Developers\n')
-    p = doc.add_paragraph('プログラムID: ')
+    # 学習パス完了ステップ（統合版）
+    doc.add_heading('0.2 学習パス完了ステップ（完全版）', 2)
+
+    p = doc.add_paragraph()
+    p.add_run('予想所要時間: ').font.bold = True
+    p.add_run('2～7日（Prerequisites有無により変動）')
+
+    doc.add_paragraph()
+
+    # Step 1
+    heading = doc.add_paragraph()
+    run1 = heading.add_run('Step 1: Prerequisites認証完了  ')
+    run1.font.size = Pt(12)
+    run1.font.bold = True
+    run2 = heading.add_run('【推奨・スキップ可】')
+    run2.font.size = Pt(12)
+    run2.font.bold = True
+    run2.font.color.rgb = RGBColor(192, 0, 0)  # 赤色
+
+    doc.add_paragraph('• 2つ以上の認証を完了（上記の推奨認証表を参照）', style='List Bullet')
+    doc.add_paragraph('• 最速: GitHub Foundations + Responsible AI（7～11時間）', style='List Bullet')
+    doc.add_paragraph('• 最有用: Azure AI-900 + GitHub Foundations（10～16時間）', style='List Bullet')
+
+    doc.add_paragraph()
+
+    # Step 2
+    heading = doc.add_paragraph()
+    run1 = heading.add_run('Step 2: GitHub EMU + Pull Request提出  ')
+    run1.font.size = Pt(12)
+    run1.font.bold = True
+    run2 = heading.add_run('【必須】')
+    run2.font.size = Pt(12)
+    run2.font.bold = True
+    run2.font.color.rgb = RGBColor(192, 0, 0)  # 赤色
+
+    p = doc.add_paragraph('• ')
+    add_hyperlink(p, 'GitHub EMU',
+                  'https://handbook.code.kpmg.com/KPMG-Code/GitHub/Organization%20onboarding/')
+    p.add_run(' にオンボーディング完了')
+
+    doc.add_paragraph('• 任意のリポジトリに最低1つのPull Requestを提出', style='List Bullet')
+    doc.add_paragraph('• 所要時間: 1～2時間', style='List Bullet')
+
+    doc.add_paragraph()
+
+    # Step 3
+    heading = doc.add_paragraph()
+    run1 = heading.add_run('Step 3: Learning Path完了  ')
+    run1.font.size = Pt(12)
+    run1.font.bold = True
+    run2 = heading.add_run('【必須・二択一】')
+    run2.font.size = Pt(12)
+    run2.font.bold = True
+    run2.font.color.rgb = RGBColor(192, 0, 0)  # 赤色
+
+    doc.add_paragraph()
+    doc.add_heading('選択肢A: Developer Learning Path（開発者向け）', 4)
+
+    p = doc.add_paragraph('Program ID: ')
     add_hyperlink(p, 'GX25_CFS_DDF_AI_BLDG_WB_D_PRO',
                   'https://kpmgic.lms.hr.cloud.sap/learning/user/learning/program/viewProgramDetails.do?fromSF=Y&programID=GX25_CFS_DDF_AI_BLDG_WB_D_PRO')
-    p.add_run('\n総所要時間: 約5.3時間（318分）')
+
+    doc.add_paragraph('• 総時間: 約5.3時間（318分）', style='List Bullet')
+    doc.add_paragraph('• 9モジュール: Intro / AI Productivity / Inference API / Completion API / RAG（2部）/ Feature Flags / Design / Resources', style='List Bullet')
+
+    p = doc.add_paragraph('• ', style='List Bullet')
+    run = p.add_run('重点: モジュール2・9の部署モード確認')
+    run.font.bold = True
+    run.font.color.rgb = RGBColor(192, 0, 0)
 
     doc.add_paragraph()
-    doc.add_heading('モジュール一覧:', 3)
+    doc.add_heading('選択肢B: Product Management Learning Path（PM向け）', 4)
 
-    # Developer modules with links
-    dev_modules = [
-        ('1. Introduction to KPMG Workbench', '54分'),
-        ('2. Revolutionizing AI Productivity: Dive into KPMG Workbench', '35分'),
-        ('3. Deep Dive: Inference API', '26分'),
-        ('4. Deep Dive: Completion API', '28分'),
-        ('5. RAG: Overview and Building Blocks', '49分'),
-        ('6. RAG: Leading Practices', '53分'),
-        ('7. Tailoring KPMG Workbench for Global: Feature Flags', '13分'),
-        ('8. Designing AI Experiences with KPMG Workbench', '39分'),
-        ('9. Building Better, Faster: Guide to Developer Resources', '21分')
-    ]
-
-    for i, (title, duration) in enumerate(dev_modules, 1):
-        doc.add_paragraph(f'{title} - {duration}', style='List Bullet')
-
-    doc.add_paragraph()
-    doc.add_heading('重要な注意事項:', 3)
-    p = doc.add_paragraph()
-    p.add_run('ビデオを完全に視聴してください（95%）。完了ステータスは').font.bold = False
-    p.add_run('24～48時間後').font.bold = True
-    p.add_run('にシステムに転送されます。').font.bold = False
-
-    p = doc.add_paragraph()
-    p.add_run('原文: "').font.italic = True
-    p.add_run('Please watch the video in full (95%) to ensure the completion is captured. Completions will be transferred after 24 - 48 hours.').font.italic = True
-    p.add_run('"').font.italic = True
-
-    doc.add_page_break()
-
-    # Product Management Learning Path詳細
-    doc.add_heading('0.3 Product Management Learning Path 詳細', 2)
-    p = doc.add_paragraph('プログラム名: GX25_PRO_KPMG Workbench for Product Managers\n')
-    p = doc.add_paragraph('プログラムID: ')
+    p = doc.add_paragraph('Program ID: ')
     add_hyperlink(p, 'GX25_CFS_DDF_AI_BLDG_WB_PM_PRO',
                   'https://kpmgic.lms.hr.cloud.sap/learning/user/learning/program/viewProgramDetails.do?fromSF=Y&programID=GX25_CFS_DDF_AI_BLDG_WB_PM_PRO')
-    p.add_run('\n総所要時間: 約5.0時間（301分）')
+
+    doc.add_paragraph('• 総時間: 約5.0時間（301分）', style='List Bullet')
+    doc.add_paragraph('• 9モジュール: Intro / Panel / AI Productivity / Why Workbench / IP Strategy / Microsoft Keynote / Migration / Feature Request / Support', style='List Bullet')
 
     doc.add_paragraph()
-    doc.add_heading('モジュール一覧:', 3)
-
-    # PM modules
-    pm_modules = [
-        ('1. Introduction to KPMG Workbench', '54分'),
-        ('2. Panel discussion', '45分'),
-        ('3. Revolutionizing AI Productivity: Dive into KPMG Workbench', '35分'),
-        ('4. Why Choose KPMG Workbench? Advancing your AI Innovations', '30分'),
-        ('5. Safeguarding Innovation: IP and Patenting Strategies', '41分'),
-        ('6. Microsoft Keynote - Agentic AI Thinking', '47分'),
-        ('7. Migration Strategies: Transitioning to KPMG Workbench', '23分'),
-        ('8. Submitting Feature Requests and Collaborating', '15分'),
-        ('9. Support and Maintenance for Applications', '11分')
-    ]
-
-    for i, (title, duration) in enumerate(pm_modules, 1):
-        doc.add_paragraph(f'{title} - {duration}', style='List Bullet')
+    p = doc.add_paragraph()
+    p.add_run('⚠️ 重要: ').font.bold = True
+    p.add_run('ビデオを95%以上視聴すること。完了ステータスは')
+    run = p.add_run('24～48時間後')
+    run.font.bold = True
+    run.font.color.rgb = RGBColor(192, 0, 0)
+    p.add_run('にシステムに反映されます。')
 
     doc.add_paragraph()
-    doc.add_heading('重要な注意事項:', 3)
-    p = doc.add_paragraph()
-    p.add_run('ビデオを完全に視聴してください（95%）。完了ステータスは').font.bold = False
-    p.add_run('24～48時間後').font.bold = True
-    p.add_run('にシステムに転送されます。').font.bold = False
 
-    p = doc.add_paragraph()
-    p.add_run('原文: "').font.italic = True
-    p.add_run('Please watch the video in full (95%) to ensure the completion is captured. Completions will be transferred after 24 - 48 hours.').font.italic = True
-    p.add_run('"').font.italic = True
+    # Step 4
+    heading = doc.add_paragraph()
+    run1 = heading.add_run('Step 4: Knowledge Badge Assessment合格  ')
+    run1.font.size = Pt(12)
+    run1.font.bold = True
+    run2 = heading.add_run('【必須】')
+    run2.font.size = Pt(12)
+    run2.font.bold = True
+    run2.font.color.rgb = RGBColor(192, 0, 0)  # 赤色
+
+    doc.add_paragraph('• 全モジュール完了後、Assessment（試験）を受験', style='List Bullet')
+    doc.add_paragraph('• 形式: 選択式問題（予想: 20～50問、30～60分）', style='List Bullet')
+    doc.add_paragraph('• 合格基準: 70～80%以上', style='List Bullet')
+
+    doc.add_paragraph()
+
+    # Step 5
+    heading = doc.add_paragraph()
+    run1 = heading.add_run('Step 5: API Key取得  ')
+    run1.font.size = Pt(12)
+    run1.font.bold = True
+    run2 = heading.add_run('【必須】')
+    run2.font.size = Pt(12)
+    run2.font.bold = True
+    run2.font.color.rgb = RGBColor(192, 0, 0)  # 赤色
+
+    p = doc.add_paragraph('• Assessment合格後、')
+    add_hyperlink(p, 'Developer Onboarding Request Form',
+                  'https://kpmggoprod.service-now.com/sp?id=sc_cat_item&sys_id=623c6518c314a61088532485e0013117&sysparm_category=3cae446893230a10324c76847aba1033')
+    p.add_run(' からAPIキーをリクエスト')
+
+    doc.add_paragraph('• 添付必須: Badge証明書 + Member Firm承認者のメール', style='List Bullet')
+    doc.add_paragraph('• 発行期間: 2～3営業日', style='List Bullet')
 
     doc.add_page_break()
 
     # 時間コスト評価
-    doc.add_heading('0.4 時間コスト評価', 2)
+    doc.add_heading('0.3 時間コスト評価', 2)
 
     table = doc.add_table(rows=5, cols=3)
     table.style = 'Light Grid Accent 1'
@@ -204,17 +255,5 @@ def add_dimension_0(doc):
         row[0].text = module
         row[1].text = est
         row[2].text = actual
-
-    doc.add_paragraph()
-
-    doc.add_heading('0.5 API キー取得', 2)
-    p = doc.add_paragraph('Badge取得後、')
-    add_hyperlink(p, 'KPMG Workbench developer onboarding request form',
-                  'https://kpmggoprod.service-now.com/sp?id=sc_cat_item&sys_id=623c6518c314a61088532485e0013117&sysparm_category=3cae446893230a10324c76847aba1033')
-    p.add_run(' からAPIキーをリクエストします。')
-
-    doc.add_paragraph('\n✓ Badgeの証明書を添付してください')
-    doc.add_paragraph('✓ メンバーファーム承認者からの承認メールを添付してください')
-    doc.add_paragraph('\nAPIキーとDeveloper Portalへのアクセスは、2～3営業日以内にメールで届きます。')
 
     doc.add_page_break()
