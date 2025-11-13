@@ -203,30 +203,45 @@ def add_dimension_0(doc):
     run2.font.color.rgb = RGBColor(192, 0, 0)  # 赤色
     set_run_font(run2)
 
-    doc.add_paragraph()
-    add_heading_with_font(doc, '選択肢A: Developer Learning Path（開発者向け）', 4)
+    # Learning Path比較テーブル
+    doc.add_paragraph('以下のいずれかのLearning Pathを選択し、完了してください：')
 
-    p = doc.add_paragraph('Program ID: ')
-    add_hyperlink(p, 'GX25_CFS_DDF_AI_BLDG_WB_D_PRO',
+    learning_table = doc.add_table(rows=5, cols=3)
+    learning_table.style = 'Light Grid Accent 1'
+
+    # ヘッダー行
+    learning_headers = learning_table.rows[0].cells
+    learning_headers[0].text = '項目'
+    learning_headers[1].text = 'Developer Learning Path（開発者向け）'
+    learning_headers[2].text = 'Product Management Learning Path（PM向け）'
+
+    # Program ID行
+    row1 = learning_table.rows[1].cells
+    row1[0].text = 'Program ID'
+    p_dev_id = row1[1].paragraphs[0]
+    add_hyperlink(p_dev_id, 'GX25_CFS_DDF_AI_BLDG_WB_D_PRO',
                   'https://kpmgic.lms.hr.cloud.sap/learning/user/learning/program/viewProgramDetails.do?fromSF=Y&programID=GX25_CFS_DDF_AI_BLDG_WB_D_PRO')
-
-    doc.add_paragraph('• 総時間: 約5.3時間（318分）', style='List Bullet')
-    doc.add_paragraph('• 9モジュール: Intro / AI Productivity / Inference API / Completion API / RAG（2部）/ Feature Flags / Design / Resources', style='List Bullet')
-
-    p = doc.add_paragraph('• ', style='List Bullet')
-    run = p.add_run('重点: モジュール2・9の部署モード確認')
-    run.font.bold = True
-    run.font.color.rgb = RGBColor(192, 0, 0)
-
-    doc.add_paragraph()
-    add_heading_with_font(doc, '選択肢B: Product Management Learning Path（PM向け）', 4)
-
-    p = doc.add_paragraph('Program ID: ')
-    add_hyperlink(p, 'GX25_CFS_DDF_AI_BLDG_WB_PM_PRO',
+    p_pm_id = row1[2].paragraphs[0]
+    add_hyperlink(p_pm_id, 'GX25_CFS_DDF_AI_BLDG_WB_PM_PRO',
                   'https://kpmgic.lms.hr.cloud.sap/learning/user/learning/program/viewProgramDetails.do?fromSF=Y&programID=GX25_CFS_DDF_AI_BLDG_WB_PM_PRO')
 
-    doc.add_paragraph('• 総時間: 約5.0時間（301分）', style='List Bullet')
-    doc.add_paragraph('• 9モジュール: Intro / Panel / AI Productivity / Why Workbench / IP Strategy / Microsoft Keynote / Migration / Feature Request / Support', style='List Bullet')
+    # 総時間行
+    row2 = learning_table.rows[2].cells
+    row2[0].text = '総時間'
+    row2[1].text = '約5.3時間（318分）'
+    row2[2].text = '約5.0時間（301分）'
+
+    # モジュール内容行
+    row3 = learning_table.rows[3].cells
+    row3[0].text = 'モジュール内容'
+    row3[1].text = '9モジュール:\n• Intro\n• AI Productivity\n• Inference API\n• Completion API\n• RAG（2部）\n• Feature Flags\n• Design\n• Resources'
+    row3[2].text = '9モジュール:\n• Intro\n• Panel\n• AI Productivity\n• Why Workbench\n• IP Strategy\n• Microsoft Keynote\n• Migration\n• Feature Request\n• Support'
+
+    # 備考行
+    row4 = learning_table.rows[4].cells
+    row4[0].text = '備考'
+    row4[1].text = '重点: モジュール2・9の部署モード確認'
+    row4[2].text = ''
 
     doc.add_paragraph()
     p = doc.add_paragraph()
@@ -252,8 +267,8 @@ def add_dimension_0(doc):
     set_run_font(run2)
 
     doc.add_paragraph('• 全モジュール完了後、Assessment（試験）を受験', style='List Bullet')
-    doc.add_paragraph('• 形式: 選択式問題（予想: 20～50問、30～60分）', style='List Bullet')
-    doc.add_paragraph('• 合格基準: 70～80%以上', style='List Bullet')
+    doc.add_paragraph('• 形式: 選択式問題（12問、30分）', style='List Bullet')
+    doc.add_paragraph('• 合格基準: 70%以上', style='List Bullet')
 
     doc.add_paragraph()
 
@@ -276,6 +291,36 @@ def add_dimension_0(doc):
 
     doc.add_paragraph('• 添付必須: Badge証明書 + Member Firm承認者のメール', style='List Bullet')
     doc.add_paragraph('• 発行期間: 2～3営業日', style='List Bullet')
+
+    doc.add_paragraph()
+    p_approver = doc.add_paragraph()
+    run_approver = p_approver.add_run('⚠️ 日本地区のMember Firm Approver連絡先：')
+    run_approver.font.bold = True
+    run_approver.font.color.rgb = RGBColor(0, 112, 192)
+    set_run_font(run_approver)
+
+    # 日本地区Approverテーブル
+    approver_table = doc.add_table(rows=4, cols=3)
+    approver_table.style = 'Light Grid Accent 1'
+
+    # ヘッダー行
+    approver_headers = approver_table.rows[0].cells
+    approver_headers[0].text = '氏名'
+    approver_headers[1].text = '所属'
+    approver_headers[2].text = 'メールアドレス'
+
+    # Approverデータ
+    japan_approvers = [
+        ('Hotta Tomoyuki', 'FAS', 'Tomoyuki.Hotta@jp.kpmg.com'),
+        ('Isoi Toru', 'AZSA', 'Toru.Isoi@jp.kpmg.com'),
+        ('Tanaka Hidekazu', 'FAS', 'Hidekazu.Tanaka@jp.kpmg.com')
+    ]
+
+    for i, (name, dept, email) in enumerate(japan_approvers, 1):
+        row = approver_table.rows[i].cells
+        row[0].text = name
+        row[1].text = dept
+        row[2].text = email
 
     doc.add_page_break()
 
