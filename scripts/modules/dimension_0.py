@@ -104,7 +104,11 @@ def add_dimension_0(doc):
     """
     add_heading_with_font(doc, '0. 事前準備: 学習パスと認証コスト評価', 1)
 
-    doc.add_paragraph('【評価背景】これはチームメンバーにとって最大の参入障壁であり、時間コストと学習品質を詳細に評価する必要があります。')
+    doc.add_paragraph('KPMG WorkbenchにおけるAPI申請プロセスは、そのロジックが複雑であり、関連ページ間の連携も不明瞭であるため、以下の達成を目指します。')
+    doc.add_paragraph()
+    doc.add_paragraph('API申請の具体的な手順とプロセスを明確に抽出し、体系化する。')
+    doc.add_paragraph()
+    doc.add_paragraph('これにより、チームメンバーのAPI申請にかかる時間と学習コストを削減し、申請の迅速化を図る。')
 
     add_heading_with_font(doc, '0.1 認証要件', 2)
     p = doc.add_paragraph('KPMG Workbenchにアクセスするには、以下の認証パスを完了する必要があります (出典: ')

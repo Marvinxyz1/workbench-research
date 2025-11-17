@@ -60,38 +60,38 @@ def main():
     print('  ├─ 目次ページ...')
     create_toc(doc)
 
-    print('  ├─ エグゼクティブサマリー...')
-    add_executive_summary(doc)
+    # print('  ├─ エグゼクティブサマリー...')
+    # add_executive_summary(doc)
 
-    print('  ├─ 維度0: 事前準備（詳細版）...')
+    print('  └─ 維度0: 事前準備（詳細版）...')
     add_dimension_0(doc)
 
-    print('  ├─ 維度1: 技術能力と効率評価...')
-    add_dimension_1(doc)
+    # print('  ├─ 維度1: 技術能力と効率評価...')
+    # add_dimension_1(doc)
 
-    print('  ├─ 維度2: Agentic AI核心能力評価...')
-    add_dimension_2(doc)
+    # print('  ├─ 維度2: Agentic AI核心能力評価...')
+    # add_dimension_2(doc)
 
-    print('  ├─ 維度3: 商業価値と顧客応用...')
-    add_dimension_3(doc)
+    # print('  ├─ 維度3: 商業価値と顧客応用...')
+    # add_dimension_3(doc)
 
-    print('  ├─ 維度4: 学習資源とコミュニティサポート...')
-    add_dimension_4(doc)
+    # print('  ├─ 維度4: 学習資源とコミュニティサポート...')
+    # add_dimension_4(doc)
 
-    print('  ├─ 維度5: 戦略価値と組織影響...')
-    add_dimension_5(doc)
+    # print('  ├─ 維度5: 戦略価値と組織影響...')
+    # add_dimension_5(doc)
 
-    print('  ├─ 維度6: リスクとコンプライアンス評価...')
-    add_dimension_6(doc)
+    # print('  ├─ 維度6: リスクとコンプライアンス評価...')
+    # add_dimension_6(doc)
 
-    print('  ├─ 維度7: チーム推進と運営考慮...')
-    add_dimension_7(doc)
+    # print('  ├─ 維度7: チーム推進と運営考慮...')
+    # add_dimension_7(doc)
 
-    print('  ├─ 付録: 参考資料...')
-    add_appendix_references(doc)
+    # print('  ├─ 付録: 参考資料...')
+    # add_appendix_references(doc)
 
-    print('  └─ 付録: 評価タイムライン...')
-    add_appendix_timeline(doc)
+    # print('  └─ 付録: 評価タイムライン...')
+    # add_appendix_timeline(doc)
 
     print('\n✅ すべてのセクション生成完了\n')
 

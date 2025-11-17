@@ -37,9 +37,8 @@ def create_cover_page(doc):
     # メタ情報
     info = doc.add_paragraph()
     info.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    info.add_run('評価担当者: [氏名]\n').font.size = Pt(12)
-    info.add_run('役職: Senior Consultant, AI Development\n').font.size = Pt(12)
-    info.add_run('日付: [評価日]\n').font.size = Pt(12)
+    info.add_run('評価担当者: Junchen Ma\n').font.size = Pt(12)
+    info.add_run('日付: 2025/11/14\n').font.size = Pt(12)
 
     doc.add_paragraph()
     doc.add_paragraph()
