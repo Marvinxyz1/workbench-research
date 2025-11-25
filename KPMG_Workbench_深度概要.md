@@ -17,6 +17,8 @@
 ### 1.1 本质定义
 
 > **KPMG Workbench is our AI backbone – a centrally managed platform that powers AI innovation across our organization.**
+>
+> *出处：[KPMG Workbench 主页](https://spo-global.kpmg.com/sites/GO-OI-BUS-GTK-WB)*
 
 KPMG Workbench 并非简单的工具或平台，而是被定义为 **"AI 骨干系统"（AI Backbone）**。这一定位揭示了其在 KPMG 全球战略中的核心地位：
 
@@ -29,6 +31,8 @@ KPMG Workbench 并非简单的工具或平台，而是被定义为 **"AI 骨干�
 KPMG Workbench 的诞生源于一个关键洞察：
 
 > **KPMG Workbench addresses the fragmentation of AI development across our global network. Independent efforts by various member firms and functions have led to duplicated work, increased cost and inconsistent standards.**
+>
+> *出处：[KPMG Workbench 主页 - What is KPMG Workbench?](https://spo-global.kpmg.com/sites/GO-OI-BUS-GTK-WB/SitePages/KPMG-Workbench.aspx#what-is-kpmg-workbench)*
 
 **碎片化带来的三大问题**：
 
@@ -69,6 +73,8 @@ KPMG Workbench 的诞生源于一个关键洞察：
 ### 1.4 业界首创的意义
 
 > **KPMG Workbench is a first-of-its-kind platform that drives collaboration, consistency and scale.**
+>
+> *出处：[KPMG Workbench 主页](https://spo-global.kpmg.com/sites/GO-OI-BUS-GTK-WB)*
 
 作为业界首创的平台，KPMG Workbench 的创新性在于：
 
@@ -85,6 +91,8 @@ KPMG Workbench 不仅仅是技术平台，更是一套完整的 AI 治理和交�
 ### 2.1 全球数据主权（Global Data Sovereignty）
 
 > **KPMG Workbench promises data storage and processing sovereignty within defined geographic regions or data zones, unless explicitly approved otherwise.**
+>
+> *出处：[KPMG Workbench 主页 - Global data sovereignty](https://spo-global.kpmg.com/sites/GO-OI-BUS-GTK-WB/SitePages/KPMG-Workbench.aspx#global-data-sovereignty)*
 
 **数据主权的深层意义**：
 
@@ -108,6 +116,8 @@ KPMG Workbench 不仅仅是技术平台，更是一套完整的 AI 治理和交�
 ### 2.2 可信 AI 框架（Trusted AI Framework）
 
 > **KPMG Workbench is a key component of KPMG's Trusted AI services and designed to support us manage AI-related risks, comply with evolving regulations, and maintain high ethical standards.**
+>
+> *出处：[KPMG Workbench 主页 - Trusted AI Framework](https://spo-global.kpmg.com/sites/GO-OI-BUS-GTK-WB/SitePages/KPMG-Workbench.aspx#trusted-ai-framework)*
 
 **Trusted AI Stamp 的核心价值**：
 
@@ -137,6 +147,8 @@ KPMG 的 Trusted AI 框架不仅仅是技术控制，更是一套完整的 AI �
 ### 2.3 独特的计费与遥测系统（Unique Billing and Telemetry）
 
 > **KPMG Workbench features a unique billing and telemetry layer, enabling accurate consumption data and recharge to users.**
+>
+> *出处：[KPMG Workbench 主页 - Unique billing and telemetry](https://spo-global.kpmg.com/sites/GO-OI-BUS-GTK-WB/SitePages/KPMG-Workbench.aspx#unique-billing-and-telemetry)*
 
 **计费与遥测的战略意义**：
 
@@ -171,6 +183,8 @@ KPMG Workbench 不仅是技术平台，更是一个完整的 AI 产品生态系�
 ### 3.1 核心产品：aIQ Chat on KPMG Workbench
 
 > **aIQ Chat on KPMG Workbench is the new globally available AI tool for our people, across all functions and member firm locations. It is our version of OpenAI's ChatGPT.**
+>
+> *出处：[aIQ Chat on KPMG Workbench](https://spo-global.kpmg.com/sites/GO-OI-BUS-GTK-WB/SitePages/aIQ-Chat-on-KPMG-Workbench.aspx)*
 
 **aIQ Chat 的战略定位**：
 
@@ -188,11 +202,15 @@ aIQ Chat 是 Workbench 平台上的旗舰产品，代表了 KPMG 对企业级 AI
 - **上下文相关性**：AI 响应基于团队的知识库和 KPMG 政策，确保准确性和相关性
 - **知识共享**：团队知识通过 AI 得以结构化和高效利用
 
+*出处：[aIQ Chat on KPMG Workbench - What can I use aIQ Chat for?](https://spo-global.kpmg.com/sites/GO-OI-BUS-GTK-WB/SitePages/aIQ-Chat-on-KPMG-Workbench.aspx#what-can-i-use-aiq-chat-for)*
+
 **2. 多场景应用**
 - **快速研究**：从全公司范围内快速收集信息和资源
 - **政策解读**：解释公司政策和流程
 - **内容总结**：快速总结复杂内容和冗长文档
 - **文档起草**：生成各类文档的初稿，提高效率
+
+*出处：[aIQ Chat on KPMG Workbench - What can I use aIQ Chat for?](https://spo-global.kpmg.com/sites/GO-OI-BUS-GTK-WB/SitePages/aIQ-Chat-on-KPMG-Workbench.aspx#what-can-i-use-aiq-chat-for)*
 
 **3. 业务价值**
 
@@ -205,6 +223,8 @@ aIQ Chat 是 Workbench 平台上的旗舰产品，代表了 KPMG 对企业级 AI
 | **跨职能赋能** | 帮助不同专业背景的团队有效协作 |
 | **提升准确性** | 最小化报告和文档中的错误 |
 | **增强分析能力** | 快速准确地分析大量数据，支持更明智的决策 |
+
+*出处：[aIQ Chat on KPMG Workbench - The benefits](https://spo-global.kpmg.com/sites/GO-OI-BUS-GTK-WB/SitePages/aIQ-Chat-on-KPMG-Workbench.aspx#the-benefits)*
 
 ### 3.2 Trusted AI Stamp：质量保证体系
 
@@ -230,6 +250,8 @@ Trusted AI Stamp 不仅是技术框架，更是 KPMG AI 产品的"认证标志"�
 ### 3.4 平台化思维：组件、能力、设计系统
 
 > **KPMG Workbench provides AI components, capabilities and design systems to all member firms and functions so they can build applications that leverage AI.**
+>
+> *出处：[KPMG Workbench 主页 - What is KPMG Workbench?](https://spo-global.kpmg.com/sites/GO-OI-BUS-GTK-WB/SitePages/KPMG-Workbench.aspx#what-is-kpmg-workbench)*
 
 **Workbench 的平台化特征**：
 
@@ -277,7 +299,51 @@ KPMG Workbench 的成功将取决于：
 
 ---
 
+## 参考链接汇总
+
+本文档所有引用均来自 KPMG Workbench 官方 SharePoint 站点，以下是完整的参考链接列表：
+
+### 主要页面
+
+1. **KPMG Workbench 主页**
+   - URL: https://spo-global.kpmg.com/sites/GO-OI-BUS-GTK-WB
+   - 包含章节：
+     - What is KPMG Workbench? (#what-is-kpmg-workbench)
+     - How it works (#how-it-works)
+     - What makes it different (#what-makes-kpmg-workbench-different-from-other-ai-development-platforms)
+     - Global data sovereignty (#global-data-sovereignty)
+     - Trusted AI Framework (#trusted-ai-framework)
+     - Unique billing and telemetry (#unique-billing-and-telemetry)
+
+2. **aIQ Chat on KPMG Workbench**
+   - URL: https://spo-global.kpmg.com/sites/GO-OI-BUS-GTK-WB/SitePages/aIQ-Chat-on-KPMG-Workbench.aspx
+   - 包含章节：
+     - What can I use aIQ Chat for? (#what-can-i-use-aiq-chat-for)
+     - The benefits (#the-benefits)
+
+3. **KPMG Workbench Learning & Development**
+   - URL: https://spo-global.kpmg.com/sites/GO-OI-BUS-GTK-WB/SitePages/KPMG-Workbench-learning-development.aspx
+   - 背景调研参考页面
+
+### 引用对照表
+
+| 引用内容概要 | 出处页面 | 章节锚点 |
+|------------|---------|---------|
+| "AI backbone" 核心定义 | KPMG Workbench 主页 | 主页面 |
+| AI 开发碎片化问题 | KPMG Workbench 主页 | #what-is-kpmg-workbench |
+| 业界首创平台 | KPMG Workbench 主页 | 主页面 |
+| 全球数据主权 | KPMG Workbench 主页 | #global-data-sovereignty |
+| Trusted AI 框架 | KPMG Workbench 主页 | #trusted-ai-framework |
+| 计费与遥测系统 | KPMG Workbench 主页 | #unique-billing-and-telemetry |
+| aIQ Chat 定义 | aIQ Chat 页面 | 主页面 |
+| 知识增强功能 | aIQ Chat 页面 | #what-can-i-use-aiq-chat-for |
+| 业务价值（五大收益） | aIQ Chat 页面 | #the-benefits |
+| 平台化组件能力 | KPMG Workbench 主页 | #what-is-kpmg-workbench |
+
+---
+
 **文档创建时间**: 2025-11-17
 **信息来源**: KPMG Workbench 官方 SharePoint 站点
 **调研工具**: Chrome DevTools MCP
 **分析框架**: 战略-技术-应用 三维分析
+**引用标注**: 所有直接引用均已在文中标注出处链接
