@@ -325,11 +325,54 @@ API_KEY = os.getenv("KPMG_WORKBENCH_API_KEY")
 
 ---
 
+## 11. 常见问题排查
+
+### 11.1 SSL握手失败 / 连接被拒绝
+
+**症状:**
+```
+SSLError: [SSL: UNEXPECTED_EOF_WHILE_READING]
+schannel: failed to receive handshake, SSL/TLS connection failed
+```
+
+**原因:** IP地址未加入白名单
+
+**解决方案:**
+1. 获取你的公网IP: `curl https://api.ipify.org`
+2. 联系成员公司AI Lead提交IP白名单请求
+3. 或使用已加入白名单的VPN网络
+
+### 11.2 401 Unauthorized
+
+**原因:** API Key无效或缺失
+
+**解决方案:**
+- 检查 `Ocp-Apim-Subscription-Key` header是否正确
+- 确认API Key未过期
+- 确认使用正确区域的API Key
+
+### 11.3 400 Bad Request
+
+**原因:** 缺少必需的header
+
+**解决方案:**
+- 确保包含 `x-kpmg-charge-code` header
+
+### 11.4 IP白名单申请流程
+
+1. 访问 [Workbench Service Catalog](https://kpmggoprod.service-now.com/sp?id=sc_category&sys_id=3cae446893230a10324c76847aba1033)
+2. 选择 "IP Whitelist Request" 或相关选项
+3. 提供需要白名单的IP地址
+4. 等待审批（通常2-3个工作日）
+
+---
+
 ## 更新日志
 
 | 日期 | 更新内容 |
 |------|----------|
 | 2025-11-25 | 初始版本，包含API认证、产品列表、代码示例等 |
+| 2025-11-25 | 添加问题排查章节，包含IP白名单问题诊断 |
 
 ---
 
