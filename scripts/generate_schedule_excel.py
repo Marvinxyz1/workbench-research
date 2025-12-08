@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-KPMG Workbench 开发日程表 Excel 生成器
+KPMG Workbench 开发日程表 Excel 生成器 v2
 生成包含甘特图、任务详情、休假日历、里程碑的完整日程表
+- Phase列合并单元格，带背景色
+- 版本号自动递增，不覆盖旧文件
 """
 
 import sys
 import os
+import re
+import glob
 from datetime import datetime, timedelta
 from openpyxl import Workbook
 from openpyxl.styles import (
@@ -13,9 +17,7 @@ from openpyxl.styles import (
     NamedStyle
 )
 from openpyxl.utils import get_column_letter
-from openpyxl.utils.dataframe import dataframe_to_rows
-from openpyxl.formatting.rule import FormulaRule, ColorScaleRule, CellIsRule
-from openpyxl.chart import BarChart, Reference
+from openpyxl.formatting.rule import CellIsRule
 from openpyxl.worksheet.datavalidation import DataValidation
 
 # Windows console UTF-8 support
@@ -29,6 +31,23 @@ KC_COLOR = "4472C4"      # 蓝色 - KC组
 ATH_COLOR = "70AD47"     # 绿色 - ATH组
 JOINT_COLOR = "7030A0"   # 紫色 - 联合任务
 HOLIDAY_COLOR = "D9D9D9" # 灰色 - 休假
+ORANGE_COLOR = "ED7D31"  # 橙色 - Phase 4
+
+# Phase colors
+PHASE_COLORS = {
+    "Phase 2": KPMG_BLUE,
+    "过渡期": JOINT_COLOR,
+    "Phase 3": ATH_COLOR,
+    "Phase 4": ORANGE_COLOR,
+}
+
+# Phase display names (for merged cells)
+PHASE_DISPLAY = {
+    "Phase 2": '"誰でも1週間で\n迷いなく開始"',
+    "过渡期": "POC項目\n主題討論",
+    "Phase 3": '"海外MF\nナレッジ探索"',
+    "Phase 4": '"スピーディな\nプロダクトプロセス"',
+}
 
 # Status colors
 STATUS_COLORS = {
@@ -121,6 +140,23 @@ HOLIDAYS = [
 ]
 
 
+def get_next_version(output_dir, base_name):
+    """Get the next version number for the file"""
+    pattern = os.path.join(output_dir, f"{base_name}_v*.xlsx")
+    existing_files = glob.glob(pattern)
+
+    if not existing_files:
+        return 1
+
+    versions = []
+    for f in existing_files:
+        match = re.search(r'_v(\d+)\.xlsx$', f)
+        if match:
+            versions.append(int(match.group(1)))
+
+    return max(versions) + 1 if versions else 1
+
+
 def create_header_style():
     """Create KPMG branded header style"""
     return {
@@ -168,6 +204,20 @@ def apply_cell_style(cell, team=None):
             cell.font = Font(color="FFFFFF", bold=True)
 
 
+def apply_phase_style(cell, phase):
+    """Apply phase-specific style"""
+    color = PHASE_COLORS.get(phase, KPMG_BLUE)
+    cell.fill = PatternFill(start_color=color, end_color=color, fill_type="solid")
+    cell.font = Font(color="FFFFFF", bold=True, size=10)
+    cell.alignment = Alignment(horizontal='center', vertical='center', wrap_text=True, text_rotation=0)
+    cell.border = Border(
+        left=Side(style='medium'),
+        right=Side(style='medium'),
+        top=Side(style='medium'),
+        bottom=Side(style='medium')
+    )
+
+
 def get_week_start_dates(start_date_str, end_date_str):
     """Generate list of week start dates (Mondays)"""
     start = datetime.strptime(start_date_str, "%Y-%m-%d")
@@ -199,14 +249,14 @@ def is_in_holiday(date, team):
 
 
 def create_gantt_sheet(wb):
-    """Create Gantt chart sheet"""
+    """Create Gantt chart sheet with Phase column"""
     ws = wb.create_sheet("甘特图总览")
 
     # Define date range
     weeks = get_week_start_dates("2024-12-02", "2025-06-30")
 
-    # Headers
-    headers = ["任务ID", "任务名称", "负责组", "开始", "结束"]
+    # Headers (added Phase column)
+    headers = ["Phase", "任务ID", "任务名称", "负责组", "开始", "结束"]
 
     # Write headers
     for col, header in enumerate(headers, 1):
@@ -220,25 +270,39 @@ def create_gantt_sheet(wb):
         ws.column_dimensions[get_column_letter(col)].width = 6
 
     # Set column widths
-    ws.column_dimensions['A'].width = 10
-    ws.column_dimensions['B'].width = 40
-    ws.column_dimensions['C'].width = 10
-    ws.column_dimensions['D'].width = 12
-    ws.column_dimensions['E'].width = 12
+    ws.column_dimensions['A'].width = 15  # Phase
+    ws.column_dimensions['B'].width = 10  # ID
+    ws.column_dimensions['C'].width = 40  # Name
+    ws.column_dimensions['D'].width = 10  # Team
+    ws.column_dimensions['E'].width = 12  # Start
+    ws.column_dimensions['F'].width = 12  # End
+
+    # Group tasks by phase for merging
+    phase_groups = {}
+    for i, task in enumerate(ALL_TASKS):
+        phase = task['phase']
+        if phase not in phase_groups:
+            phase_groups[phase] = {'start': i, 'end': i}
+        else:
+            phase_groups[phase]['end'] = i
 
     # Write tasks
     for row, task in enumerate(ALL_TASKS, 2):
-        ws.cell(row=row, column=1, value=task['id'])
-        ws.cell(row=row, column=2, value=task['name'])
+        # Phase column (will be merged later)
+        phase_cell = ws.cell(row=row, column=1, value=PHASE_DISPLAY.get(task['phase'], task['phase']))
+        apply_phase_style(phase_cell, task['phase'])
 
-        team_cell = ws.cell(row=row, column=3, value=task['team'])
+        ws.cell(row=row, column=2, value=task['id'])
+        ws.cell(row=row, column=3, value=task['name'])
+
+        team_cell = ws.cell(row=row, column=4, value=task['team'])
         apply_cell_style(team_cell, task['team'])
 
-        ws.cell(row=row, column=4, value=task['start'])
-        ws.cell(row=row, column=5, value=task['end'])
+        ws.cell(row=row, column=5, value=task['start'])
+        ws.cell(row=row, column=6, value=task['end'])
 
         # Apply borders to basic cells
-        for col in [1, 2, 4, 5]:
+        for col in [2, 3, 5, 6]:
             apply_cell_style(ws.cell(row=row, column=col))
 
         # Draw Gantt bars
@@ -268,6 +332,13 @@ def create_gantt_sheet(wb):
                 bottom=Side(style='thin', color='CCCCCC')
             )
 
+    # Merge Phase cells
+    for phase, indices in phase_groups.items():
+        start_row = indices['start'] + 2  # +2 for header and 0-index
+        end_row = indices['end'] + 2
+        if start_row != end_row:
+            ws.merge_cells(start_row=start_row, start_column=1, end_row=end_row, end_column=1)
+
     # Add legend
     legend_row = len(ALL_TASKS) + 4
     ws.cell(row=legend_row, column=1, value="凡例:")
@@ -280,16 +351,16 @@ def create_gantt_sheet(wb):
     ws.cell(row=legend_row, column=5, value="休假").fill = PatternFill(start_color=HOLIDAY_COLOR, end_color=HOLIDAY_COLOR, fill_type="solid")
 
     # Freeze panes
-    ws.freeze_panes = 'F2'
+    ws.freeze_panes = 'G2'
 
     return ws
 
 
 def create_all_tasks_sheet(wb):
-    """Create all tasks detail sheet"""
+    """Create all tasks detail sheet with Phase column"""
     ws = wb.create_sheet("全部任务详情")
 
-    headers = ["任务ID", "阶段", "任务名称", "负责组", "时长(天)", "开始日期", "结束日期", "状态", "备注"]
+    headers = ["Phase", "任务ID", "任务名称", "负责组", "时长(天)", "开始日期", "结束日期", "状态", "备注"]
 
     # Write headers
     for col, header in enumerate(headers, 1):
@@ -297,14 +368,26 @@ def create_all_tasks_sheet(wb):
         apply_header_style(cell)
 
     # Set column widths
-    col_widths = [10, 12, 45, 10, 10, 12, 12, 10, 25]
+    col_widths = [18, 10, 45, 10, 10, 12, 12, 10, 25]
     for i, width in enumerate(col_widths, 1):
         ws.column_dimensions[get_column_letter(i)].width = width
 
+    # Group tasks by phase for merging
+    phase_groups = {}
+    for i, task in enumerate(ALL_TASKS):
+        phase = task['phase']
+        if phase not in phase_groups:
+            phase_groups[phase] = {'start': i, 'end': i}
+        else:
+            phase_groups[phase]['end'] = i
+
     # Write tasks
     for row, task in enumerate(ALL_TASKS, 2):
-        ws.cell(row=row, column=1, value=task['id'])
-        ws.cell(row=row, column=2, value=task['phase'])
+        # Phase column
+        phase_cell = ws.cell(row=row, column=1, value=PHASE_DISPLAY.get(task['phase'], task['phase']))
+        apply_phase_style(phase_cell, task['phase'])
+
+        ws.cell(row=row, column=2, value=task['id'])
         ws.cell(row=row, column=3, value=task['name'])
 
         team_cell = ws.cell(row=row, column=4, value=task['team'])
@@ -317,9 +400,16 @@ def create_all_tasks_sheet(wb):
         ws.cell(row=row, column=9, value=task['note'])
 
         # Apply borders
-        for col in range(1, 10):
+        for col in range(2, 10):
             if col != 4:  # Skip team column (already styled)
                 apply_cell_style(ws.cell(row=row, column=col))
+
+    # Merge Phase cells
+    for phase, indices in phase_groups.items():
+        start_row = indices['start'] + 2
+        end_row = indices['end'] + 2
+        if start_row != end_row:
+            ws.merge_cells(start_row=start_row, start_column=1, end_row=end_row, end_column=1)
 
     # Add data validation for status column
     status_validation = DataValidation(
@@ -342,17 +432,17 @@ def create_all_tasks_sheet(wb):
         )
 
     # Freeze panes
-    ws.freeze_panes = 'A2'
+    ws.freeze_panes = 'B2'
     ws.auto_filter.ref = f'A1:I{len(ALL_TASKS) + 1}'
 
     return ws
 
 
 def create_team_sheet(wb, team_name, team_filter):
-    """Create team-specific task sheet"""
+    """Create team-specific task sheet with Phase column"""
     ws = wb.create_sheet(f"{team_name}组任务")
 
-    headers = ["任务ID", "阶段", "任务名称", "时长(天)", "开始日期", "结束日期", "状态", "备注"]
+    headers = ["Phase", "任务ID", "任务名称", "时长(天)", "开始日期", "结束日期", "状态", "备注"]
 
     # Write headers
     for col, header in enumerate(headers, 1):
@@ -360,17 +450,29 @@ def create_team_sheet(wb, team_name, team_filter):
         apply_header_style(cell)
 
     # Set column widths
-    col_widths = [10, 12, 45, 10, 12, 12, 10, 25]
+    col_widths = [18, 10, 45, 10, 12, 12, 10, 25]
     for i, width in enumerate(col_widths, 1):
         ws.column_dimensions[get_column_letter(i)].width = width
 
     # Filter tasks
     team_tasks = [t for t in ALL_TASKS if team_filter in t['team']]
 
+    # Group tasks by phase for merging
+    phase_groups = {}
+    for i, task in enumerate(team_tasks):
+        phase = task['phase']
+        if phase not in phase_groups:
+            phase_groups[phase] = {'start': i, 'end': i}
+        else:
+            phase_groups[phase]['end'] = i
+
     # Write tasks
     for row, task in enumerate(team_tasks, 2):
-        ws.cell(row=row, column=1, value=task['id'])
-        ws.cell(row=row, column=2, value=task['phase'])
+        # Phase column
+        phase_cell = ws.cell(row=row, column=1, value=PHASE_DISPLAY.get(task['phase'], task['phase']))
+        apply_phase_style(phase_cell, task['phase'])
+
+        ws.cell(row=row, column=2, value=task['id'])
         ws.cell(row=row, column=3, value=task['name'])
         ws.cell(row=row, column=4, value=task['days'])
         ws.cell(row=row, column=5, value=task['start'])
@@ -379,8 +481,15 @@ def create_team_sheet(wb, team_name, team_filter):
         ws.cell(row=row, column=8, value=task['note'])
 
         # Apply borders
-        for col in range(1, 9):
+        for col in range(2, 9):
             apply_cell_style(ws.cell(row=row, column=col))
+
+    # Merge Phase cells
+    for phase, indices in phase_groups.items():
+        start_row = indices['start'] + 2
+        end_row = indices['end'] + 2
+        if start_row != end_row:
+            ws.merge_cells(start_row=start_row, start_column=1, end_row=end_row, end_column=1)
 
     # Add data validation for status
     status_validation = DataValidation(
@@ -393,7 +502,7 @@ def create_team_sheet(wb, team_name, team_filter):
         ws.add_data_validation(status_validation)
 
     # Freeze panes
-    ws.freeze_panes = 'A2'
+    ws.freeze_panes = 'B2'
 
     return ws
 
@@ -552,8 +661,18 @@ def create_milestone_sheet(wb):
 def main():
     """Main function to generate the Excel file"""
     print("=" * 60)
-    print("KPMG Workbench 开发日程表 Excel 生成器")
+    print("KPMG Workbench 开发日程表 Excel 生成器 v2")
     print("=" * 60)
+
+    # Ensure output directory exists
+    output_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "generated_docs")
+    os.makedirs(output_dir, exist_ok=True)
+
+    # Get next version number
+    base_name = "KPMG_Workbench_Schedule"
+    version = get_next_version(output_dir, base_name)
+
+    print(f"\n检测到版本号: v{version}")
 
     # Create workbook
     wb = Workbook()
@@ -563,10 +682,10 @@ def main():
     wb.remove(default_sheet)
 
     # Create sheets
-    print("\n[1/6] 创建甘特图总览...")
+    print("\n[1/6] 创建甘特图总览（含Phase合并单元格）...")
     create_gantt_sheet(wb)
 
-    print("[2/6] 创建全部任务详情...")
+    print("[2/6] 创建全部任务详情（含Phase合并单元格）...")
     create_all_tasks_sheet(wb)
 
     print("[3/6] 创建KC组任务视图...")
@@ -581,16 +700,14 @@ def main():
     print("[6/6] 创建里程碑追踪...")
     create_milestone_sheet(wb)
 
-    # Ensure output directory exists
-    output_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "generated_docs")
-    os.makedirs(output_dir, exist_ok=True)
-
-    # Save workbook
-    output_path = os.path.join(output_dir, "KPMG_Workbench_Schedule.xlsx")
+    # Save workbook with version number
+    output_filename = f"{base_name}_v{version}.xlsx"
+    output_path = os.path.join(output_dir, output_filename)
     wb.save(output_path)
 
     print("\n" + "=" * 60)
     print(f"Excel文件已生成: {output_path}")
+    print(f"版本号: v{version}")
     print("=" * 60)
 
     # Summary
