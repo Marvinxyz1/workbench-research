@@ -64,13 +64,12 @@ ALL_TASKS = [
     {"wbs": "1.1.1", "phase": "Phase 1", "subtask": "学習・認証", "name": "Developer Learning Path 完了", "team": "KC+ATH", "months": [10, 11], "deliverable": "学習修了証", "status": "完了"},
     {"wbs": "1.1.2", "phase": "Phase 1", "subtask": "学習・認証", "name": "Knowledge Badge 取得", "team": "KC+ATH", "months": [11], "deliverable": "バッジ証明", "status": "完了"},
     {"wbs": "1.2", "phase": "Phase 1", "subtask": "技術評価", "name": "Workbench 環境セットアップ", "team": "KC+ATH", "months": [10], "deliverable": "環境構築完了", "status": "完了"},
-    {"wbs": "1.2.1", "phase": "Phase 1", "subtask": "技術評価", "name": "API 機能調査（Document Translation等）", "team": "KC+ATH", "months": [10, 11], "deliverable": "API調査レポート", "status": "完了"},
-    {"wbs": "1.2.2", "phase": "Phase 1", "subtask": "技術評価", "name": "Agent 開発フレームワーク評価", "team": "KC+ATH", "months": [11], "deliverable": "評価レポート", "status": "完了"},
+    {"wbs": "1.2.1", "phase": "Phase 1", "subtask": "技術評価", "name": "API 機能調査（Document Translation等）", "team": "KC+ATH", "months": [10, 11], "deliverable": "KPMG_Workbench_API一覧", "status": "完了"},
     {"wbs": "1.3", "phase": "Phase 1", "subtask": "課題対応", "name": "手続上の障壁把握", "team": "KC+ATH", "months": [10], "deliverable": "課題リスト", "status": "完了"},
-    {"wbs": "1.3.1", "phase": "Phase 1", "subtask": "課題対応", "name": "APIアクセス課題解決（12/1完了）", "team": "KC+ATH", "months": [11], "deliverable": "解決策ドキュメント", "status": "完了"},
-    {"wbs": "1.3.2", "phase": "Phase 1", "subtask": "課題対応", "name": "Global WB Community ローンチ（11/13）", "team": "KC+ATH", "months": [11], "deliverable": "Community稼働", "status": "完了"},
-    {"wbs": "1.4", "phase": "Phase 1", "subtask": "報告・計画", "name": "技術評価レポート作成", "team": "KC+ATH", "months": [11], "deliverable": "評価レポート", "status": "完了"},
-    {"wbs": "1.4.1", "phase": "Phase 1", "subtask": "報告・計画", "name": "Phase 2 計画策定", "team": "KC+ATH", "months": [11], "deliverable": "計画書", "status": "完了"},
+    {"wbs": "1.3.1", "phase": "Phase 1", "subtask": "課題対応", "name": "APIアクセス課題解決（12/1完了）", "team": "ATH", "months": [11], "deliverable": "解決策ドキュメント", "status": "完了"},
+    {"wbs": "1.3.2", "phase": "Phase 1", "subtask": "課題対応", "name": "Global WB Community ローンチ（11/13）", "team": "ATH", "months": [11], "deliverable": "Community稼働", "status": "完了"},
+    {"wbs": "1.4", "phase": "Phase 1", "subtask": "報告・計画", "name": "Onboarding簡易パワポ作成", "team": "KC+ATH", "months": [11], "deliverable": "Onboarding簡易パワポ", "status": "完了"},
+    {"wbs": "1.4.1", "phase": "Phase 1", "subtask": "報告・計画", "name": "KC・ALH共同会議", "team": "KC+ATH", "months": [11], "deliverable": "N/A", "status": "完了"},
 
     # Phase 2: "誰でも1週間で迷いなく開始" (12-1月)
     {"wbs": "2.1", "phase": "Phase 2", "subtask": "KC組タスク", "name": "残りAPIテスト完了（Document Translation等）", "team": "KC", "months": [12], "deliverable": "テストレポート", "status": "未開始"},
