@@ -355,7 +355,7 @@ def create_gantt_sheet(wb):
     ws.column_dimensions['B'].width = 8   # WBS
     ws.column_dimensions['C'].width = 18  # Sub-Task
     ws.column_dimensions['D'].width = 40  # Action
-    ws.column_dimensions['E'].width = 8   # Owner
+    ws.column_dimensions['E'].bestFit = True  # Owner 自適応幅
     ws.column_dimensions['F'].width = 20  # Deliverable
     ws.column_dimensions['G'].width = 10  # Status
 
@@ -505,9 +505,11 @@ def create_all_tasks_sheet(wb):
         apply_header_style(cell)
 
     # 列幅を設定
-    col_widths = [18, 8, 18, 42, 10, 15, 22, 10]
+    col_widths = [18, 8, 18, 42, None, 15, 22, 10]  # Owner列はbestFit
     for i, width in enumerate(col_widths, 1):
-        ws.column_dimensions[get_column_letter(i)].width = width
+        if width is not None:
+            ws.column_dimensions[get_column_letter(i)].width = width
+    ws.column_dimensions['E'].bestFit = True  # Owner 自適応幅
 
     # セル結合のためにPhaseとSubtaskでタスクをグループ化
     phase_groups = {}
