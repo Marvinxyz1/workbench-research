@@ -17,7 +17,7 @@ from openpyxl.styles import (
     NamedStyle
 )
 from openpyxl.utils import get_column_letter
-from openpyxl.formatting.rule import CellIsRule, FormulaRule
+from openpyxl.formatting.rule import FormulaRule
 from openpyxl.worksheet.datavalidation import DataValidation
 
 # Windows console UTF-8 support
@@ -63,7 +63,6 @@ ALL_TASKS = [
     {"wbs": "1.1", "phase": "Phase 1", "subtask": "学習・認証", "name": "Prerequisites 認証完了", "team": "KC+ATH", "months": [10], "deliverable": "認証バッジ", "status": "完了"},
     {"wbs": "1.1.1", "phase": "Phase 1", "subtask": "学習・認証", "name": "Developer Learning Path 完了", "team": "KC+ATH", "months": [10, 11], "deliverable": "学習修了証", "status": "完了"},
     {"wbs": "1.1.2", "phase": "Phase 1", "subtask": "学習・認証", "name": "Knowledge Badge 取得", "team": "KC+ATH", "months": [11], "deliverable": "バッジ証明", "status": "完了"},
-    {"wbs": "1.1.3", "phase": "Phase 1", "subtask": "学習・認証", "name": "Tech Talks 重要回視聴", "team": "KC+ATH", "months": [10, 11], "deliverable": "視聴記録", "status": "完了"},
     {"wbs": "1.2", "phase": "Phase 1", "subtask": "技術評価", "name": "Workbench 環境セットアップ", "team": "KC+ATH", "months": [10], "deliverable": "環境構築完了", "status": "完了"},
     {"wbs": "1.2.1", "phase": "Phase 1", "subtask": "技術評価", "name": "API 機能調査（Document Translation等）", "team": "KC+ATH", "months": [10, 11], "deliverable": "API調査レポート", "status": "完了"},
     {"wbs": "1.2.2", "phase": "Phase 1", "subtask": "技術評価", "name": "Agent 開発フレームワーク評価", "team": "KC+ATH", "months": [11], "deliverable": "評価レポート", "status": "完了"},
@@ -488,133 +487,6 @@ def create_gantt_sheet(wb):
 
     # ペインを固定（Status列の後から）
     ws.freeze_panes = 'H2'
-
-    return ws
-
-
-def create_all_tasks_sheet(wb):
-    """全タスク詳細シートを作成（WBS形式：subtask、月、成果物）"""
-    ws = wb.create_sheet("タスク詳細")
-
-    # ALL_TASKSの新構造に合わせたヘッダー: wbs, subtask, name, team, months, deliverable, status
-    headers = ["Phase", "WBS", "Sub-Task", "Action", "Owner", "Months", "Deliverable", "Status"]
-
-    # ヘッダーを書き込む
-    for col, header in enumerate(headers, 1):
-        cell = ws.cell(row=1, column=col, value=header)
-        apply_header_style(cell)
-
-    # 列幅を設定
-    col_widths = [18, 8, 18, 42, None, 15, 22, 10]  # Owner列はbestFit
-    for i, width in enumerate(col_widths, 1):
-        if width is not None:
-            ws.column_dimensions[get_column_letter(i)].width = width
-    ws.column_dimensions['E'].bestFit = True  # Owner 自適応幅
-
-    # セル結合のためにPhaseとSubtaskでタスクをグループ化
-    phase_groups = {}
-    subtask_groups = {}
-    for i, task in enumerate(ALL_TASKS):
-        phase = task['phase']
-        subtask_key = f"{phase}|{task['subtask']}"
-
-        if phase not in phase_groups:
-            phase_groups[phase] = {'start': i, 'end': i}
-        else:
-            phase_groups[phase]['end'] = i
-
-        if subtask_key not in subtask_groups:
-            subtask_groups[subtask_key] = {'start': i, 'end': i}
-        else:
-            subtask_groups[subtask_key]['end'] = i
-
-    # 新フィールド名でタスクを書き込む
-    for row, task in enumerate(ALL_TASKS, 2):
-        # Phase列
-        phase_cell = ws.cell(row=row, column=1, value=PHASE_DISPLAY.get(task['phase'], task['phase']))
-        apply_phase_style(phase_cell, task['phase'])
-
-        # WBS番号
-        ws.cell(row=row, column=2, value=task['wbs'])
-        apply_cell_style(ws.cell(row=row, column=2))
-
-        # Sub-Taskカテゴリ
-        ws.cell(row=row, column=3, value=task['subtask'])
-        apply_cell_style(ws.cell(row=row, column=3))
-
-        # Action（タスク名）
-        ws.cell(row=row, column=4, value=task['name'])
-        apply_cell_style(ws.cell(row=row, column=4))
-
-        # Owner（チーム）
-        team_cell = ws.cell(row=row, column=5, value=task['team'])
-        apply_cell_style(team_cell, task['team'])
-
-        # 月を "10月, 11月" 形式でフォーマット
-        months_str = ", ".join([f"{m}月" for m in task['months']])
-        ws.cell(row=row, column=6, value=months_str)
-        apply_cell_style(ws.cell(row=row, column=6))
-
-        # 成果物
-        ws.cell(row=row, column=7, value=task['deliverable'])
-        apply_cell_style(ws.cell(row=row, column=7))
-
-        # ステータス（ガントチャートから参照）
-        ws.cell(row=row, column=8, value=f"='ガントチャート'!G{row}")
-        apply_cell_style(ws.cell(row=row, column=8))
-
-    # Phaseセルを結合
-    for phase, indices in phase_groups.items():
-        start_row = indices['start'] + 2
-        end_row = indices['end'] + 2
-        if start_row != end_row:
-            ws.merge_cells(start_row=start_row, start_column=1, end_row=end_row, end_column=1)
-
-    # Sub-Taskセルを結合
-    for key, indices in subtask_groups.items():
-        start_row = indices['start'] + 2
-        end_row = indices['end'] + 2
-        if start_row != end_row:
-            ws.merge_cells(start_row=start_row, start_column=3, end_row=end_row, end_column=3)
-
-    # ステータスに条件付き書式を追加
-    for status, color in STATUS_COLORS.items():
-        ws.conditional_formatting.add(
-            f'H2:H{len(ALL_TASKS) + 1}',
-            CellIsRule(
-                operator='equal',
-                formula=[f'"{status}"'],
-                fill=PatternFill(start_color=color, end_color=color, fill_type="solid")
-            )
-        )
-
-    # 条件付き書式：Status="完了"の場合、左側の列をグレーに（Sub-Task列Cを除く）
-    gray_fill = PatternFill(start_color="D9D9D9", end_color="D9D9D9", fill_type="solid")
-    last_row = len(ALL_TASKS) + 1
-    # B列のみ
-    ws.conditional_formatting.add(
-        f'B2:B{last_row}',
-        FormulaRule(formula=['$H2="完了"'], fill=gray_fill)
-    )
-    # D-G列（C列Sub-Taskを除外）
-    ws.conditional_formatting.add(
-        f'D2:G{last_row}',
-        FormulaRule(formula=['$H2="完了"'], fill=gray_fill)
-    )
-
-    # Sub-Task列（C列）：該当Sub-Task内の全タスクが完了した場合のみグレーに
-    for _, indices in subtask_groups.items():
-        start_row = indices['start'] + 2
-        end_row = indices['end'] + 2
-        formula = f'COUNTIF($H${start_row}:$H${end_row},"完了")=ROWS($H${start_row}:$H${end_row})'
-        ws.conditional_formatting.add(
-            f'C{start_row}:C{end_row}',
-            FormulaRule(formula=[formula], fill=gray_fill)
-        )
-
-    # ペインを固定
-    ws.freeze_panes = 'B2'
-    ws.auto_filter.ref = f'A1:I{len(ALL_TASKS) + 1}'
 
     return ws
 
