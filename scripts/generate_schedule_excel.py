@@ -334,8 +334,8 @@ def create_gantt_sheet(wb):
     month_labels = ["10月", "11月", "12月", "1月", "2月", "3月", "4月", "5月", "6月"]
     month_values = [10, 11, 12, 1, 2, 3, 4, 5, 6]
 
-    # ヘッダー: Phase, WBS, Sub-Task, Action, Owner, Deliverable + 月
-    headers = ["Phase", "WBS", "Sub-Task", "Action", "Owner", "Deliverable"]
+    # ヘッダー: Phase, WBS, Sub-Task, Action, Owner, Deliverable, Status + 月
+    headers = ["Phase", "WBS", "Sub-Task", "Action", "Owner", "Deliverable", "Status"]
     base_month_col = len(headers) + 1
 
     # ヘッダーを書き込む
@@ -357,6 +357,7 @@ def create_gantt_sheet(wb):
     ws.column_dimensions['D'].width = 40  # Action
     ws.column_dimensions['E'].width = 8   # Owner
     ws.column_dimensions['F'].width = 20  # Deliverable
+    ws.column_dimensions['G'].width = 10  # Status
 
     # セル結合のためにPhaseとSubtaskでタスクをグループ化
     phase_groups = {}
@@ -401,6 +402,14 @@ def create_gantt_sheet(wb):
         ws.cell(row=row, column=6, value=task['deliverable'])
         apply_cell_style(ws.cell(row=row, column=6))
 
+        # Status列（ガントチャートが主表、下拉選択あり）
+        status = task.get('status', '未開始')
+        status_cell = ws.cell(row=row, column=7, value=status)
+        apply_cell_style(status_cell)
+        # ステータスに応じた背景色
+        if status in STATUS_COLORS:
+            status_cell.fill = PatternFill(start_color=STATUS_COLORS[status], end_color=STATUS_COLORS[status], fill_type="solid")
+
         # 月別にガントバーを描画（Phaseカラーを使用）
         for i, month in enumerate(month_values):
             col = base_month_col + i
@@ -443,8 +452,17 @@ def create_gantt_sheet(wb):
     ws.cell(row=legend_row + 4, column=1, value="Phase 4").fill = PatternFill(start_color=MAGENTA_COLOR, end_color=MAGENTA_COLOR, fill_type="solid")
     ws.cell(row=legend_row + 4, column=1).font = Font(name='Meiryo UI', color="FFFFFF")
 
-    # ペインを固定
-    ws.freeze_panes = 'G2'
+    # Status列Gにデータ検証（下拉選択）を追加
+    status_validation = DataValidation(
+        type="list",
+        formula1='"未開始,進行中,完了,ブロック"',
+        allow_blank=True
+    )
+    status_validation.add(f'G2:G{len(ALL_TASKS) + 1}')
+    ws.add_data_validation(status_validation)
+
+    # ペインを固定（Status列の後から）
+    ws.freeze_panes = 'H2'
 
     return ws
 
@@ -514,8 +532,8 @@ def create_all_tasks_sheet(wb):
         ws.cell(row=row, column=7, value=task['deliverable'])
         apply_cell_style(ws.cell(row=row, column=7))
 
-        # ステータス
-        ws.cell(row=row, column=8, value=task['status'])
+        # ステータス（ガントチャートから参照）
+        ws.cell(row=row, column=8, value=f"='ガントチャート'!G{row}")
         apply_cell_style(ws.cell(row=row, column=8))
 
     # Phaseセルを結合
@@ -531,15 +549,6 @@ def create_all_tasks_sheet(wb):
         end_row = indices['end'] + 2
         if start_row != end_row:
             ws.merge_cells(start_row=start_row, start_column=3, end_row=end_row, end_column=3)
-
-    # ステータス列Hにデータ検証を追加
-    status_validation = DataValidation(
-        type="list",
-        formula1='"未開始,進行中,完了,ブロック"',
-        allow_blank=True
-    )
-    status_validation.add(f'H2:H{len(ALL_TASKS) + 1}')
-    ws.add_data_validation(status_validation)
 
     # ステータスに条件付き書式を追加
     for status, color in STATUS_COLORS.items():
@@ -615,8 +624,10 @@ def create_team_sheet(wb, team_name, team_filter):
         ws.cell(row=row, column=6, value=task['deliverable'])
         apply_cell_style(ws.cell(row=row, column=6))
 
-        # ステータス
-        ws.cell(row=row, column=7, value=task['status'])
+        # ステータス（VLOOKUPでガントチャートから参照）
+        total_tasks = len(ALL_TASKS)
+        vlookup_formula = f"=VLOOKUP(B{row},'ガントチャート'!$B$2:$G${total_tasks + 1},6,FALSE)"
+        ws.cell(row=row, column=7, value=vlookup_formula)
         apply_cell_style(ws.cell(row=row, column=7))
 
     # Phaseセルを結合
@@ -625,16 +636,6 @@ def create_team_sheet(wb, team_name, team_filter):
         end_row = indices['end'] + 2
         if start_row != end_row:
             ws.merge_cells(start_row=start_row, start_column=1, end_row=end_row, end_column=1)
-
-    # ステータス列Gにデータ検証を追加
-    status_validation = DataValidation(
-        type="list",
-        formula1='"未開始,進行中,完了,ブロック"',
-        allow_blank=True
-    )
-    if team_tasks:
-        status_validation.add(f'G2:G{len(team_tasks) + 1}')
-        ws.add_data_validation(status_validation)
 
     # ペインを固定
     ws.freeze_panes = 'B2'
