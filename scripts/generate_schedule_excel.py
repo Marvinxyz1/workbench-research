@@ -921,22 +921,19 @@ def main():
     wb.remove(default_sheet)
 
     # シートを作成
-    print("\n[1/6] ガントチャートを作成中（Phaseセル結合付き）...")
+    print("\n[1/5] ガントチャートを作成中（Phaseセル結合付き）...")
     create_gantt_sheet(wb)
 
-    print("[2/6] タスク詳細を作成中（Phaseセル結合付き）...")
-    create_all_tasks_sheet(wb)
-
-    print("[3/6] KC組タスクビューを作成中...")
+    print("[2/5] KC組タスクビューを作成中...")
     create_team_sheet(wb, "KC", "KC")
 
-    print("[4/6] ATH組タスクビューを作成中...")
+    print("[3/5] ATH組タスクビューを作成中...")
     create_team_sheet(wb, "ATH", "ATH")
 
-    print("[5/6] 休暇カレンダーを作成中...")
+    print("[4/5] 休暇カレンダーを作成中...")
     create_holiday_sheet(wb)
 
-    print("[6/6] マイルストーン追跡を作成中...")
+    print("[5/5] マイルストーン追跡を作成中...")
     create_milestone_sheet(wb)
 
     # バージョン番号付きでワークブックを保存
