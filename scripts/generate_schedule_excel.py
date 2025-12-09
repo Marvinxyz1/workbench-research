@@ -17,7 +17,7 @@ from openpyxl.styles import (
     NamedStyle
 )
 from openpyxl.utils import get_column_letter
-from openpyxl.formatting.rule import CellIsRule
+from openpyxl.formatting.rule import CellIsRule, FormulaRule
 from openpyxl.worksheet.datavalidation import DataValidation
 
 # Windows console UTF-8 support
@@ -410,7 +410,7 @@ def create_gantt_sheet(wb):
         if status in STATUS_COLORS:
             status_cell.fill = PatternFill(start_color=STATUS_COLORS[status], end_color=STATUS_COLORS[status], fill_type="solid")
 
-        # 月別にガントバーを描画（Phaseカラーを使用）
+        # 月別にガントバーを描画（Phaseカラーを直接設定）
         for i, month in enumerate(month_values):
             col = base_month_col + i
             cell = ws.cell(row=row, column=col)
@@ -458,8 +458,21 @@ def create_gantt_sheet(wb):
         formula1='"未開始,進行中,完了,ブロック"',
         allow_blank=True
     )
+    status_validation.showDropDown = False  # False = 下拉箭頭を表示
     status_validation.add(f'G2:G{len(ALL_TASKS) + 1}')
     ws.add_data_validation(status_validation)
+
+    # 条件付き書式：Status="完了"の場合、左側の列（B-F）をグレーに
+    gray_fill = PatternFill(start_color="D9D9D9", end_color="D9D9D9", fill_type="solid")
+    last_row = len(ALL_TASKS) + 1
+    left_cols_range = f'B2:F{last_row}'  # B列(WBS)からF列(Deliverable)まで
+    ws.conditional_formatting.add(
+        left_cols_range,
+        FormulaRule(
+            formula=['$G2="完了"'],
+            fill=gray_fill
+        )
+    )
 
     # ペインを固定（Status列の後から）
     ws.freeze_panes = 'H2'
