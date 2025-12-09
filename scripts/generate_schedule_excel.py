@@ -72,21 +72,16 @@ ALL_TASKS = [
     {"wbs": "1.4.1", "phase": "Phase 1", "subtask": "報告・計画", "name": "KC・ALH共同会議", "team": "KC+ALH", "months": [11], "deliverable": "N/A", "status": "完了"},
 
     # Phase 2: "誰でも1週間で迷いなく開始" (12-1月)
-    {"wbs": "2.1", "phase": "Phase 2", "subtask": "KC組タスク", "name": "残りAPIテスト完了（Document Translation等）", "team": "KC", "months": [12], "deliverable": "テストレポート", "status": "未開始"},
-    {"wbs": "2.1.1", "phase": "Phase 2", "subtask": "KC組タスク", "name": "APIテスト報告総括", "team": "KC", "months": [12], "deliverable": "総括レポート", "status": "未開始"},
+    {"wbs": "2.1", "phase": "Phase 2", "subtask": "KC組タスク", "name": "APIテスト完了", "team": "KC", "months": [12], "deliverable": "KPMG_Workbench_API一覧", "status": "未開始"},
+    {"wbs": "2.1.1", "phase": "Phase 2", "subtask": "KC組タスク", "name": "APIテスト報告", "team": "KC", "months": [12], "deliverable": "KPMG_Workbench_API一覧", "status": "未開始"},
     {"wbs": "2.1.2", "phase": "Phase 2", "subtask": "KC組タスク", "name": "Cookbook基礎テンプレート整備", "team": "KC", "months": [12], "deliverable": "テンプレート", "status": "未開始"},
-    {"wbs": "2.1.3", "phase": "Phase 2", "subtask": "KC組タスク", "name": "ALH組への技術サポート資料提供", "team": "KC", "months": [12], "deliverable": "技術資料", "status": "未開始"},
     {"wbs": "2.1.4", "phase": "Phase 2", "subtask": "KC組タスク", "name": "ALH組成果物Review", "team": "KC", "months": [1], "deliverable": "Reviewレポート", "status": "未開始"},
-    {"wbs": "2.1.5", "phase": "Phase 2", "subtask": "KC組タスク", "name": "Cookbook上級用例補充（2シナリオ）", "team": "KC", "months": [1], "deliverable": "上級用例", "status": "未開始"},
-    {"wbs": "2.1.6", "phase": "Phase 2", "subtask": "KC組タスク", "name": "Agentベストプラクティスドキュメント作成", "team": "KC", "months": [1], "deliverable": "ベストプラクティス", "status": "未開始"},
-    {"wbs": "2.1.7", "phase": "Phase 2", "subtask": "KC組タスク", "name": "Phase 2 総括レポート", "team": "KC", "months": [1], "deliverable": "総括レポート", "status": "未開始"},
     {"wbs": "2.2", "phase": "Phase 2", "subtask": "ALH組タスク", "name": "KJ開発者Onboardingサイト設計", "team": "ALH", "months": [12], "deliverable": "設計書", "status": "未開始"},
     {"wbs": "2.2.1", "phase": "Phase 2", "subtask": "ALH組タスク", "name": "Onboardingサイトフロントエンド開発", "team": "ALH", "months": [12], "deliverable": "フロントエンド", "status": "未開始"},
     {"wbs": "2.2.2", "phase": "Phase 2", "subtask": "ALH組タスク", "name": "Onboardingサイトコンテンツ作成", "team": "ALH", "months": [1], "deliverable": "コンテンツ", "status": "未開始"},
     {"wbs": "2.2.3", "phase": "Phase 2", "subtask": "ALH組タスク", "name": "Agent検証環境構築", "team": "ALH", "months": [12], "deliverable": "環境構築", "status": "未開始"},
     {"wbs": "2.2.4", "phase": "Phase 2", "subtask": "ALH組タスク", "name": "API/Agent基礎検証テスト", "team": "ALH", "months": [12], "deliverable": "テスト結果", "status": "未開始"},
-    {"wbs": "2.2.5", "phase": "Phase 2", "subtask": "ALH組タスク", "name": "Cookbookコア用例作成（5シナリオ）", "team": "ALH", "months": [1], "deliverable": "コア用例", "status": "未開始"},
-    {"wbs": "2.2.6", "phase": "Phase 2", "subtask": "ALH組タスク", "name": "開発者コミュニティプラットフォーム構築", "team": "ALH", "months": [1], "deliverable": "プラットフォーム", "status": "未開始"},
+    {"wbs": "2.2.6", "phase": "Phase 2", "subtask": "ALH組タスク", "name": "開発者コミュニティプラットフォーム構築", "team": "ALH", "months": [1], "deliverable": "プラットフォーム", "status": "完了"},
     {"wbs": "2.2.7", "phase": "Phase 2", "subtask": "ALH組タスク", "name": "開発者コミュニティ初期コンテンツ", "team": "ALH", "months": [1], "deliverable": "初期コンテンツ", "status": "未開始"},
     {"wbs": "2.2.8", "phase": "Phase 2", "subtask": "ALH組タスク", "name": "Onboardingサイトローンチ＆テスト", "team": "ALH", "months": [1], "deliverable": "サイト稼働", "status": "未開始"},
     {"wbs": "2.2.9", "phase": "Phase 2", "subtask": "ALH組タスク", "name": "開発者コミュニティ正式ローンチ", "team": "ALH", "months": [1], "deliverable": "コミュニティ稼働", "status": "未開始"},
@@ -353,9 +348,9 @@ def create_gantt_sheet(wb):
     ws.column_dimensions['B'].width = 8   # WBS
     ws.column_dimensions['C'].width = 18  # Sub-Task
     ws.column_dimensions['D'].width = 40  # Action
-    ws.column_dimensions['E'].bestFit = True  # Owner 自適応幅
-    ws.column_dimensions['F'].width = 12  # 担当者
-    ws.column_dimensions['G'].width = 20  # Deliverable
+    ws.column_dimensions['E'].width = 10  # Owner
+    ws.column_dimensions['F'].width = 10  # 担当者
+    ws.column_dimensions['G'].width = 22  # Deliverable
     ws.column_dimensions['H'].width = 10  # Status
 
     # セル結合のためにPhaseとSubtaskでタスクをグループ化
@@ -505,8 +500,31 @@ def create_gantt_sheet(wb):
         allow_blank=True
     )
     status_validation.showDropDown = False  # False = 下拉箭頭を表示
-    status_validation.add(f'H2:H{len(ALL_TASKS) + 1}')
+    status_validation.add(f'H2:H{last_row}')
     ws.add_data_validation(status_validation)
+
+    # Status列の条件付き書式（下拉選択後も色が変わるように）
+    status_gray_fill = PatternFill(start_color=STATUS_COLORS["未開始"], end_color=STATUS_COLORS["未開始"], fill_type="solid")
+    status_yellow_fill = PatternFill(start_color=STATUS_COLORS["進行中"], end_color=STATUS_COLORS["進行中"], fill_type="solid")
+    status_green_fill = PatternFill(start_color=STATUS_COLORS["完了"], end_color=STATUS_COLORS["完了"], fill_type="solid")
+    status_red_fill = PatternFill(start_color=STATUS_COLORS["ブロック"], end_color=STATUS_COLORS["ブロック"], fill_type="solid")
+
+    ws.conditional_formatting.add(
+        f'H2:H{last_row}',
+        FormulaRule(formula=['$H2="未開始"'], fill=status_gray_fill)
+    )
+    ws.conditional_formatting.add(
+        f'H2:H{last_row}',
+        FormulaRule(formula=['$H2="進行中"'], fill=status_yellow_fill)
+    )
+    ws.conditional_formatting.add(
+        f'H2:H{last_row}',
+        FormulaRule(formula=['$H2="完了"'], fill=status_green_fill)
+    )
+    ws.conditional_formatting.add(
+        f'H2:H{last_row}',
+        FormulaRule(formula=['$H2="ブロック"'], fill=status_red_fill)
+    )
 
     # 条件付き書式：Status="完了"の場合、左側の列をグレーに（Sub-Task列Cを除く）
     gray_fill = PatternFill(start_color="D9D9D9", end_color="D9D9D9", fill_type="solid")
