@@ -462,17 +462,29 @@ def create_gantt_sheet(wb):
     status_validation.add(f'G2:G{len(ALL_TASKS) + 1}')
     ws.add_data_validation(status_validation)
 
-    # 条件付き書式：Status="完了"の場合、左側の列（B-F）をグレーに
+    # 条件付き書式：Status="完了"の場合、左側の列をグレーに（Sub-Task列Cを除く）
     gray_fill = PatternFill(start_color="D9D9D9", end_color="D9D9D9", fill_type="solid")
     last_row = len(ALL_TASKS) + 1
-    left_cols_range = f'B2:F{last_row}'  # B列(WBS)からF列(Deliverable)まで
-    ws.conditional_formatting.add(
-        left_cols_range,
-        FormulaRule(
-            formula=['$G2="完了"'],
-            fill=gray_fill
+    # B列(WBS), D列(Action), E列(Owner), F列(Deliverable)
+    for col_range in [f'B2:B{last_row}', f'D2:F{last_row}']:
+        ws.conditional_formatting.add(
+            col_range,
+            FormulaRule(
+                formula=['$G2="完了"'],
+                fill=gray_fill
+            )
         )
-    )
+
+    # Sub-Task列（C列）：該当Sub-Task内の全タスクが完了した場合のみグレーに
+    for subtask_key, indices in subtask_groups.items():
+        start_row = indices['start'] + 2
+        end_row = indices['end'] + 2
+        # 条件：該当範囲のStatus列で"完了"の数 = 該当範囲の行数
+        formula = f'COUNTIF($G${start_row}:$G${end_row},"完了")=ROWS($G${start_row}:$G${end_row})'
+        ws.conditional_formatting.add(
+            f'C{start_row}:C{end_row}',
+            FormulaRule(formula=[formula], fill=gray_fill)
+        )
 
     # ペインを固定（Status列の後から）
     ws.freeze_panes = 'H2'
@@ -574,15 +586,29 @@ def create_all_tasks_sheet(wb):
             )
         )
 
-    # 条件付き書式：Status="完了"の場合、左側の列（B-G）をグレーに
+    # 条件付き書式：Status="完了"の場合、左側の列をグレーに（Sub-Task列Cを除く）
     gray_fill = PatternFill(start_color="D9D9D9", end_color="D9D9D9", fill_type="solid")
+    last_row = len(ALL_TASKS) + 1
+    # B列のみ
     ws.conditional_formatting.add(
-        f'B2:G{len(ALL_TASKS) + 1}',
-        FormulaRule(
-            formula=['$H2="完了"'],
-            fill=gray_fill
-        )
+        f'B2:B{last_row}',
+        FormulaRule(formula=['$H2="完了"'], fill=gray_fill)
     )
+    # D-G列（C列Sub-Taskを除外）
+    ws.conditional_formatting.add(
+        f'D2:G{last_row}',
+        FormulaRule(formula=['$H2="完了"'], fill=gray_fill)
+    )
+
+    # Sub-Task列（C列）：該当Sub-Task内の全タスクが完了した場合のみグレーに
+    for _, indices in subtask_groups.items():
+        start_row = indices['start'] + 2
+        end_row = indices['end'] + 2
+        formula = f'COUNTIF($H${start_row}:$H${end_row},"完了")=ROWS($H${start_row}:$H${end_row})'
+        ws.conditional_formatting.add(
+            f'C{start_row}:C{end_row}',
+            FormulaRule(formula=[formula], fill=gray_fill)
+        )
 
     # ペインを固定
     ws.freeze_panes = 'B2'
@@ -613,12 +639,18 @@ def create_team_sheet(wb, team_name, team_filter):
 
     # Phaseでグループ化（セル結合用）
     phase_groups = {}
+    subtask_groups = {}
     for i, task in enumerate(team_tasks):
         phase = task['phase']
+        subtask_key = f"{phase}|{task['subtask']}"
         if phase not in phase_groups:
             phase_groups[phase] = {'start': i, 'end': i}
         else:
             phase_groups[phase]['end'] = i
+        if subtask_key not in subtask_groups:
+            subtask_groups[subtask_key] = {'start': i, 'end': i}
+        else:
+            subtask_groups[subtask_key]['end'] = i
 
     # タスクを書き込む
     for row, task in enumerate(team_tasks, 2):
@@ -660,16 +692,36 @@ def create_team_sheet(wb, team_name, team_filter):
         if start_row != end_row:
             ws.merge_cells(start_row=start_row, start_column=1, end_row=end_row, end_column=1)
 
-    # 条件付き書式：Status="完了"の場合、左側の列（B-F）をグレーに
+    # Sub-Taskセルを結合
+    for _, indices in subtask_groups.items():
+        start_row = indices['start'] + 2
+        end_row = indices['end'] + 2
+        if start_row != end_row:
+            ws.merge_cells(start_row=start_row, start_column=3, end_row=end_row, end_column=3)
+
+    # 条件付き書式：Status="完了"の場合、左側の列をグレーに（Sub-Task列Cを除く）
     gray_fill = PatternFill(start_color="D9D9D9", end_color="D9D9D9", fill_type="solid")
     last_row = len(team_tasks) + 1
+    # B列のみ
     ws.conditional_formatting.add(
-        f'B2:F{last_row}',
-        FormulaRule(
-            formula=['$G2="完了"'],
-            fill=gray_fill
-        )
+        f'B2:B{last_row}',
+        FormulaRule(formula=['$G2="完了"'], fill=gray_fill)
     )
+    # D-F列（C列Sub-Taskを除外）
+    ws.conditional_formatting.add(
+        f'D2:F{last_row}',
+        FormulaRule(formula=['$G2="完了"'], fill=gray_fill)
+    )
+
+    # Sub-Task列（C列）：該当Sub-Task内の全タスクが完了した場合のみグレーに
+    for _, indices in subtask_groups.items():
+        start_row = indices['start'] + 2
+        end_row = indices['end'] + 2
+        formula = f'COUNTIF($G${start_row}:$G${end_row},"完了")=ROWS($G${start_row}:$G${end_row})'
+        ws.conditional_formatting.add(
+            f'C{start_row}:C{end_row}',
+            FormulaRule(formula=[formula], fill=gray_fill)
+        )
 
     # ペインを固定
     ws.freeze_panes = 'B2'
