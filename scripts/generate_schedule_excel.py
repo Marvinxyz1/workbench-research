@@ -574,6 +574,16 @@ def create_all_tasks_sheet(wb):
             )
         )
 
+    # 条件付き書式：Status="完了"の場合、左側の列（B-G）をグレーに
+    gray_fill = PatternFill(start_color="D9D9D9", end_color="D9D9D9", fill_type="solid")
+    ws.conditional_formatting.add(
+        f'B2:G{len(ALL_TASKS) + 1}',
+        FormulaRule(
+            formula=['$H2="完了"'],
+            fill=gray_fill
+        )
+    )
+
     # ペインを固定
     ws.freeze_panes = 'B2'
     ws.auto_filter.ref = f'A1:I{len(ALL_TASKS) + 1}'
@@ -649,6 +659,17 @@ def create_team_sheet(wb, team_name, team_filter):
         end_row = indices['end'] + 2
         if start_row != end_row:
             ws.merge_cells(start_row=start_row, start_column=1, end_row=end_row, end_column=1)
+
+    # 条件付き書式：Status="完了"の場合、左側の列（B-F）をグレーに
+    gray_fill = PatternFill(start_color="D9D9D9", end_color="D9D9D9", fill_type="solid")
+    last_row = len(team_tasks) + 1
+    ws.conditional_formatting.add(
+        f'B2:F{last_row}',
+        FormulaRule(
+            formula=['$G2="完了"'],
+            fill=gray_fill
+        )
+    )
 
     # ペインを固定
     ws.freeze_panes = 'B2'
