@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-KPMG Workbench 开发日程表 Excel 生成器 v2
-生成包含甘特图、任务详情、休假日历、里程碑的完整日程表
-- Phase列合并单元格，带背景色
-- 版本号自动递增，不覆盖旧文件
+KPMG Workbench 開発スケジュール Excel 生成ツール v2
+ガントチャート、タスク詳細、休暇カレンダー、マイルストーンを含む完全なスケジュール表を生成
+- Phase列のセル結合と背景色
+- バージョン番号自動インクリメント（既存ファイルを上書きしない）
 """
 
 import sys
@@ -24,113 +24,145 @@ from openpyxl.worksheet.datavalidation import DataValidation
 if sys.platform == 'win32':
     sys.stdout.reconfigure(encoding='utf-8')
 
-# ==================== KPMG Brand Colors ====================
+# ==================== KPMG ブランドカラー ====================
 KPMG_BLUE = "005EB8"
 KPMG_DARK_BLUE = "00338D"
-KC_COLOR = "4472C4"      # 蓝色 - KC组
-ATH_COLOR = "70AD47"     # 绿色 - ATH组
-JOINT_COLOR = "7030A0"   # 紫色 - 联合任务
-HOLIDAY_COLOR = "D9D9D9" # 灰色 - 休假
-ORANGE_COLOR = "ED7D31"  # 橙色 - Phase 4
+KC_COLOR = "4472C4"      # 青色 - KC組
+ATH_COLOR = "70AD47"     # 緑色 - ATH組
+JOINT_COLOR = "7030A0"   # 紫色 - 連合タスク
+HOLIDAY_COLOR = "D9D9D9" # グレー - 休暇
+MAGENTA_COLOR = "E91E8C" # マゼンタ - Phase 4
 
-# Phase colors
+# Phase カラー
 PHASE_COLORS = {
-    "Phase 2": KPMG_BLUE,
-    "过渡期": JOINT_COLOR,
-    "Phase 3": ATH_COLOR,
-    "Phase 4": ORANGE_COLOR,
+    "Phase 1": KPMG_DARK_BLUE,  # 濃紺 - オンボーディング
+    "Phase 2": KPMG_BLUE,       # 青 - 誰でも1週間で
+    "Phase 3": ATH_COLOR,       # 緑 - 海外MFナレッジ
+    "Phase 4": MAGENTA_COLOR,   # マゼンタ - スピーディな
 }
 
 # Phase display names (for merged cells)
 PHASE_DISPLAY = {
-    "Phase 2": '"誰でも1週間で\n迷いなく開始"',
-    "过渡期": "POC項目\n主題討論",
-    "Phase 3": '"海外MF\nナレッジ探索"',
-    "Phase 4": '"スピーディな\nプロダクトプロセス"',
+    "Phase 1": "オンボーディング\nフェーズ\n(10-11月)",
+    "Phase 2": "誰でも1週間で\n迷いなく開始\n(12-1月)",
+    "Phase 3": "海外MF\nナレッジ探索\n(2-3月)",
+    "Phase 4": "スピーディな\nプロダクトプロセス\n(4-6月)",
 }
 
-# Status colors
+# ステータスカラー（タスクデータのstatus値と一致）
 STATUS_COLORS = {
-    "未开始": "BFBFBF",    # 灰色
-    "进行中": "FFC000",    # 黄色
-    "已完成": "92D050",    # 绿色
-    "阻塞": "FF0000",      # 红色
+    "未開始": "BFBFBF",    # グレー
+    "進行中": "FFC000",    # 黄色
+    "完了": "92D050",      # 緑色
+    "ブロック": "FF0000",  # 赤色
 }
 
-# ==================== Task Data ====================
+# ==================== タスクデータ (WBS) ====================
 ALL_TASKS = [
-    # Phase 2: 12月～1月 KC组任务（休假前）
-    {"id": "KC-01", "phase": "Phase 2", "name": "完成剩余API测试（Document Translation等）", "team": "KC", "days": 5, "start": "2024-12-09", "end": "2024-12-13", "status": "未开始", "note": ""},
-    {"id": "KC-02", "phase": "Phase 2", "name": "编写API测试报告总结", "team": "KC", "days": 2, "start": "2024-12-14", "end": "2024-12-15", "status": "未开始", "note": ""},
-    {"id": "KC-03", "phase": "Phase 2", "name": "整理Cookbook基础模板和目录结构", "team": "KC", "days": 2, "start": "2024-12-09", "end": "2024-12-10", "status": "未开始", "note": ""},
-    {"id": "KC-04", "phase": "Phase 2", "name": "与ATH组交接工作，提供技术支持文档", "team": "KC", "days": 1, "start": "2024-12-15", "end": "2024-12-15", "status": "未开始", "note": "休假前最后任务"},
+    # Phase 1: オンボーディングフェーズ (10-11月)
+    {"wbs": "1.1", "phase": "Phase 1", "subtask": "学習・認証", "name": "Prerequisites 認証完了", "team": "KC", "months": [10], "deliverable": "認証バッジ", "status": "未開始"},
+    {"wbs": "1.1.1", "phase": "Phase 1", "subtask": "学習・認証", "name": "Developer Learning Path 完了", "team": "KC", "months": [10, 11], "deliverable": "学習修了証", "status": "未開始"},
+    {"wbs": "1.1.2", "phase": "Phase 1", "subtask": "学習・認証", "name": "Knowledge Badge 取得", "team": "KC", "months": [11], "deliverable": "バッジ証明", "status": "未開始"},
+    {"wbs": "1.1.3", "phase": "Phase 1", "subtask": "学習・認証", "name": "Tech Talks 重要回視聴", "team": "KC", "months": [10, 11], "deliverable": "視聴記録", "status": "未開始"},
+    {"wbs": "1.2", "phase": "Phase 1", "subtask": "技術評価", "name": "Workbench 環境セットアップ", "team": "KC", "months": [10], "deliverable": "環境構築完了", "status": "未開始"},
+    {"wbs": "1.2.1", "phase": "Phase 1", "subtask": "技術評価", "name": "API 機能調査（Document Translation等）", "team": "KC", "months": [10, 11], "deliverable": "API調査レポート", "status": "未開始"},
+    {"wbs": "1.2.2", "phase": "Phase 1", "subtask": "技術評価", "name": "Agent 開発フレームワーク評価", "team": "KC", "months": [11], "deliverable": "評価レポート", "status": "未開始"},
+    {"wbs": "1.3", "phase": "Phase 1", "subtask": "課題対応", "name": "手続上の障壁把握", "team": "KC", "months": [10], "deliverable": "課題リスト", "status": "未開始"},
+    {"wbs": "1.3.1", "phase": "Phase 1", "subtask": "課題対応", "name": "APIアクセス課題解決（12/1完了）", "team": "KC", "months": [11], "deliverable": "解決策ドキュメント", "status": "未開始"},
+    {"wbs": "1.3.2", "phase": "Phase 1", "subtask": "課題対応", "name": "Global WB Community ローンチ（11/13）", "team": "KC+ATH", "months": [11], "deliverable": "Community稼働", "status": "未開始"},
+    {"wbs": "1.4", "phase": "Phase 1", "subtask": "報告・計画", "name": "技術評価レポート作成", "team": "KC", "months": [11], "deliverable": "評価レポート", "status": "未開始"},
+    {"wbs": "1.4.1", "phase": "Phase 1", "subtask": "報告・計画", "name": "Phase 2 計画策定", "team": "KC", "months": [11], "deliverable": "計画書", "status": "未開始"},
 
-    # Phase 2: ATH组任务
-    {"id": "ATH-01", "phase": "Phase 2", "name": "KJ开发者Onboarding网站设计", "team": "ATH", "days": 5, "start": "2024-12-09", "end": "2024-12-13", "status": "未开始", "note": ""},
-    {"id": "ATH-02", "phase": "Phase 2", "name": "Onboarding网站前端开发", "team": "ATH", "days": 10, "start": "2024-12-16", "end": "2024-12-27", "status": "未开始", "note": ""},
-    {"id": "ATH-03", "phase": "Phase 2", "name": "Onboarding网站内容填充", "team": "ATH", "days": 5, "start": "2025-01-06", "end": "2025-01-10", "status": "未开始", "note": ""},
-    {"id": "ATH-04", "phase": "Phase 2", "name": "Agent验证环境搭建", "team": "ATH", "days": 5, "start": "2024-12-09", "end": "2024-12-13", "status": "未开始", "note": ""},
-    {"id": "ATH-05", "phase": "Phase 2", "name": "API/Agent基础验证测试", "team": "ATH", "days": 10, "start": "2024-12-16", "end": "2024-12-27", "status": "未开始", "note": ""},
-    {"id": "ATH-06", "phase": "Phase 2", "name": "Cookbook核心用例编写（5个场景）", "team": "ATH", "days": 10, "start": "2025-01-06", "end": "2025-01-17", "status": "未开始", "note": ""},
-    {"id": "ATH-07", "phase": "Phase 2", "name": "开发者社区平台搭建", "team": "ATH", "days": 5, "start": "2025-01-06", "end": "2025-01-10", "status": "未开始", "note": ""},
-    {"id": "ATH-08", "phase": "Phase 2", "name": "开发者社区内容初始化", "team": "ATH", "days": 5, "start": "2025-01-13", "end": "2025-01-17", "status": "未开始", "note": ""},
-    {"id": "ATH-09", "phase": "Phase 2", "name": "Onboarding网站上线 & 测试", "team": "ATH", "days": 5, "start": "2025-01-20", "end": "2025-01-24", "status": "未开始", "note": ""},
-    {"id": "ATH-10", "phase": "Phase 2", "name": "开发者社区正式上线", "team": "ATH", "days": 2, "start": "2025-01-27", "end": "2025-01-28", "status": "未开始", "note": ""},
+    # Phase 2: "誰でも1週間で迷いなく開始" (12-1月)
+    {"wbs": "2.1", "phase": "Phase 2", "subtask": "KC組タスク", "name": "残りAPIテスト完了（Document Translation等）", "team": "KC", "months": [12], "deliverable": "テストレポート", "status": "未開始"},
+    {"wbs": "2.1.1", "phase": "Phase 2", "subtask": "KC組タスク", "name": "APIテスト報告総括", "team": "KC", "months": [12], "deliverable": "総括レポート", "status": "未開始"},
+    {"wbs": "2.1.2", "phase": "Phase 2", "subtask": "KC組タスク", "name": "Cookbook基礎テンプレート整備", "team": "KC", "months": [12], "deliverable": "テンプレート", "status": "未開始"},
+    {"wbs": "2.1.3", "phase": "Phase 2", "subtask": "KC組タスク", "name": "ATH組への技術サポート資料提供", "team": "KC", "months": [12], "deliverable": "技術資料", "status": "未開始"},
+    {"wbs": "2.1.4", "phase": "Phase 2", "subtask": "KC組タスク", "name": "ATH組成果物Review", "team": "KC", "months": [1], "deliverable": "Reviewレポート", "status": "未開始"},
+    {"wbs": "2.1.5", "phase": "Phase 2", "subtask": "KC組タスク", "name": "Cookbook上級用例補充（2シナリオ）", "team": "KC", "months": [1], "deliverable": "上級用例", "status": "未開始"},
+    {"wbs": "2.1.6", "phase": "Phase 2", "subtask": "KC組タスク", "name": "Agentベストプラクティスドキュメント作成", "team": "KC", "months": [1], "deliverable": "ベストプラクティス", "status": "未開始"},
+    {"wbs": "2.1.7", "phase": "Phase 2", "subtask": "KC組タスク", "name": "Phase 2 総括レポート", "team": "KC", "months": [1], "deliverable": "総括レポート", "status": "未開始"},
+    {"wbs": "2.2", "phase": "Phase 2", "subtask": "ATH組タスク", "name": "KJ開発者Onboardingサイト設計", "team": "ATH", "months": [12], "deliverable": "設計書", "status": "未開始"},
+    {"wbs": "2.2.1", "phase": "Phase 2", "subtask": "ATH組タスク", "name": "Onboardingサイトフロントエンド開発", "team": "ATH", "months": [12], "deliverable": "フロントエンド", "status": "未開始"},
+    {"wbs": "2.2.2", "phase": "Phase 2", "subtask": "ATH組タスク", "name": "Onboardingサイトコンテンツ作成", "team": "ATH", "months": [1], "deliverable": "コンテンツ", "status": "未開始"},
+    {"wbs": "2.2.3", "phase": "Phase 2", "subtask": "ATH組タスク", "name": "Agent検証環境構築", "team": "ATH", "months": [12], "deliverable": "環境構築", "status": "未開始"},
+    {"wbs": "2.2.4", "phase": "Phase 2", "subtask": "ATH組タスク", "name": "API/Agent基礎検証テスト", "team": "ATH", "months": [12], "deliverable": "テスト結果", "status": "未開始"},
+    {"wbs": "2.2.5", "phase": "Phase 2", "subtask": "ATH組タスク", "name": "Cookbookコア用例作成（5シナリオ）", "team": "ATH", "months": [1], "deliverable": "コア用例", "status": "未開始"},
+    {"wbs": "2.2.6", "phase": "Phase 2", "subtask": "ATH組タスク", "name": "開発者コミュニティプラットフォーム構築", "team": "ATH", "months": [1], "deliverable": "プラットフォーム", "status": "未開始"},
+    {"wbs": "2.2.7", "phase": "Phase 2", "subtask": "ATH組タスク", "name": "開発者コミュニティ初期コンテンツ", "team": "ATH", "months": [1], "deliverable": "初期コンテンツ", "status": "未開始"},
+    {"wbs": "2.2.8", "phase": "Phase 2", "subtask": "ATH組タスク", "name": "Onboardingサイトローンチ＆テスト", "team": "ATH", "months": [1], "deliverable": "サイト稼働", "status": "未開始"},
+    {"wbs": "2.2.9", "phase": "Phase 2", "subtask": "ATH組タスク", "name": "開発者コミュニティ正式ローンチ", "team": "ATH", "months": [1], "deliverable": "コミュニティ稼働", "status": "未開始"},
 
-    # Phase 2: KC组任务（复工后）
-    {"id": "KC-05", "phase": "Phase 2", "name": "Review ATH组工作成果", "team": "KC", "days": 2, "start": "2025-01-06", "end": "2025-01-07", "status": "未开始", "note": "复工后第一任务"},
-    {"id": "KC-06", "phase": "Phase 2", "name": "补充Cookbook高级用例（2个场景）", "team": "KC", "days": 5, "start": "2025-01-08", "end": "2025-01-14", "status": "未开始", "note": ""},
-    {"id": "KC-07", "phase": "Phase 2", "name": "编写Agent最佳实践文档", "team": "KC", "days": 5, "start": "2025-01-15", "end": "2025-01-21", "status": "未开始", "note": ""},
-    {"id": "KC-08", "phase": "Phase 2", "name": "Phase 2 总结报告", "team": "KC", "days": 2, "start": "2025-01-22", "end": "2025-01-23", "status": "未开始", "note": ""},
+    # Phase 3: "海外MFナレッジ探索" (2-3月)
+    {"wbs": "3.1", "phase": "Phase 3", "subtask": "POC討論", "name": "POC項目テーマブレインストーミング", "team": "KC+ATH", "months": [1], "deliverable": "テーマリスト", "status": "未開始"},
+    {"wbs": "3.1.1", "phase": "Phase 3", "subtask": "POC討論", "name": "関係者ニーズ・アイデア収集", "team": "ATH", "months": [1], "deliverable": "ニーズリスト", "status": "未開始"},
+    {"wbs": "3.1.2", "phase": "Phase 3", "subtask": "POC討論", "name": "POC項目フィージビリティ初期評価", "team": "KC+ATH", "months": [1], "deliverable": "評価結果", "status": "未開始"},
+    {"wbs": "3.1.3", "phase": "Phase 3", "subtask": "POC討論", "name": "POC項目リスト確定（2-3件）", "team": "KC+ATH", "months": [1], "deliverable": "確定リスト", "status": "未開始"},
+    {"wbs": "3.2", "phase": "Phase 3", "subtask": "海外MF情報収集", "name": "US/UK/AU等MFのAgent開発事例収集", "team": "ATH", "months": [2], "deliverable": "事例リスト", "status": "未開始"},
+    {"wbs": "3.2.1", "phase": "Phase 3", "subtask": "海外MF情報収集", "name": "海外MF技術ドキュメント翻訳整理", "team": "ATH", "months": [2], "deliverable": "翻訳ドキュメント", "status": "未開始"},
+    {"wbs": "3.2.2", "phase": "Phase 3", "subtask": "海外MF情報収集", "name": "ナレッジ再利用フレームワーク構築", "team": "ATH", "months": [2], "deliverable": "フレームワーク", "status": "未開始"},
+    {"wbs": "3.2.3", "phase": "Phase 3", "subtask": "海外MF情報収集", "name": "海外MF技術交流会議（2回）", "team": "KC", "months": [2], "deliverable": "会議記録", "status": "未開始"},
+    {"wbs": "3.2.4", "phase": "Phase 3", "subtask": "海外MF情報収集", "name": "海外ソリューション実現可能性評価レポート", "team": "KC", "months": [2], "deliverable": "評価レポート", "status": "未開始"},
+    {"wbs": "3.3", "phase": "Phase 3", "subtask": "POC開始", "name": "POC項目A開始", "team": "ATH", "months": [3], "deliverable": "POC A進捗", "status": "未開始"},
+    {"wbs": "3.3.1", "phase": "Phase 3", "subtask": "POC開始", "name": "POC項目B開始", "team": "ATH", "months": [3], "deliverable": "POC B進捗", "status": "未開始"},
+    {"wbs": "3.3.2", "phase": "Phase 3", "subtask": "POC開始", "name": "POC技術サポート", "team": "KC", "months": [3], "deliverable": "技術サポート", "status": "未開始"},
+    {"wbs": "3.3.3", "phase": "Phase 3", "subtask": "POC開始", "name": "POC中期レビュー", "team": "KC", "months": [3], "deliverable": "中期レビュー", "status": "未開始"},
 
-    # 过渡期: POC讨论
-    {"id": "JOINT-01", "phase": "过渡期", "name": "POC项目主题头脑风暴会议", "team": "KC+ATH", "days": 2, "start": "2025-01-27", "end": "2025-01-28", "status": "未开始", "note": "全员参与"},
-    {"id": "JOINT-02", "phase": "过渡期", "name": "收集各方需求和想法", "team": "ATH", "days": 3, "start": "2025-01-27", "end": "2025-01-29", "status": "未开始", "note": ""},
-    {"id": "JOINT-03", "phase": "过渡期", "name": "POC项目可行性初评", "team": "KC+ATH", "days": 2, "start": "2025-01-30", "end": "2025-01-31", "status": "未开始", "note": ""},
-    {"id": "JOINT-04", "phase": "过渡期", "name": "确定POC项目列表（2-3个）", "team": "KC+ATH", "days": 1, "start": "2025-01-31", "end": "2025-01-31", "status": "未开始", "note": "决策会议"},
-
-    # Phase 3: 海外MFナレッジ探索
-    {"id": "ATH-11", "phase": "Phase 3", "name": "收集US/UK/AU等MF的Agent开发案例", "team": "ATH", "days": 10, "start": "2025-02-03", "end": "2025-02-14", "status": "未开始", "note": ""},
-    {"id": "ATH-12", "phase": "Phase 3", "name": "整理海外MF技术文档翻译", "team": "ATH", "days": 5, "start": "2025-02-17", "end": "2025-02-21", "status": "未开始", "note": ""},
-    {"id": "ATH-13", "phase": "Phase 3", "name": "建立知识复用框架", "team": "ATH", "days": 5, "start": "2025-02-24", "end": "2025-02-28", "status": "未开始", "note": ""},
-    {"id": "ATH-14", "phase": "Phase 3", "name": "POC项目A启动", "team": "ATH", "days": 10, "start": "2025-03-03", "end": "2025-03-14", "status": "未开始", "note": ""},
-    {"id": "ATH-15", "phase": "Phase 3", "name": "POC项目B启动", "team": "ATH", "days": 10, "start": "2025-03-03", "end": "2025-03-14", "status": "未开始", "note": ""},
-    {"id": "KC-09", "phase": "Phase 3", "name": "与海外MF技术交流会议（2次）", "team": "KC", "days": 2, "start": "2025-02-10", "end": "2025-02-11", "status": "未开始", "note": ""},
-    {"id": "KC-10", "phase": "Phase 3", "name": "评估海外方案可行性报告", "team": "KC", "days": 5, "start": "2025-02-17", "end": "2025-02-21", "status": "未开始", "note": ""},
-    {"id": "KC-11", "phase": "Phase 3", "name": "POC技术支援", "team": "KC", "days": 10, "start": "2025-03-03", "end": "2025-03-14", "status": "未开始", "note": ""},
-    {"id": "KC-12", "phase": "Phase 3", "name": "POC中期评审", "team": "KC", "days": 2, "start": "2025-03-17", "end": "2025-03-18", "status": "未开始", "note": ""},
-
-    # Phase 4: スピーディなプロダクトプロセス
-    {"id": "ATH-16", "phase": "Phase 4", "name": "POC项目A完成 & 评审", "team": "ATH", "days": 10, "start": "2025-03-17", "end": "2025-03-28", "status": "未开始", "note": ""},
-    {"id": "ATH-17", "phase": "Phase 4", "name": "POC项目B完成 & 评审", "team": "ATH", "days": 10, "start": "2025-03-17", "end": "2025-03-28", "status": "未开始", "note": ""},
-    {"id": "ATH-18", "phase": "Phase 4", "name": "本番アプリ开发（项目A）", "team": "ATH", "days": 20, "start": "2025-04-01", "end": "2025-04-25", "status": "未开始", "note": ""},
-    {"id": "ATH-19", "phase": "Phase 4", "name": "本番アプリ开发（项目B）", "team": "ATH", "days": 20, "start": "2025-04-01", "end": "2025-04-25", "status": "未开始", "note": ""},
-    {"id": "ATH-20", "phase": "Phase 4", "name": "UAT测试", "team": "ATH", "days": 10, "start": "2025-04-28", "end": "2025-05-09", "status": "未开始", "note": ""},
-    {"id": "ATH-21", "phase": "Phase 4", "name": "本番リリース準備", "team": "ATH", "days": 10, "start": "2025-05-12", "end": "2025-05-23", "status": "未开始", "note": ""},
-    {"id": "ATH-22", "phase": "Phase 4", "name": "本番リリース & 监控", "team": "ATH", "days": 5, "start": "2025-05-26", "end": "2025-05-30", "status": "未开始", "note": ""},
-    {"id": "ATH-23", "phase": "Phase 4", "name": "新流程文档化", "team": "ATH", "days": 5, "start": "2025-06-02", "end": "2025-06-06", "status": "未开始", "note": ""},
-    {"id": "KC-13", "phase": "Phase 4", "name": "本番アプリ架构设计Review", "team": "KC", "days": 5, "start": "2025-04-01", "end": "2025-04-04", "status": "未开始", "note": ""},
-    {"id": "KC-14", "phase": "Phase 4", "name": "安全合规审查", "team": "KC", "days": 5, "start": "2025-04-14", "end": "2025-04-18", "status": "未开始", "note": ""},
-    {"id": "KC-15", "phase": "Phase 4", "name": "最终发布审批", "team": "KC", "days": 2, "start": "2025-05-26", "end": "2025-05-27", "status": "未开始", "note": ""},
-    {"id": "KC-16", "phase": "Phase 4", "name": "项目总结报告", "team": "KC", "days": 5, "start": "2025-06-09", "end": "2025-06-13", "status": "未开始", "note": ""},
+    # Phase 4: "スピーディなプロダクトプロセス" (4-6月)
+    {"wbs": "4.1", "phase": "Phase 4", "subtask": "POC完成", "name": "POC項目A完成＆評価", "team": "ATH", "months": [3, 4], "deliverable": "POC A完成", "status": "未開始"},
+    {"wbs": "4.1.1", "phase": "Phase 4", "subtask": "POC完成", "name": "POC項目B完成＆評価", "team": "ATH", "months": [3, 4], "deliverable": "POC B完成", "status": "未開始"},
+    {"wbs": "4.2", "phase": "Phase 4", "subtask": "本番アプリ開発", "name": "本番アプリアーキテクチャ設計Review", "team": "KC", "months": [4], "deliverable": "設計Review", "status": "未開始"},
+    {"wbs": "4.2.1", "phase": "Phase 4", "subtask": "本番アプリ開発", "name": "本番アプリ開発（項目A）", "team": "ATH", "months": [4, 5], "deliverable": "アプリA", "status": "未開始"},
+    {"wbs": "4.2.2", "phase": "Phase 4", "subtask": "本番アプリ開発", "name": "本番アプリ開発（項目B）", "team": "ATH", "months": [4, 5], "deliverable": "アプリB", "status": "未開始"},
+    {"wbs": "4.2.3", "phase": "Phase 4", "subtask": "本番アプリ開発", "name": "セキュリティ・コンプライアンス審査", "team": "KC", "months": [4], "deliverable": "審査結果", "status": "未開始"},
+    {"wbs": "4.3", "phase": "Phase 4", "subtask": "リリース", "name": "UATテスト", "team": "ATH", "months": [5], "deliverable": "テスト結果", "status": "未開始"},
+    {"wbs": "4.3.1", "phase": "Phase 4", "subtask": "リリース", "name": "本番リリース準備", "team": "ATH", "months": [5], "deliverable": "リリース準備", "status": "未開始"},
+    {"wbs": "4.3.2", "phase": "Phase 4", "subtask": "リリース", "name": "本番リリース＆監視", "team": "ATH", "months": [5, 6], "deliverable": "リリース完了", "status": "未開始"},
+    {"wbs": "4.3.3", "phase": "Phase 4", "subtask": "リリース", "name": "最終発表承認", "team": "KC", "months": [5], "deliverable": "承認完了", "status": "未開始"},
+    {"wbs": "4.4", "phase": "Phase 4", "subtask": "プロセス確立", "name": "新プロセスドキュメント化", "team": "ATH", "months": [6], "deliverable": "プロセスドキュメント", "status": "未開始"},
+    {"wbs": "4.4.1", "phase": "Phase 4", "subtask": "プロセス確立", "name": "プロジェクト総括レポート", "team": "KC", "months": [6], "deliverable": "総括レポート", "status": "未開始"},
 ]
 
-# Milestones
+# Milestones (including Phase 1)
 MILESTONES = [
-    {"name": "Phase 2 开始", "target_date": "2024-12-09", "actual_date": "", "deliverable": "团队启动", "status": "未开始"},
-    {"name": "KC组休假开始", "target_date": "2024-12-15", "actual_date": "", "deliverable": "交接完成", "status": "未开始"},
-    {"name": "ATH组休假开始", "target_date": "2024-12-27", "actual_date": "", "deliverable": "-", "status": "未开始"},
-    {"name": "全员复工", "target_date": "2025-01-06", "actual_date": "", "deliverable": "恢复开发", "status": "未开始"},
-    {"name": "Onboarding网站上线", "target_date": "2025-01-24", "actual_date": "", "deliverable": "网站可访问", "status": "未开始"},
-    {"name": "开发者社区上线", "target_date": "2025-01-28", "actual_date": "", "deliverable": "社区可访问", "status": "未开始"},
-    {"name": "POC项目确定", "target_date": "2025-01-31", "actual_date": "", "deliverable": "项目列表", "status": "未开始"},
-    {"name": "Phase 3 开始", "target_date": "2025-02-03", "actual_date": "", "deliverable": "知识探索启动", "status": "未开始"},
-    {"name": "POC启动", "target_date": "2025-03-03", "actual_date": "", "deliverable": "POC开发开始", "status": "未开始"},
-    {"name": "POC完成", "target_date": "2025-03-28", "actual_date": "", "deliverable": "POC评审通过", "status": "未开始"},
-    {"name": "Phase 4 开始", "target_date": "2025-04-01", "actual_date": "", "deliverable": "本番开发启动", "status": "未开始"},
-    {"name": "UAT完成", "target_date": "2025-05-09", "actual_date": "", "deliverable": "测试通过", "status": "未开始"},
-    {"name": "本番リリース", "target_date": "2025-05-30", "actual_date": "", "deliverable": "アプリ上线", "status": "未开始"},
-    {"name": "项目完成", "target_date": "2025-06-13", "actual_date": "", "deliverable": "总结报告", "status": "未开始"},
+    # Phase 1 里程碑
+    {"name": "Phase 1 開始", "target_date": "2024-10-01",
+     "actual_date": "", "deliverable": "オンボーディング開始", "status": "未開始"},
+    {"name": "Prerequisites認証完了", "target_date": "2024-10-31",
+     "actual_date": "", "deliverable": "認証バッジ", "status": "未開始"},
+    {"name": "技術評価レポート完成", "target_date": "2024-11-30",
+     "actual_date": "", "deliverable": "評価レポート", "status": "未開始"},
+    # Phase 2 里程碑
+    {"name": "Phase 2 開始", "target_date": "2024-12-01",
+     "actual_date": "", "deliverable": "チーム拡大", "status": "未開始"},
+    {"name": "KC組休暇開始", "target_date": "2024-12-15",
+     "actual_date": "", "deliverable": "引継ぎ完了", "status": "未開始"},
+    {"name": "ATH組休暇開始", "target_date": "2024-12-27",
+     "actual_date": "", "deliverable": "-", "status": "未開始"},
+    {"name": "全員復帰", "target_date": "2025-01-06",
+     "actual_date": "", "deliverable": "開発再開", "status": "未開始"},
+    {"name": "Onboardingサイト公開", "target_date": "2025-01-31",
+     "actual_date": "", "deliverable": "サイト稼働", "status": "未開始"},
+    {"name": "開発者コミュニティ公開", "target_date": "2025-01-31",
+     "actual_date": "", "deliverable": "コミュニティ稼働", "status": "未開始"},
+    # Phase 3 里程碑
+    {"name": "Phase 3 開始", "target_date": "2025-02-01",
+     "actual_date": "", "deliverable": "海外MF探索開始", "status": "未開始"},
+    {"name": "POC項目確定", "target_date": "2025-01-31",
+     "actual_date": "", "deliverable": "確定リスト", "status": "未開始"},
+    {"name": "POC開始", "target_date": "2025-03-01",
+     "actual_date": "", "deliverable": "POC開発開始", "status": "未開始"},
+    # Phase 4 里程碑
+    {"name": "Phase 4 開始", "target_date": "2025-04-01",
+     "actual_date": "", "deliverable": "本番開発開始", "status": "未開始"},
+    {"name": "POC完成", "target_date": "2025-04-15",
+     "actual_date": "", "deliverable": "POC評価完了", "status": "未開始"},
+    {"name": "UAT完成", "target_date": "2025-05-31",
+     "actual_date": "", "deliverable": "テスト合格", "status": "未開始"},
+    {"name": "本番リリース", "target_date": "2025-05-31",
+     "actual_date": "", "deliverable": "アプリ公開", "status": "未開始"},
+    {"name": "プロジェクト完了", "target_date": "2025-06-30",
+     "actual_date": "", "deliverable": "総括レポート", "status": "未開始"},
 ]
 
 # Holiday periods
@@ -141,7 +173,7 @@ HOLIDAYS = [
 
 
 def get_next_version(output_dir, base_name):
-    """Get the next version number for the file"""
+    """ファイルの次のバージョン番号を取得"""
     pattern = os.path.join(output_dir, f"{base_name}_v*.xlsx")
     existing_files = glob.glob(pattern)
 
@@ -157,10 +189,55 @@ def get_next_version(output_dir, base_name):
     return max(versions) + 1 if versions else 1
 
 
+def get_month_year(month):
+    """月に基づいて年を返す（10-12月は2024年、1-6月は2025年）"""
+    if month >= 10:
+        return 2024
+    else:
+        return 2025
+
+
+def get_month_last_day(year, month):
+    """指定月の最終日を取得"""
+    if month == 12:
+        return 31
+    next_month = datetime(year, month + 1, 1) if month < 12 else datetime(year + 1, 1, 1)
+    return (next_month - timedelta(days=1)).day
+
+
+def months_to_dates(months):
+    """月配列を開始/終了日付文字列に変換する"""
+    if not months:
+        return None, None
+
+    start_month = min(months)
+    end_month = max(months)
+
+    start_year = get_month_year(start_month)
+    end_year = get_month_year(end_month)
+
+    start_date = f"{start_year}-{start_month:02d}-01"
+    end_day = get_month_last_day(end_year, end_month)
+    end_date = f"{end_year}-{end_month:02d}-{end_day:02d}"
+
+    return start_date, end_date
+
+
+def month_to_col(month, base_col=7):
+    """月をガントチャートの列番号にマッピング
+    月順序: 10月, 11月, 12月, 1月, 2月, 3月, 4月, 5月, 6月
+    base_col: 最初の月（10月）に対応する列番号
+    """
+    if month >= 10:
+        return base_col + (month - 10)  # 10月=7, 11月=8, 12月=9
+    else:
+        return base_col + 3 + (month - 1)  # 1月=10, 2月=11, ..., 6月=15
+
+
 def create_header_style():
-    """Create KPMG branded header style"""
+    """KPMGブランドのヘッダースタイルを作成"""
     return {
-        'font': Font(bold=True, color="FFFFFF", size=11),
+        'font': Font(name='Meiryo UI', bold=True, color="FFFFFF", size=11),
         'fill': PatternFill(start_color=KPMG_BLUE, end_color=KPMG_BLUE, fill_type="solid"),
         'alignment': Alignment(horizontal='center', vertical='center', wrap_text=True),
         'border': Border(
@@ -173,7 +250,7 @@ def create_header_style():
 
 
 def apply_header_style(cell):
-    """Apply header style to a cell"""
+    """セルにヘッダースタイルを適用"""
     style = create_header_style()
     cell.font = style['font']
     cell.fill = style['fill']
@@ -182,7 +259,8 @@ def apply_header_style(cell):
 
 
 def apply_cell_style(cell, team=None):
-    """Apply standard cell style"""
+    """標準セルスタイルを適用"""
+    cell.font = Font(name='Meiryo UI')  # デフォルトフォント
     cell.alignment = Alignment(horizontal='left', vertical='center', wrap_text=True)
     cell.border = Border(
         left=Side(style='thin'),
@@ -191,24 +269,24 @@ def apply_cell_style(cell, team=None):
         bottom=Side(style='thin')
     )
 
-    # Team-based coloring for team column
+    # チーム列のチームベース色分け
     if team:
         if team == "KC":
             cell.fill = PatternFill(start_color=KC_COLOR, end_color=KC_COLOR, fill_type="solid")
-            cell.font = Font(color="FFFFFF", bold=True)
+            cell.font = Font(name='Meiryo UI', color="FFFFFF", bold=True)
         elif team == "ATH":
             cell.fill = PatternFill(start_color=ATH_COLOR, end_color=ATH_COLOR, fill_type="solid")
-            cell.font = Font(color="FFFFFF", bold=True)
+            cell.font = Font(name='Meiryo UI', color="FFFFFF", bold=True)
         elif "KC+ATH" in team:
             cell.fill = PatternFill(start_color=JOINT_COLOR, end_color=JOINT_COLOR, fill_type="solid")
-            cell.font = Font(color="FFFFFF", bold=True)
+            cell.font = Font(name='Meiryo UI', color="FFFFFF", bold=True)
 
 
 def apply_phase_style(cell, phase):
-    """Apply phase-specific style"""
+    """Phase固有のスタイルを適用"""
     color = PHASE_COLORS.get(phase, KPMG_BLUE)
     cell.fill = PatternFill(start_color=color, end_color=color, fill_type="solid")
-    cell.font = Font(color="FFFFFF", bold=True, size=10)
+    cell.font = Font(name='Meiryo UI', color="FFFFFF", bold=True, size=10)
     cell.alignment = Alignment(horizontal='center', vertical='center', wrap_text=True, text_rotation=0)
     cell.border = Border(
         left=Side(style='medium'),
@@ -219,11 +297,11 @@ def apply_phase_style(cell, phase):
 
 
 def get_week_start_dates(start_date_str, end_date_str):
-    """Generate list of week start dates (Mondays)"""
+    """週の開始日（月曜日）のリストを生成"""
     start = datetime.strptime(start_date_str, "%Y-%m-%d")
     end = datetime.strptime(end_date_str, "%Y-%m-%d")
 
-    # Find first Monday
+    # 最初の月曜日を探す
     days_until_monday = (7 - start.weekday()) % 7
     if days_until_monday == 0 and start.weekday() != 0:
         days_until_monday = 7
@@ -238,7 +316,7 @@ def get_week_start_dates(start_date_str, end_date_str):
 
 
 def is_in_holiday(date, team):
-    """Check if a date is in holiday period for a team"""
+    """日付がチームの休暇期間内かどうかを確認"""
     for holiday in HOLIDAYS:
         if holiday['team'] == team or team == "KC+ATH":
             h_start = datetime.strptime(holiday['start'], "%Y-%m-%d")
@@ -249,81 +327,88 @@ def is_in_holiday(date, team):
 
 
 def create_gantt_sheet(wb):
-    """Create Gantt chart sheet with Phase column"""
-    ws = wb.create_sheet("甘特图总览")
+    """ガントチャートシートを作成（月次ビュー、WBS形式）"""
+    ws = wb.create_sheet("ガントチャート")
 
-    # Define date range
-    weeks = get_week_start_dates("2024-12-02", "2025-06-30")
+    # 月ヘッダー (10月-6月)
+    month_labels = ["10月", "11月", "12月", "1月", "2月", "3月", "4月", "5月", "6月"]
+    month_values = [10, 11, 12, 1, 2, 3, 4, 5, 6]
 
-    # Headers (added Phase column)
-    headers = ["Phase", "任务ID", "任务名称", "负责组", "开始", "结束"]
+    # ヘッダー: Phase, WBS, Sub-Task, Action, Owner, Deliverable + 月
+    headers = ["Phase", "WBS", "Sub-Task", "Action", "Owner", "Deliverable"]
+    base_month_col = len(headers) + 1
 
-    # Write headers
+    # ヘッダーを書き込む
     for col, header in enumerate(headers, 1):
         cell = ws.cell(row=1, column=col, value=header)
         apply_header_style(cell)
 
-    # Write week headers
-    for col, week in enumerate(weeks, len(headers) + 1):
-        cell = ws.cell(row=1, column=col, value=week.strftime("%m/%d"))
+    # 月ヘッダーを書き込む
+    for i, month_label in enumerate(month_labels):
+        col = base_month_col + i
+        cell = ws.cell(row=1, column=col, value=month_label)
         apply_header_style(cell)
-        ws.column_dimensions[get_column_letter(col)].width = 6
+        ws.column_dimensions[get_column_letter(col)].width = 5
 
-    # Set column widths
-    ws.column_dimensions['A'].width = 15  # Phase
-    ws.column_dimensions['B'].width = 10  # ID
-    ws.column_dimensions['C'].width = 40  # Name
-    ws.column_dimensions['D'].width = 10  # Team
-    ws.column_dimensions['E'].width = 12  # Start
-    ws.column_dimensions['F'].width = 12  # End
+    # 列幅を設定
+    ws.column_dimensions['A'].width = 19  # Phase
+    ws.column_dimensions['B'].width = 8   # WBS
+    ws.column_dimensions['C'].width = 18  # Sub-Task
+    ws.column_dimensions['D'].width = 40  # Action
+    ws.column_dimensions['E'].width = 8   # Owner
+    ws.column_dimensions['F'].width = 20  # Deliverable
 
-    # Group tasks by phase for merging
+    # セル結合のためにPhaseとSubtaskでタスクをグループ化
     phase_groups = {}
+    subtask_groups = {}
     for i, task in enumerate(ALL_TASKS):
         phase = task['phase']
+        subtask_key = f"{phase}|{task['subtask']}"
+
         if phase not in phase_groups:
             phase_groups[phase] = {'start': i, 'end': i}
         else:
             phase_groups[phase]['end'] = i
 
-    # Write tasks
+        if subtask_key not in subtask_groups:
+            subtask_groups[subtask_key] = {'start': i, 'end': i}
+        else:
+            subtask_groups[subtask_key]['end'] = i
+
+    # タスクを書き込む
     for row, task in enumerate(ALL_TASKS, 2):
-        # Phase column (will be merged later)
+        # Phase列
         phase_cell = ws.cell(row=row, column=1, value=PHASE_DISPLAY.get(task['phase'], task['phase']))
         apply_phase_style(phase_cell, task['phase'])
 
-        ws.cell(row=row, column=2, value=task['id'])
-        ws.cell(row=row, column=3, value=task['name'])
+        # WBS
+        ws.cell(row=row, column=2, value=task['wbs'])
+        apply_cell_style(ws.cell(row=row, column=2))
 
-        team_cell = ws.cell(row=row, column=4, value=task['team'])
+        # Sub-Task
+        ws.cell(row=row, column=3, value=task['subtask'])
+        apply_cell_style(ws.cell(row=row, column=3))
+
+        # Action（タスク名）
+        ws.cell(row=row, column=4, value=task['name'])
+        apply_cell_style(ws.cell(row=row, column=4))
+
+        # Owner（チーム）
+        team_cell = ws.cell(row=row, column=5, value=task['team'])
         apply_cell_style(team_cell, task['team'])
 
-        ws.cell(row=row, column=5, value=task['start'])
-        ws.cell(row=row, column=6, value=task['end'])
+        # 成果物
+        ws.cell(row=row, column=6, value=task['deliverable'])
+        apply_cell_style(ws.cell(row=row, column=6))
 
-        # Apply borders to basic cells
-        for col in [2, 3, 5, 6]:
-            apply_cell_style(ws.cell(row=row, column=col))
-
-        # Draw Gantt bars
-        task_start = datetime.strptime(task['start'], "%Y-%m-%d")
-        task_end = datetime.strptime(task['end'], "%Y-%m-%d")
-
-        for col, week_start in enumerate(weeks, len(headers) + 1):
-            week_end = week_start + timedelta(days=6)
+        # 月別にガントバーを描画（Phaseカラーを使用）
+        for i, month in enumerate(month_values):
+            col = base_month_col + i
             cell = ws.cell(row=row, column=col)
 
-            # Check if task overlaps with this week
-            if task_start <= week_end and task_end >= week_start:
-                # Task is active this week
-                if task['team'] == "KC":
-                    cell.fill = PatternFill(start_color=KC_COLOR, end_color=KC_COLOR, fill_type="solid")
-                elif task['team'] == "ATH":
-                    cell.fill = PatternFill(start_color=ATH_COLOR, end_color=ATH_COLOR, fill_type="solid")
-                else:
-                    cell.fill = PatternFill(start_color=JOINT_COLOR, end_color=JOINT_COLOR, fill_type="solid")
-            elif is_in_holiday(week_start, task['team']):
-                cell.fill = PatternFill(start_color=HOLIDAY_COLOR, end_color=HOLIDAY_COLOR, fill_type="solid")
+            if month in task['months']:
+                phase_color = PHASE_COLORS.get(task['phase'], KPMG_BLUE)
+                cell.fill = PatternFill(start_color=phase_color, end_color=phase_color, fill_type="solid")
 
             cell.border = Border(
                 left=Side(style='thin', color='CCCCCC'),
@@ -332,95 +417,131 @@ def create_gantt_sheet(wb):
                 bottom=Side(style='thin', color='CCCCCC')
             )
 
-    # Merge Phase cells
-    for phase, indices in phase_groups.items():
-        start_row = indices['start'] + 2  # +2 for header and 0-index
-        end_row = indices['end'] + 2
-        if start_row != end_row:
-            ws.merge_cells(start_row=start_row, start_column=1, end_row=end_row, end_column=1)
-
-    # Add legend
-    legend_row = len(ALL_TASKS) + 4
-    ws.cell(row=legend_row, column=1, value="凡例:")
-    ws.cell(row=legend_row, column=2, value="KC组").fill = PatternFill(start_color=KC_COLOR, end_color=KC_COLOR, fill_type="solid")
-    ws.cell(row=legend_row, column=2).font = Font(color="FFFFFF")
-    ws.cell(row=legend_row, column=3, value="ATH组").fill = PatternFill(start_color=ATH_COLOR, end_color=ATH_COLOR, fill_type="solid")
-    ws.cell(row=legend_row, column=3).font = Font(color="FFFFFF")
-    ws.cell(row=legend_row, column=4, value="联合").fill = PatternFill(start_color=JOINT_COLOR, end_color=JOINT_COLOR, fill_type="solid")
-    ws.cell(row=legend_row, column=4).font = Font(color="FFFFFF")
-    ws.cell(row=legend_row, column=5, value="休假").fill = PatternFill(start_color=HOLIDAY_COLOR, end_color=HOLIDAY_COLOR, fill_type="solid")
-
-    # Freeze panes
-    ws.freeze_panes = 'G2'
-
-    return ws
-
-
-def create_all_tasks_sheet(wb):
-    """Create all tasks detail sheet with Phase column"""
-    ws = wb.create_sheet("全部任务详情")
-
-    headers = ["Phase", "任务ID", "任务名称", "负责组", "时长(天)", "开始日期", "结束日期", "状态", "备注"]
-
-    # Write headers
-    for col, header in enumerate(headers, 1):
-        cell = ws.cell(row=1, column=col, value=header)
-        apply_header_style(cell)
-
-    # Set column widths
-    col_widths = [18, 10, 45, 10, 10, 12, 12, 10, 25]
-    for i, width in enumerate(col_widths, 1):
-        ws.column_dimensions[get_column_letter(i)].width = width
-
-    # Group tasks by phase for merging
-    phase_groups = {}
-    for i, task in enumerate(ALL_TASKS):
-        phase = task['phase']
-        if phase not in phase_groups:
-            phase_groups[phase] = {'start': i, 'end': i}
-        else:
-            phase_groups[phase]['end'] = i
-
-    # Write tasks
-    for row, task in enumerate(ALL_TASKS, 2):
-        # Phase column
-        phase_cell = ws.cell(row=row, column=1, value=PHASE_DISPLAY.get(task['phase'], task['phase']))
-        apply_phase_style(phase_cell, task['phase'])
-
-        ws.cell(row=row, column=2, value=task['id'])
-        ws.cell(row=row, column=3, value=task['name'])
-
-        team_cell = ws.cell(row=row, column=4, value=task['team'])
-        apply_cell_style(team_cell, task['team'])
-
-        ws.cell(row=row, column=5, value=task['days'])
-        ws.cell(row=row, column=6, value=task['start'])
-        ws.cell(row=row, column=7, value=task['end'])
-        ws.cell(row=row, column=8, value=task['status'])
-        ws.cell(row=row, column=9, value=task['note'])
-
-        # Apply borders
-        for col in range(2, 10):
-            if col != 4:  # Skip team column (already styled)
-                apply_cell_style(ws.cell(row=row, column=col))
-
-    # Merge Phase cells
+    # Phaseセルを結合
     for phase, indices in phase_groups.items():
         start_row = indices['start'] + 2
         end_row = indices['end'] + 2
         if start_row != end_row:
             ws.merge_cells(start_row=start_row, start_column=1, end_row=end_row, end_column=1)
 
-    # Add data validation for status column
+    # Sub-Taskセルを結合
+    for key, indices in subtask_groups.items():
+        start_row = indices['start'] + 2
+        end_row = indices['end'] + 2
+        if start_row != end_row:
+            ws.merge_cells(start_row=start_row, start_column=3, end_row=end_row, end_column=3)
+
+    # 凡例を追加（Phaseカラー）
+    legend_row = len(ALL_TASKS) + 4
+    ws.cell(row=legend_row, column=1, value="凡例:")
+    ws.cell(row=legend_row, column=2, value="Phase 1").fill = PatternFill(start_color=KPMG_DARK_BLUE, end_color=KPMG_DARK_BLUE, fill_type="solid")
+    ws.cell(row=legend_row, column=2).font = Font(name='Meiryo UI', color="FFFFFF")
+    ws.cell(row=legend_row, column=3, value="Phase 2").fill = PatternFill(start_color=KPMG_BLUE, end_color=KPMG_BLUE, fill_type="solid")
+    ws.cell(row=legend_row, column=3).font = Font(name='Meiryo UI', color="FFFFFF")
+    ws.cell(row=legend_row, column=4, value="Phase 3").fill = PatternFill(start_color=ATH_COLOR, end_color=ATH_COLOR, fill_type="solid")
+    ws.cell(row=legend_row, column=4).font = Font(name='Meiryo UI', color="FFFFFF")
+    ws.cell(row=legend_row, column=5, value="Phase 4").fill = PatternFill(start_color=MAGENTA_COLOR, end_color=MAGENTA_COLOR, fill_type="solid")
+    ws.cell(row=legend_row, column=5).font = Font(name='Meiryo UI', color="FFFFFF")
+
+    # ペインを固定
+    ws.freeze_panes = 'G2'
+
+    return ws
+
+
+def create_all_tasks_sheet(wb):
+    """全タスク詳細シートを作成（WBS形式：subtask、月、成果物）"""
+    ws = wb.create_sheet("タスク詳細")
+
+    # ALL_TASKSの新構造に合わせたヘッダー: wbs, subtask, name, team, months, deliverable, status
+    headers = ["Phase", "WBS", "Sub-Task", "Action", "Owner", "Months", "Deliverable", "Status"]
+
+    # ヘッダーを書き込む
+    for col, header in enumerate(headers, 1):
+        cell = ws.cell(row=1, column=col, value=header)
+        apply_header_style(cell)
+
+    # 列幅を設定
+    col_widths = [18, 8, 18, 42, 10, 15, 22, 10]
+    for i, width in enumerate(col_widths, 1):
+        ws.column_dimensions[get_column_letter(i)].width = width
+
+    # セル結合のためにPhaseとSubtaskでタスクをグループ化
+    phase_groups = {}
+    subtask_groups = {}
+    for i, task in enumerate(ALL_TASKS):
+        phase = task['phase']
+        subtask_key = f"{phase}|{task['subtask']}"
+
+        if phase not in phase_groups:
+            phase_groups[phase] = {'start': i, 'end': i}
+        else:
+            phase_groups[phase]['end'] = i
+
+        if subtask_key not in subtask_groups:
+            subtask_groups[subtask_key] = {'start': i, 'end': i}
+        else:
+            subtask_groups[subtask_key]['end'] = i
+
+    # 新フィールド名でタスクを書き込む
+    for row, task in enumerate(ALL_TASKS, 2):
+        # Phase列
+        phase_cell = ws.cell(row=row, column=1, value=PHASE_DISPLAY.get(task['phase'], task['phase']))
+        apply_phase_style(phase_cell, task['phase'])
+
+        # WBS番号
+        ws.cell(row=row, column=2, value=task['wbs'])
+        apply_cell_style(ws.cell(row=row, column=2))
+
+        # Sub-Taskカテゴリ
+        ws.cell(row=row, column=3, value=task['subtask'])
+        apply_cell_style(ws.cell(row=row, column=3))
+
+        # Action（タスク名）
+        ws.cell(row=row, column=4, value=task['name'])
+        apply_cell_style(ws.cell(row=row, column=4))
+
+        # Owner（チーム）
+        team_cell = ws.cell(row=row, column=5, value=task['team'])
+        apply_cell_style(team_cell, task['team'])
+
+        # 月を "10月, 11月" 形式でフォーマット
+        months_str = ", ".join([f"{m}月" for m in task['months']])
+        ws.cell(row=row, column=6, value=months_str)
+        apply_cell_style(ws.cell(row=row, column=6))
+
+        # 成果物
+        ws.cell(row=row, column=7, value=task['deliverable'])
+        apply_cell_style(ws.cell(row=row, column=7))
+
+        # ステータス
+        ws.cell(row=row, column=8, value=task['status'])
+        apply_cell_style(ws.cell(row=row, column=8))
+
+    # Phaseセルを結合
+    for phase, indices in phase_groups.items():
+        start_row = indices['start'] + 2
+        end_row = indices['end'] + 2
+        if start_row != end_row:
+            ws.merge_cells(start_row=start_row, start_column=1, end_row=end_row, end_column=1)
+
+    # Sub-Taskセルを結合
+    for key, indices in subtask_groups.items():
+        start_row = indices['start'] + 2
+        end_row = indices['end'] + 2
+        if start_row != end_row:
+            ws.merge_cells(start_row=start_row, start_column=3, end_row=end_row, end_column=3)
+
+    # ステータス列Hにデータ検証を追加
     status_validation = DataValidation(
         type="list",
-        formula1='"未开始,进行中,已完成,阻塞"',
+        formula1='"未開始,進行中,完了,ブロック"',
         allow_blank=True
     )
     status_validation.add(f'H2:H{len(ALL_TASKS) + 1}')
     ws.add_data_validation(status_validation)
 
-    # Add conditional formatting for status
+    # ステータスに条件付き書式を追加
     for status, color in STATUS_COLORS.items():
         ws.conditional_formatting.add(
             f'H2:H{len(ALL_TASKS) + 1}',
@@ -431,7 +552,7 @@ def create_all_tasks_sheet(wb):
             )
         )
 
-    # Freeze panes
+    # ペインを固定
     ws.freeze_panes = 'B2'
     ws.auto_filter.ref = f'A1:I{len(ALL_TASKS) + 1}'
 
@@ -439,25 +560,26 @@ def create_all_tasks_sheet(wb):
 
 
 def create_team_sheet(wb, team_name, team_filter):
-    """Create team-specific task sheet with Phase column"""
-    ws = wb.create_sheet(f"{team_name}组任务")
+    """チーム別タスクシートを作成（WBS形式）"""
+    ws = wb.create_sheet(f"{team_name}組タスク")
 
-    headers = ["Phase", "任务ID", "任务名称", "时长(天)", "开始日期", "结束日期", "状态", "备注"]
+    # WBS形式のヘッダー
+    headers = ["Phase", "WBS", "Sub-Task", "Action", "Months", "Deliverable", "Status"]
 
-    # Write headers
+    # ヘッダーを書き込む
     for col, header in enumerate(headers, 1):
         cell = ws.cell(row=1, column=col, value=header)
         apply_header_style(cell)
 
-    # Set column widths
-    col_widths = [18, 10, 45, 10, 12, 12, 10, 25]
+    # 列幅を設定
+    col_widths = [18, 8, 18, 42, 15, 22, 10]
     for i, width in enumerate(col_widths, 1):
         ws.column_dimensions[get_column_letter(i)].width = width
 
-    # Filter tasks
+    # チームでタスクをフィルタ
     team_tasks = [t for t in ALL_TASKS if team_filter in t['team']]
 
-    # Group tasks by phase for merging
+    # Phaseでグループ化（セル結合用）
     phase_groups = {}
     for i, task in enumerate(team_tasks):
         phase = task['phase']
@@ -466,58 +588,71 @@ def create_team_sheet(wb, team_name, team_filter):
         else:
             phase_groups[phase]['end'] = i
 
-    # Write tasks
+    # タスクを書き込む
     for row, task in enumerate(team_tasks, 2):
-        # Phase column
+        # Phase列
         phase_cell = ws.cell(row=row, column=1, value=PHASE_DISPLAY.get(task['phase'], task['phase']))
         apply_phase_style(phase_cell, task['phase'])
 
-        ws.cell(row=row, column=2, value=task['id'])
-        ws.cell(row=row, column=3, value=task['name'])
-        ws.cell(row=row, column=4, value=task['days'])
-        ws.cell(row=row, column=5, value=task['start'])
-        ws.cell(row=row, column=6, value=task['end'])
+        # WBS番号
+        ws.cell(row=row, column=2, value=task['wbs'])
+        apply_cell_style(ws.cell(row=row, column=2))
+
+        # Sub-Taskカテゴリ
+        ws.cell(row=row, column=3, value=task['subtask'])
+        apply_cell_style(ws.cell(row=row, column=3))
+
+        # Action（タスク名）
+        ws.cell(row=row, column=4, value=task['name'])
+        apply_cell_style(ws.cell(row=row, column=4))
+
+        # 月
+        months_str = ", ".join([f"{m}月" for m in task['months']])
+        ws.cell(row=row, column=5, value=months_str)
+        apply_cell_style(ws.cell(row=row, column=5))
+
+        # 成果物
+        ws.cell(row=row, column=6, value=task['deliverable'])
+        apply_cell_style(ws.cell(row=row, column=6))
+
+        # ステータス
         ws.cell(row=row, column=7, value=task['status'])
-        ws.cell(row=row, column=8, value=task['note'])
+        apply_cell_style(ws.cell(row=row, column=7))
 
-        # Apply borders
-        for col in range(2, 9):
-            apply_cell_style(ws.cell(row=row, column=col))
-
-    # Merge Phase cells
+    # Phaseセルを結合
     for phase, indices in phase_groups.items():
         start_row = indices['start'] + 2
         end_row = indices['end'] + 2
         if start_row != end_row:
             ws.merge_cells(start_row=start_row, start_column=1, end_row=end_row, end_column=1)
 
-    # Add data validation for status
+    # ステータス列Gにデータ検証を追加
     status_validation = DataValidation(
         type="list",
-        formula1='"未开始,进行中,已完成,阻塞"',
+        formula1='"未開始,進行中,完了,ブロック"',
         allow_blank=True
     )
     if team_tasks:
         status_validation.add(f'G2:G{len(team_tasks) + 1}')
         ws.add_data_validation(status_validation)
 
-    # Freeze panes
+    # ペインを固定
     ws.freeze_panes = 'B2'
 
     return ws
 
 
 def create_holiday_sheet(wb):
-    """Create holiday calendar sheet"""
-    ws = wb.create_sheet("休假日历")
+    """休暇カレンダーシートを作成"""
+    ws = wb.create_sheet("休暇カレンダー")
 
-    # Title
+    # タイトル
     title_cell = ws.cell(row=1, column=1, value="2024-2025 年末年始休暇カレンダー")
-    title_cell.font = Font(bold=True, size=14, color=KPMG_BLUE)
+    title_cell.font = Font(name='Meiryo UI', bold=True, size=14, color=KPMG_BLUE)
     ws.merge_cells('A1:G1')
 
-    # Holiday details
-    headers = ["组织", "开始日期", "结束日期", "休假天数", "备注"]
+    # 休暇詳細
+    headers = ["組織", "開始日", "終了日", "休暇日数", "備考"]
     for col, header in enumerate(headers, 1):
         cell = ws.cell(row=3, column=col, value=header)
         apply_header_style(cell)
@@ -536,10 +671,10 @@ def create_holiday_sheet(wb):
         for col in range(1, 6):
             apply_cell_style(ws.cell(row=row, column=col))
 
-    # Visual calendar
-    ws.cell(row=7, column=1, value="日历视图:").font = Font(bold=True)
+    # カレンダービュー
+    ws.cell(row=7, column=1, value="カレンダービュー:").font = Font(name='Meiryo UI', bold=True)
 
-    # Generate December 2024 and January 2025 calendars
+    # 2024年12月と2025年1月のカレンダーを生成
     months = [
         ("2024年12月", 2024, 12),
         ("2025年1月", 2025, 1)
@@ -547,22 +682,22 @@ def create_holiday_sheet(wb):
 
     start_col = 1
     for month_name, year, month in months:
-        ws.cell(row=8, column=start_col, value=month_name).font = Font(bold=True)
+        ws.cell(row=8, column=start_col, value=month_name).font = Font(name='Meiryo UI', bold=True)
 
-        # Week headers
+        # 曜日ヘッダー
         week_headers = ["月", "火", "水", "木", "金", "土", "日"]
         for i, header in enumerate(week_headers):
             ws.cell(row=9, column=start_col + i, value=header)
 
-        # Calculate first day of month
+        # 月の最初の日を計算
         first_day = datetime(year, month, 1)
-        # Get number of days in month
+        # 月の日数を取得
         if month == 12:
             days_in_month = 31
         else:
-            days_in_month = 31  # January
+            days_in_month = 31  # 1月
 
-        # Fill calendar
+        # カレンダーを埋める
         current_row = 10
         current_col = start_col + first_day.weekday()
 
@@ -570,7 +705,7 @@ def create_holiday_sheet(wb):
             date = datetime(year, month, day)
             cell = ws.cell(row=current_row, column=current_col, value=day)
 
-            # Check holidays
+            # 休暇をチェック
             is_kc_holiday = False
             is_ath_holiday = False
 
@@ -587,51 +722,51 @@ def create_holiday_sheet(wb):
                 cell.fill = PatternFill(start_color="FF9999", end_color="FF9999", fill_type="solid")
             elif is_kc_holiday:
                 cell.fill = PatternFill(start_color=KC_COLOR, end_color=KC_COLOR, fill_type="solid")
-                cell.font = Font(color="FFFFFF")
+                cell.font = Font(name='Meiryo UI', color="FFFFFF")
             elif is_ath_holiday:
                 cell.fill = PatternFill(start_color=ATH_COLOR, end_color=ATH_COLOR, fill_type="solid")
-                cell.font = Font(color="FFFFFF")
+                cell.font = Font(name='Meiryo UI', color="FFFFFF")
 
             current_col += 1
             if current_col > start_col + 6:
                 current_col = start_col
                 current_row += 1
 
-        start_col += 9  # Move to next month
+        start_col += 9  # 次の月へ移動
 
-    # Set column widths
+    # 列幅を設定
     for col in range(1, 20):
         ws.column_dimensions[get_column_letter(col)].width = 5
 
-    # Legend
+    # 凡例
     legend_row = 17
     ws.cell(row=legend_row, column=1, value="凡例:")
-    ws.cell(row=legend_row, column=2, value="KC休假").fill = PatternFill(start_color=KC_COLOR, end_color=KC_COLOR, fill_type="solid")
-    ws.cell(row=legend_row, column=2).font = Font(color="FFFFFF")
-    ws.cell(row=legend_row, column=4, value="ATH休假").fill = PatternFill(start_color=ATH_COLOR, end_color=ATH_COLOR, fill_type="solid")
-    ws.cell(row=legend_row, column=4).font = Font(color="FFFFFF")
-    ws.cell(row=legend_row, column=6, value="両方休假").fill = PatternFill(start_color="FF9999", end_color="FF9999", fill_type="solid")
+    ws.cell(row=legend_row, column=2, value="KC休暇").fill = PatternFill(start_color=KC_COLOR, end_color=KC_COLOR, fill_type="solid")
+    ws.cell(row=legend_row, column=2).font = Font(name='Meiryo UI', color="FFFFFF")
+    ws.cell(row=legend_row, column=4, value="ATH休暇").fill = PatternFill(start_color=ATH_COLOR, end_color=ATH_COLOR, fill_type="solid")
+    ws.cell(row=legend_row, column=4).font = Font(name='Meiryo UI', color="FFFFFF")
+    ws.cell(row=legend_row, column=6, value="両方休暇").fill = PatternFill(start_color="FF9999", end_color="FF9999", fill_type="solid")
 
     return ws
 
 
 def create_milestone_sheet(wb):
-    """Create milestone tracking sheet"""
-    ws = wb.create_sheet("里程碑追踪")
+    """マイルストーン追跡シートを作成"""
+    ws = wb.create_sheet("マイルストーン")
 
-    headers = ["里程碑", "预期日期", "实际日期", "交付物", "状态"]
+    headers = ["マイルストーン", "予定日", "実績日", "成果物", "ステータス"]
 
-    # Write headers
+    # ヘッダーを書き込む
     for col, header in enumerate(headers, 1):
         cell = ws.cell(row=1, column=col, value=header)
         apply_header_style(cell)
 
-    # Set column widths
+    # 列幅を設定
     col_widths = [25, 12, 12, 25, 10]
     for i, width in enumerate(col_widths, 1):
         ws.column_dimensions[get_column_letter(i)].width = width
 
-    # Write milestones
+    # マイルストーンを書き込む
     for row, milestone in enumerate(MILESTONES, 2):
         ws.cell(row=row, column=1, value=milestone['name'])
         ws.cell(row=row, column=2, value=milestone['target_date'])
@@ -639,88 +774,92 @@ def create_milestone_sheet(wb):
         ws.cell(row=row, column=4, value=milestone['deliverable'])
         ws.cell(row=row, column=5, value=milestone['status'])
 
-        # Apply borders
+        # 罫線を適用
         for col in range(1, 6):
             apply_cell_style(ws.cell(row=row, column=col))
 
-    # Add data validation for status
+    # ステータスにデータ検証を追加
     status_validation = DataValidation(
         type="list",
-        formula1='"未开始,进行中,已完成,延期"',
+        formula1='"未開始,進行中,完了,遅延"',
         allow_blank=True
     )
     status_validation.add(f'E2:E{len(MILESTONES) + 1}')
     ws.add_data_validation(status_validation)
 
-    # Freeze panes
+    # ペインを固定
     ws.freeze_panes = 'A2'
 
     return ws
 
 
 def main():
-    """Main function to generate the Excel file"""
+    """Excelファイルを生成するメイン関数"""
     print("=" * 60)
-    print("KPMG Workbench 开发日程表 Excel 生成器 v2")
+    print("KPMG Workbench 開発スケジュール Excel 生成ツール v2")
     print("=" * 60)
 
-    # Ensure output directory exists
-    output_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "generated_docs")
+    # 出力ディレクトリの存在を確認
+    output_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "generated_docs", "schedules")
     os.makedirs(output_dir, exist_ok=True)
 
-    # Get next version number
+    # 次のバージョン番号を取得
     base_name = "KPMG_Workbench_Schedule"
     version = get_next_version(output_dir, base_name)
 
-    print(f"\n检测到版本号: v{version}")
+    print(f"\nバージョン番号: v{version}")
 
-    # Create workbook
+    # ワークブックを作成
     wb = Workbook()
 
-    # Remove default sheet
+    # デフォルトシートを削除
     default_sheet = wb.active
     wb.remove(default_sheet)
 
-    # Create sheets
-    print("\n[1/6] 创建甘特图总览（含Phase合并单元格）...")
+    # シートを作成
+    print("\n[1/6] ガントチャートを作成中（Phaseセル結合付き）...")
     create_gantt_sheet(wb)
 
-    print("[2/6] 创建全部任务详情（含Phase合并单元格）...")
+    print("[2/6] タスク詳細を作成中（Phaseセル結合付き）...")
     create_all_tasks_sheet(wb)
 
-    print("[3/6] 创建KC组任务视图...")
+    print("[3/6] KC組タスクビューを作成中...")
     create_team_sheet(wb, "KC", "KC")
 
-    print("[4/6] 创建ATH组任务视图...")
+    print("[4/6] ATH組タスクビューを作成中...")
     create_team_sheet(wb, "ATH", "ATH")
 
-    print("[5/6] 创建休假日历...")
+    print("[5/6] 休暇カレンダーを作成中...")
     create_holiday_sheet(wb)
 
-    print("[6/6] 创建里程碑追踪...")
+    print("[6/6] マイルストーン追跡を作成中...")
     create_milestone_sheet(wb)
 
-    # Save workbook with version number
+    # バージョン番号付きでワークブックを保存
     output_filename = f"{base_name}_v{version}.xlsx"
     output_path = os.path.join(output_dir, output_filename)
     wb.save(output_path)
 
     print("\n" + "=" * 60)
-    print(f"Excel文件已生成: {output_path}")
-    print(f"版本号: v{version}")
+    print(f"Excelファイルを生成しました: {output_path}")
+    print(f"バージョン: v{version}")
     print("=" * 60)
 
-    # Summary
+    # サマリー
     kc_tasks = len([t for t in ALL_TASKS if t['team'] == 'KC'])
     ath_tasks = len([t for t in ALL_TASKS if t['team'] == 'ATH'])
     joint_tasks = len([t for t in ALL_TASKS if 'KC+ATH' in t['team']])
 
-    print(f"\n任务统计:")
-    print(f"  - KC组任务: {kc_tasks} 个")
-    print(f"  - ATH组任务: {ath_tasks} 个")
-    print(f"  - 联合任务: {joint_tasks} 个")
-    print(f"  - 总计: {len(ALL_TASKS)} 个任务")
-    print(f"  - 里程碑: {len(MILESTONES)} 个")
+    print(f"\nタスク統計:")
+    print(f"  - KC組タスク: {kc_tasks} 件")
+    print(f"  - ATH組タスク: {ath_tasks} 件")
+    print(f"  - 連合タスク: {joint_tasks} 件")
+    print(f"  - 合計: {len(ALL_TASKS)} 件")
+    print(f"  - マイルストーン: {len(MILESTONES)} 件")
+
+    # 自動的にファイルを開く
+    import subprocess
+    subprocess.run(['open', output_path])
 
     return output_path
 
