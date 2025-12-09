@@ -135,9 +135,9 @@ MILESTONES = [
     # Phase 2 里程碑
     {"name": "Phase 2 開始", "target_date": "2024-12-01",
      "actual_date": "", "deliverable": "チーム拡大", "status": "未開始"},
-    {"name": "KC組休暇開始", "target_date": "2024-12-15",
+    {"name": "KC組休暇開始", "target_date": "2024-12-24",
      "actual_date": "", "deliverable": "引継ぎ完了", "status": "未開始"},
-    {"name": "ATH組休暇開始", "target_date": "2024-12-27",
+    {"name": "ATH組休暇開始", "target_date": "2024-12-28",
      "actual_date": "", "deliverable": "-", "status": "未開始"},
     {"name": "全員復帰", "target_date": "2025-01-06",
      "actual_date": "", "deliverable": "開発再開", "status": "未開始"},
@@ -167,8 +167,8 @@ MILESTONES = [
 
 # Holiday periods
 HOLIDAYS = [
-    {"team": "KC", "start": "2024-12-15", "end": "2025-01-05", "note": "年末年始休暇"},
-    {"team": "ATH", "start": "2024-12-27", "end": "2025-01-05", "note": "年末年始休暇"},
+    {"team": "KC", "start": "2024-12-24", "end": "2025-01-05", "note": "年末年始休暇"},
+    {"team": "ATH", "start": "2024-12-28", "end": "2025-01-05", "note": "年末年始休暇"},
 ]
 
 
@@ -431,17 +431,17 @@ def create_gantt_sheet(wb):
         if start_row != end_row:
             ws.merge_cells(start_row=start_row, start_column=3, end_row=end_row, end_column=3)
 
-    # 凡例を追加（Phaseカラー）
+    # 凡例を追加（Phaseカラー、縦並び）
     legend_row = len(ALL_TASKS) + 4
     ws.cell(row=legend_row, column=1, value="凡例:")
-    ws.cell(row=legend_row, column=2, value="Phase 1").fill = PatternFill(start_color=KPMG_DARK_BLUE, end_color=KPMG_DARK_BLUE, fill_type="solid")
-    ws.cell(row=legend_row, column=2).font = Font(name='Meiryo UI', color="FFFFFF")
-    ws.cell(row=legend_row, column=3, value="Phase 2").fill = PatternFill(start_color=KPMG_BLUE, end_color=KPMG_BLUE, fill_type="solid")
-    ws.cell(row=legend_row, column=3).font = Font(name='Meiryo UI', color="FFFFFF")
-    ws.cell(row=legend_row, column=4, value="Phase 3").fill = PatternFill(start_color=ATH_COLOR, end_color=ATH_COLOR, fill_type="solid")
-    ws.cell(row=legend_row, column=4).font = Font(name='Meiryo UI', color="FFFFFF")
-    ws.cell(row=legend_row, column=5, value="Phase 4").fill = PatternFill(start_color=MAGENTA_COLOR, end_color=MAGENTA_COLOR, fill_type="solid")
-    ws.cell(row=legend_row, column=5).font = Font(name='Meiryo UI', color="FFFFFF")
+    ws.cell(row=legend_row + 1, column=1, value="Phase 1").fill = PatternFill(start_color=KPMG_DARK_BLUE, end_color=KPMG_DARK_BLUE, fill_type="solid")
+    ws.cell(row=legend_row + 1, column=1).font = Font(name='Meiryo UI', color="FFFFFF")
+    ws.cell(row=legend_row + 2, column=1, value="Phase 2").fill = PatternFill(start_color=KPMG_BLUE, end_color=KPMG_BLUE, fill_type="solid")
+    ws.cell(row=legend_row + 2, column=1).font = Font(name='Meiryo UI', color="FFFFFF")
+    ws.cell(row=legend_row + 3, column=1, value="Phase 3").fill = PatternFill(start_color=ATH_COLOR, end_color=ATH_COLOR, fill_type="solid")
+    ws.cell(row=legend_row + 3, column=1).font = Font(name='Meiryo UI', color="FFFFFF")
+    ws.cell(row=legend_row + 4, column=1, value="Phase 4").fill = PatternFill(start_color=MAGENTA_COLOR, end_color=MAGENTA_COLOR, fill_type="solid")
+    ws.cell(row=legend_row + 4, column=1).font = Font(name='Meiryo UI', color="FFFFFF")
 
     # ペインを固定
     ws.freeze_panes = 'G2'
@@ -646,33 +646,39 @@ def create_holiday_sheet(wb):
     """休暇カレンダーシートを作成"""
     ws = wb.create_sheet("休暇カレンダー")
 
-    # タイトル
-    title_cell = ws.cell(row=1, column=1, value="2024-2025 年末年始休暇カレンダー")
+    # === 左側：カレンダービュー ===
+    title_cell = ws.cell(row=1, column=1, value="カレンダービュー")
     title_cell.font = Font(name='Meiryo UI', bold=True, size=14, color=KPMG_BLUE)
-    ws.merge_cells('A1:G1')
 
-    # 休暇詳細
-    headers = ["組織", "開始日", "終了日", "休暇日数", "備考"]
-    for col, header in enumerate(headers, 1):
-        cell = ws.cell(row=3, column=col, value=header)
+    # === 右側：休暇詳細テーブル（18列目から、3列のみ） ===
+    table_start_col = 18  # R列から開始
+
+    # テーブルタイトル
+    table_title = ws.cell(row=1, column=table_start_col, value="2024-2025 年末年始休暇カレンダー")
+    table_title.font = Font(name='Meiryo UI', bold=True, size=14, color=KPMG_BLUE)
+    ws.merge_cells(start_row=1, start_column=table_start_col, end_row=1, end_column=table_start_col + 2)
+
+    # テーブルヘッダー（3列のみ：組織、開始日、終了日）
+    headers = ["組織", "開始日", "終了日"]
+    for i, header in enumerate(headers):
+        cell = ws.cell(row=3, column=table_start_col + i, value=header)
         apply_header_style(cell)
 
-    for row, holiday in enumerate(HOLIDAYS, 4):
-        start = datetime.strptime(holiday['start'], "%Y-%m-%d")
-        end = datetime.strptime(holiday['end'], "%Y-%m-%d")
-        days = (end - start).days + 1
+    # テーブルデータ
+    for row_idx, holiday in enumerate(HOLIDAYS, 4):
+        ws.cell(row=row_idx, column=table_start_col, value=holiday['team'])
+        ws.cell(row=row_idx, column=table_start_col + 1, value=holiday['start'])
+        ws.cell(row=row_idx, column=table_start_col + 2, value=holiday['end'])
 
-        ws.cell(row=row, column=1, value=holiday['team'])
-        ws.cell(row=row, column=2, value=holiday['start'])
-        ws.cell(row=row, column=3, value=holiday['end'])
-        ws.cell(row=row, column=4, value=days)
-        ws.cell(row=row, column=5, value=holiday['note'])
+        for i in range(3):
+            apply_cell_style(ws.cell(row=row_idx, column=table_start_col + i))
 
-        for col in range(1, 6):
-            apply_cell_style(ws.cell(row=row, column=col))
+    # テーブル列幅
+    ws.column_dimensions[get_column_letter(table_start_col)].width = 8       # 組織
+    ws.column_dimensions[get_column_letter(table_start_col + 1)].width = 12  # 開始日
+    ws.column_dimensions[get_column_letter(table_start_col + 2)].width = 12  # 終了日
 
-    # カレンダービュー
-    ws.cell(row=7, column=1, value="カレンダービュー:").font = Font(name='Meiryo UI', bold=True)
+    # === 左側：カレンダー生成 ===
 
     # 2024年12月と2025年1月のカレンダーを生成
     months = [
@@ -682,12 +688,12 @@ def create_holiday_sheet(wb):
 
     start_col = 1
     for month_name, year, month in months:
-        ws.cell(row=8, column=start_col, value=month_name).font = Font(name='Meiryo UI', bold=True)
+        ws.cell(row=3, column=start_col, value=month_name).font = Font(name='Meiryo UI', bold=True)
 
         # 曜日ヘッダー
         week_headers = ["月", "火", "水", "木", "金", "土", "日"]
         for i, header in enumerate(week_headers):
-            ws.cell(row=9, column=start_col + i, value=header)
+            ws.cell(row=4, column=start_col + i, value=header)
 
         # 月の最初の日を計算
         first_day = datetime(year, month, 1)
@@ -698,7 +704,7 @@ def create_holiday_sheet(wb):
             days_in_month = 31  # 1月
 
         # カレンダーを埋める
-        current_row = 10
+        current_row = 5
         current_col = start_col + first_day.weekday()
 
         for day in range(1, days_in_month + 1):
@@ -734,18 +740,27 @@ def create_holiday_sheet(wb):
 
         start_col += 9  # 次の月へ移動
 
-    # 列幅を設定
-    for col in range(1, 20):
+    # カレンダー列幅を設定
+    for col in range(1, 17):
         ws.column_dimensions[get_column_letter(col)].width = 5
 
-    # 凡例
-    legend_row = 17
+    # 凡例（縦並び、カレンダー下部に配置）
+    legend_row = 12
     ws.cell(row=legend_row, column=1, value="凡例:")
-    ws.cell(row=legend_row, column=2, value="KC休暇").fill = PatternFill(start_color=KC_COLOR, end_color=KC_COLOR, fill_type="solid")
-    ws.cell(row=legend_row, column=2).font = Font(name='Meiryo UI', color="FFFFFF")
-    ws.cell(row=legend_row, column=4, value="ATH休暇").fill = PatternFill(start_color=ATH_COLOR, end_color=ATH_COLOR, fill_type="solid")
-    ws.cell(row=legend_row, column=4).font = Font(name='Meiryo UI', color="FFFFFF")
-    ws.cell(row=legend_row, column=6, value="両方休暇").fill = PatternFill(start_color="FF9999", end_color="FF9999", fill_type="solid")
+
+    ws.cell(row=legend_row + 1, column=1, value="KC休暇(Ma)")
+    ws.cell(row=legend_row + 1, column=1).fill = PatternFill(start_color=KC_COLOR, end_color=KC_COLOR, fill_type="solid")
+    ws.cell(row=legend_row + 1, column=1).font = Font(name='Meiryo UI', color="FFFFFF")
+
+    ws.cell(row=legend_row + 2, column=1, value="ATH休暇")
+    ws.cell(row=legend_row + 2, column=1).fill = PatternFill(start_color=ATH_COLOR, end_color=ATH_COLOR, fill_type="solid")
+    ws.cell(row=legend_row + 2, column=1).font = Font(name='Meiryo UI', color="FFFFFF")
+
+    ws.cell(row=legend_row + 3, column=1, value="両方休暇")
+    ws.cell(row=legend_row + 3, column=1).fill = PatternFill(start_color="FF9999", end_color="FF9999", fill_type="solid")
+
+    # A列を凡例用に広げる
+    ws.column_dimensions['A'].width = 12
 
     return ws
 
