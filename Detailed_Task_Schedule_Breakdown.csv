@@ -1,0 +1,27 @@
+Phase,ID,Category (L2),Specific Task (L3),Owner,Start Date,End Date,Deliverable (成果物)
+"Phase 2: 1週間で開始 (12-1月)",2.1,環境速通 (Quick Start),2.1.1 環境チェック自動化スクリプト作成 (Pythonバージョン・権限確認),ALH,2024-12-09,2024-12-11,setup_check.py
+,,,"2.1.2 ""Hello World"" 最小接続パッケージ作成 (認証+Chat疎通)",KC,2024-12-09,2024-12-12,hello_workbench.zip
+,,,"2.1.3 エラーログ収集とFAQ化 (Phase 1の振り返り)",ALH,2024-12-12,2024-12-16,Troubleshooting.md
+,,,"2.1.4 セットアップ手順動画の録画 (非エンジニア向け)",ALH,2024-12-17,2024-12-19,Setup_Video.mp4
+,,技術ドキュメント (Cookbook),2.2.1 認証モジュール(Auth Wrapper)の共通化・実装,KC,2024-12-13,2024-12-18,auth_utils.py
+,,,"2.2.2 Use Case別コードスニペット作成 (翻訳・要約・RAG)",KC,2024-12-19,2024-12-23,Code Snippets Lib
+,,,"2.2.3 Onboardingサイト コンテンツ流し込み (Beta版)",ALH,2024-12-20,2024-12-27,Site Content v0.8
+,,,"--- 年末年始休暇 (Freeze Period) ---",-,2024-12-28,2025-01-05,-
+,,ユーザー検証 (Validation),2.3.1 社内Betaテスター選定・依頼 (別部署の2名),Joint,2025-01-06,2025-01-07,テスターリスト
+,,,"2.3.2 ""1週間チャレンジ"" ユーザーテスト実施 (観察・記録)",Joint,2025-01-08,2025-01-14,テスト観察ログ
+,,,"2.3.3 フィードバックに基づくドキュメント・コード修正",ALH,2025-01-15,2025-01-22,Onboarding Doc v1.0
+,,コミュニティ (Community),2.4.1 初期Q&Aデータの投入 (サクラ投稿・FAQ転載),KC,2025-01-20,2025-01-24,Q&A Seed Data
+,,,"2.4.2 サイト・コミュニティ 正式ローンチアナウンス",Joint,2025-01-27,2025-01-31,Launch Mail/Post
+"Phase 3: 海外MF探索 (2-3月)",3.1,資産発掘 (Scouting),3.1.1 Global Top 5 Use Caseの選定とリスト化,ALH,2025-02-03,2025-02-05,Top 5 Use Case List
+,,,"3.1.2 対象リポジトリのコードレベル解剖 (構造・依存関係)",KC,2025-02-06,2025-02-14,Architecture Analysis
+,,実行可能性検証 (Feasibility),3.2.1 依存ライブラリ・クラウドサービスの日本国内利用可否チェック,KC,2025-02-17,2025-02-19,Compliance Check Sheet
+,,,"3.2.2 PII/データプライバシー取扱いのギャップ分析",KC,2025-02-20,2025-02-25,Privacy Gap Report
+,,,"3.2.3 日本環境での動作検証 (Localize Experiment)",ALH,2025-02-24,2025-03-07,Localization Demo
+,,専門家連携 (Networking),3.3.1 海外開発者へのインタビュー実施 (技術的課題のヒアリング),Joint,2025-03-10,2025-03-14,Interview Minutes
+,,,"3.3.2 日本への導入ロードマップ・推奨構成案策定",Joint,2025-03-17,2025-03-31,Final Rec. Report
+"Phase 4: Speedy Process (4-6月)",4.1,基盤整備 (Scaffolding),4.1.1 標準プロジェクトテンプレート(GitHub Template)作成,ALH,2025-04-01,2025-04-11,GitHub Repo Template
+,,,"4.1.2 UIコンポーネントライブラリ整備 (Streamlit/React)",ALH,2025-04-14,2025-04-18,UI Component Set
+,,品質保証 (QA),4.2.1 自動テストスクリプト(Unit/Integration)のテンプレート化,KC,2025-04-21,2025-04-25,Test Automation Kit
+,,,"4.2.2 パフォーマンス・コスト試算モデルの作成",KC,2025-04-28,2025-04-30,Cost Calculator
+,,DevOps,4.3.1 Azure App Serviceへのデプロイ手順書標準化,ALH,2025-05-07,2025-05-09,Deployment Guide
+,,,"4.3.2 CI/CDパイプライン構築 (GitHub Actions)",ALH,2025-05-12,2025-05-23,CI/CD Pipeline

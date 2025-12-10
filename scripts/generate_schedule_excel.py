@@ -29,9 +29,11 @@ KPMG_BLUE = "005EB8"
 KPMG_DARK_BLUE = "00338D"
 KC_COLOR = "4472C4"      # 青色 - KC組
 ALH_COLOR = "70AD47"     # 緑色 - ALH組
-JOINT_COLOR = "7030A0"   # 紫色 - 連合タスク
+JOINT_COLOR = "7030A0"   # 紫色 - 連合タスク (Joint)
 HOLIDAY_COLOR = "D9D9D9" # グレー - 休暇
+FREEZE_COLOR = "D9D9D9"  # グレー - Freeze Period
 MAGENTA_COLOR = "E91E8C" # マゼンタ - Phase 4
+DECISION_COLOR = "FFCCCC"  # 淡赤 - Go/No-Go 決定点
 
 # Phase カラー
 PHASE_COLORS = {
@@ -58,110 +60,119 @@ STATUS_COLORS = {
 }
 
 # ==================== タスクデータ (WBS) ====================
+# 新構造: category（機能別分類）, start_date/end_date（精確日期）, is_freeze（凍結期間フラグ）
 ALL_TASKS = [
-    # Phase 1: オンボーディングフェーズ (10-11月)
-    {"wbs": "1.1", "phase": "Phase 1", "subtask": "学習・認証", "name": "Prerequisites 認証完了", "team": "KC+ALH", "months": [10], "deliverable": "認証バッジ", "status": "完了"},
-    {"wbs": "1.1.1", "phase": "Phase 1", "subtask": "学習・認証", "name": "Developer Learning Path 完了", "team": "KC+ALH", "months": [10, 11], "deliverable": "学習修了証", "status": "完了"},
-    {"wbs": "1.1.2", "phase": "Phase 1", "subtask": "学習・認証", "name": "Knowledge Badge 取得", "team": "KC+ALH", "months": [11], "deliverable": "バッジ証明", "status": "完了"},
-    {"wbs": "1.2", "phase": "Phase 1", "subtask": "技術評価", "name": "Workbench 環境セットアップ", "team": "KC+ALH", "months": [10], "deliverable": "環境構築完了", "status": "完了"},
-    {"wbs": "1.2.1", "phase": "Phase 1", "subtask": "技術評価", "name": "API 機能調査（Document Translation等）", "team": "KC+ALH", "months": [10, 11], "deliverable": "KPMG_Workbench_API一覧", "status": "完了"},
-    {"wbs": "1.3", "phase": "Phase 1", "subtask": "課題対応", "name": "手続上の障壁把握", "team": "KC+ALH", "months": [10], "deliverable": "課題リスト", "status": "完了"},
-    {"wbs": "1.3.1", "phase": "Phase 1", "subtask": "課題対応", "name": "APIアクセス課題解決（12/1完了）", "team": "ALH", "months": [11], "deliverable": "解決策ドキュメント", "status": "完了"},
-    {"wbs": "1.3.2", "phase": "Phase 1", "subtask": "課題対応", "name": "Global WB Community ローンチ（11/13）", "team": "ALH", "months": [11], "deliverable": "Community稼働", "status": "完了"},
-    {"wbs": "1.4", "phase": "Phase 1", "subtask": "報告・計画", "name": "Onboarding簡易パワポ作成", "team": "KC+ALH", "months": [11], "deliverable": "Onboarding簡易パワポ", "status": "完了"},
-    {"wbs": "1.4.1", "phase": "Phase 1", "subtask": "報告・計画", "name": "KC・ALH共同会議", "team": "KC+ALH", "months": [11], "deliverable": "N/A", "status": "完了"},
+    # Phase 1: オンボーディングフェーズ (10-11月) - 既存データ維持（新フィールド追加）
+    {"wbs": "1.1", "phase": "Phase 1", "category": "学習・認証", "name": "Prerequisites 認証完了", "team": "Joint", "start_date": "2024-10-01", "end_date": "2024-10-31", "deliverable": "認証バッジ", "status": "完了", "is_freeze": False},
+    {"wbs": "1.1.1", "phase": "Phase 1", "category": "学習・認証", "name": "Developer Learning Path 完了", "team": "Joint", "start_date": "2024-10-01", "end_date": "2024-11-30", "deliverable": "学習修了証", "status": "完了", "is_freeze": False},
+    {"wbs": "1.1.2", "phase": "Phase 1", "category": "学習・認証", "name": "Knowledge Badge 取得", "team": "Joint", "start_date": "2024-11-01", "end_date": "2024-11-30", "deliverable": "バッジ証明", "status": "完了", "is_freeze": False},
+    {"wbs": "1.2", "phase": "Phase 1", "category": "技術評価", "name": "Workbench 環境セットアップ", "team": "Joint", "start_date": "2024-10-01", "end_date": "2024-10-31", "deliverable": "環境構築完了", "status": "完了", "is_freeze": False},
+    {"wbs": "1.2.1", "phase": "Phase 1", "category": "技術評価", "name": "API 機能調査（Document Translation等）", "team": "Joint", "start_date": "2024-10-01", "end_date": "2024-11-30", "deliverable": "KPMG_Workbench_API一覧", "status": "完了", "is_freeze": False},
+    {"wbs": "1.3", "phase": "Phase 1", "category": "課題対応", "name": "手続上の障壁把握", "team": "Joint", "start_date": "2024-10-01", "end_date": "2024-10-31", "deliverable": "課題リスト", "status": "完了", "is_freeze": False},
+    {"wbs": "1.3.1", "phase": "Phase 1", "category": "課題対応", "name": "APIアクセス課題解決（12/1完了）", "team": "ALH", "start_date": "2024-11-01", "end_date": "2024-11-30", "deliverable": "解決策ドキュメント", "status": "完了", "is_freeze": False},
+    {"wbs": "1.3.2", "phase": "Phase 1", "category": "課題対応", "name": "Global WB Community ローンチ（11/13）", "team": "ALH", "start_date": "2024-11-01", "end_date": "2024-11-30", "deliverable": "Community稼働", "status": "完了", "is_freeze": False},
+    {"wbs": "1.4", "phase": "Phase 1", "category": "報告・計画", "name": "Onboarding簡易パワポ作成", "team": "Joint", "start_date": "2024-11-01", "end_date": "2024-11-30", "deliverable": "Onboarding簡易パワポ", "status": "完了", "is_freeze": False},
+    {"wbs": "1.4.1", "phase": "Phase 1", "category": "報告・計画", "name": "KC・ALH共同会議", "team": "Joint", "start_date": "2024-11-01", "end_date": "2024-11-30", "deliverable": "N/A", "status": "完了", "is_freeze": False},
 
-    # Phase 2: "誰でも1週間で迷いなく開始" (12-1月)
-    {"wbs": "2.1", "phase": "Phase 2", "subtask": "KC組タスク", "name": "APIテスト完了", "team": "KC", "months": [12], "deliverable": "KPMG_Workbench_API一覧", "status": "未開始"},
-    {"wbs": "2.1.1", "phase": "Phase 2", "subtask": "KC組タスク", "name": "APIテスト報告", "team": "KC", "months": [12], "deliverable": "KPMG_Workbench_API一覧", "status": "未開始"},
-    {"wbs": "2.1.2", "phase": "Phase 2", "subtask": "KC組タスク", "name": "Cookbook基礎テンプレート整備", "team": "KC", "months": [12], "deliverable": "テンプレート", "status": "未開始"},
-    {"wbs": "2.1.4", "phase": "Phase 2", "subtask": "KC組タスク", "name": "ALH組成果物Review", "team": "KC", "months": [1], "deliverable": "Reviewレポート", "status": "未開始"},
-    {"wbs": "2.2", "phase": "Phase 2", "subtask": "ALH組タスク", "name": "KJ開発者Onboardingサイト設計", "team": "ALH", "months": [12], "deliverable": "設計書", "status": "未開始"},
-    {"wbs": "2.2.1", "phase": "Phase 2", "subtask": "ALH組タスク", "name": "Onboardingサイトフロントエンド開発", "team": "ALH", "months": [12], "deliverable": "フロントエンド", "status": "未開始"},
-    {"wbs": "2.2.2", "phase": "Phase 2", "subtask": "ALH組タスク", "name": "Onboardingサイトコンテンツ作成", "team": "ALH", "months": [1], "deliverable": "コンテンツ", "status": "未開始"},
-    {"wbs": "2.2.3", "phase": "Phase 2", "subtask": "ALH組タスク", "name": "Agent検証環境構築", "team": "ALH", "months": [12], "deliverable": "環境構築", "status": "未開始"},
-    {"wbs": "2.2.4", "phase": "Phase 2", "subtask": "ALH組タスク", "name": "API/Agent基礎検証テスト", "team": "ALH", "months": [12], "deliverable": "テスト結果", "status": "未開始"},
-    {"wbs": "2.2.6", "phase": "Phase 2", "subtask": "ALH組タスク", "name": "開発者コミュニティプラットフォーム構築", "team": "ALH", "months": [1], "deliverable": "プラットフォーム", "status": "完了"},
-    {"wbs": "2.2.7", "phase": "Phase 2", "subtask": "ALH組タスク", "name": "開発者コミュニティ初期コンテンツ", "team": "ALH", "months": [1], "deliverable": "初期コンテンツ", "status": "未開始"},
-    {"wbs": "2.2.8", "phase": "Phase 2", "subtask": "ALH組タスク", "name": "Onboardingサイトローンチ＆テスト", "team": "ALH", "months": [1], "deliverable": "サイト稼働", "status": "未開始"},
-    {"wbs": "2.2.9", "phase": "Phase 2", "subtask": "ALH組タスク", "name": "開発者コミュニティ正式ローンチ", "team": "ALH", "months": [1], "deliverable": "コミュニティ稼働", "status": "未開始"},
+    # Phase 2: Onboarding (12-1月) - CSV 22.csv 同期
+    # Category: 基盤 (Infrastructure) - 保留
+    {"wbs": "2.0.1", "phase": "Phase 2", "category": "基盤", "name": "共同Repository構築", "team": "ALH", "start_date": "2024-12-09", "end_date": "2024-12-10", "deliverable": "GitHub Repo", "status": "未開始", "is_freeze": False},
 
-    # Phase 3: "海外MFナレッジ探索" (2-3月)
-    {"wbs": "3.1", "phase": "Phase 3", "subtask": "POC討論", "name": "POC項目テーマブレインストーミング", "team": "KC+ALH", "months": [1], "deliverable": "テーマリスト", "status": "未開始"},
-    {"wbs": "3.1.1", "phase": "Phase 3", "subtask": "POC討論", "name": "関係者ニーズ・アイデア収集", "team": "ALH", "months": [1], "deliverable": "ニーズリスト", "status": "未開始"},
-    {"wbs": "3.1.2", "phase": "Phase 3", "subtask": "POC討論", "name": "POC項目フィージビリティ初期評価", "team": "KC+ALH", "months": [1], "deliverable": "評価結果", "status": "未開始"},
-    {"wbs": "3.1.3", "phase": "Phase 3", "subtask": "POC討論", "name": "POC項目リスト確定（2-3件）", "team": "KC+ALH", "months": [1], "deliverable": "確定リスト", "status": "未開始"},
-    {"wbs": "3.2", "phase": "Phase 3", "subtask": "海外MF情報収集", "name": "US/UK/AU等MFのAgent開発事例収集", "team": "ALH", "months": [2], "deliverable": "事例リスト", "status": "未開始"},
-    {"wbs": "3.2.1", "phase": "Phase 3", "subtask": "海外MF情報収集", "name": "海外MF技術ドキュメント翻訳整理", "team": "ALH", "months": [2], "deliverable": "翻訳ドキュメント", "status": "未開始"},
-    {"wbs": "3.2.2", "phase": "Phase 3", "subtask": "海外MF情報収集", "name": "ナレッジ再利用フレームワーク構築", "team": "ALH", "months": [2], "deliverable": "フレームワーク", "status": "未開始"},
-    {"wbs": "3.2.3", "phase": "Phase 3", "subtask": "海外MF情報収集", "name": "海外MF技術交流会議（2回）", "team": "KC", "months": [2], "deliverable": "会議記録", "status": "未開始"},
-    {"wbs": "3.2.4", "phase": "Phase 3", "subtask": "海外MF情報収集", "name": "海外ソリューション実現可能性評価レポート", "team": "KC", "months": [2], "deliverable": "評価レポート", "status": "未開始"},
-    {"wbs": "3.3", "phase": "Phase 3", "subtask": "POC開始", "name": "POC項目A開始", "team": "ALH", "months": [3], "deliverable": "POC A進捗", "status": "未開始"},
-    {"wbs": "3.3.1", "phase": "Phase 3", "subtask": "POC開始", "name": "POC項目B開始", "team": "ALH", "months": [3], "deliverable": "POC B進捗", "status": "未開始"},
-    {"wbs": "3.3.2", "phase": "Phase 3", "subtask": "POC開始", "name": "POC技術サポート", "team": "KC", "months": [3], "deliverable": "技術サポート", "status": "未開始"},
-    {"wbs": "3.3.3", "phase": "Phase 3", "subtask": "POC開始", "name": "POC中期レビュー", "team": "KC", "months": [3], "deliverable": "中期レビュー", "status": "未開始"},
+    # Category: Toolkit (開発環境)
+    {"wbs": "2.1", "phase": "Phase 2", "category": "Toolkit", "name": "開発環境セットアップの自動化 (Onboarding Automation)", "team": "Joint", "start_date": "2024-12-09", "end_date": "2024-12-19", "deliverable": "Onboarding Automation Kit", "status": "未開始", "is_freeze": False},
 
-    # Phase 4: "スピーディなプロダクトプロセス" (4-6月)
-    {"wbs": "4.1", "phase": "Phase 4", "subtask": "POC完成", "name": "POC項目A完成＆評価", "team": "ALH", "months": [3, 4], "deliverable": "POC A完成", "status": "未開始"},
-    {"wbs": "4.1.1", "phase": "Phase 4", "subtask": "POC完成", "name": "POC項目B完成＆評価", "team": "ALH", "months": [3, 4], "deliverable": "POC B完成", "status": "未開始"},
-    {"wbs": "4.2", "phase": "Phase 4", "subtask": "本番アプリ開発", "name": "本番アプリアーキテクチャ設計Review", "team": "KC", "months": [4], "deliverable": "設計Review", "status": "未開始"},
-    {"wbs": "4.2.1", "phase": "Phase 4", "subtask": "本番アプリ開発", "name": "本番アプリ開発（項目A）", "team": "ALH", "months": [4, 5], "deliverable": "アプリA", "status": "未開始"},
-    {"wbs": "4.2.2", "phase": "Phase 4", "subtask": "本番アプリ開発", "name": "本番アプリ開発（項目B）", "team": "ALH", "months": [4, 5], "deliverable": "アプリB", "status": "未開始"},
-    {"wbs": "4.2.3", "phase": "Phase 4", "subtask": "本番アプリ開発", "name": "セキュリティ・コンプライアンス審査", "team": "KC", "months": [4], "deliverable": "審査結果", "status": "未開始"},
-    {"wbs": "4.3", "phase": "Phase 4", "subtask": "リリース", "name": "UATテスト", "team": "ALH", "months": [5], "deliverable": "テスト結果", "status": "未開始"},
-    {"wbs": "4.3.1", "phase": "Phase 4", "subtask": "リリース", "name": "本番リリース準備", "team": "ALH", "months": [5], "deliverable": "リリース準備", "status": "未開始"},
-    {"wbs": "4.3.2", "phase": "Phase 4", "subtask": "リリース", "name": "本番リリース＆監視", "team": "ALH", "months": [5, 6], "deliverable": "リリース完了", "status": "未開始"},
-    {"wbs": "4.3.3", "phase": "Phase 4", "subtask": "リリース", "name": "最終発表承認", "team": "KC", "months": [5], "deliverable": "承認完了", "status": "未開始"},
-    {"wbs": "4.4", "phase": "Phase 4", "subtask": "プロセス確立", "name": "新プロセスドキュメント化", "team": "ALH", "months": [6], "deliverable": "プロセスドキュメント", "status": "未開始"},
-    {"wbs": "4.4.1", "phase": "Phase 4", "subtask": "プロセス確立", "name": "プロジェクト総括レポート", "team": "KC", "months": [6], "deliverable": "総括レポート", "status": "未開始"},
+    # Category: Verification (API検証)
+    {"wbs": "2.2", "phase": "Phase 2", "category": "Verification", "name": "Workbench API網羅的検証 (API Capability Check)", "team": "KC", "start_date": "2024-12-10", "end_date": "2024-12-25", "deliverable": "API Capability Report", "status": "未開始", "is_freeze": False},
+
+    # Category: Toolkit (開発アセット)
+    {"wbs": "2.3", "phase": "Phase 2", "category": "Toolkit", "name": "標準開発アセットの整備 (Dev Starter Kit)", "team": "KC", "start_date": "2024-12-13", "end_date": "2024-12-26", "deliverable": "Dev Starter Kit", "status": "未開始", "is_freeze": False},
+
+    # Category: Platform (ナレッジポータル)
+    {"wbs": "2.4", "phase": "Phase 2", "category": "Platform", "name": "セルフサービス型ナレッジポータルの構築", "team": "ALH", "start_date": "2024-12-20", "end_date": "2024-12-26", "deliverable": "Knowledge Portal", "status": "未開始", "is_freeze": False},
+
+    # ★ Freeze Period (年末年始休暇) - 保留
+    {"wbs": "-", "phase": "Phase 2", "category": "Freeze", "name": "年末年始休暇 (Freeze Period)", "team": "-", "start_date": "2024-12-28", "end_date": "2025-01-05", "deliverable": "-", "status": "-", "is_freeze": True},
+
+    # Category: Launch (検証・始動)
+    {"wbs": "2.5", "phase": "Phase 2", "category": "Launch", "name": "リードタイム検証 & コミュニティ始動", "team": "Joint", "start_date": "2025-01-06", "end_date": "2025-01-31", "deliverable": "1-Week Challenge Report", "status": "未開始", "is_freeze": False},
+
+    # Phase 3: PoC Execution (2-3月) - CSV 22.csv 同期
+    # Category: Strategy (計画)
+    {"wbs": "3.1", "phase": "Phase 3", "category": "Strategy", "name": "PoCシナリオ選定 & リスク評価 (Planning)", "team": "Joint", "start_date": "2025-02-03", "end_date": "2025-02-14", "deliverable": "PoC Scenario & Risk Assessment", "status": "未開始", "is_freeze": False},
+
+    # Category: Execution (App) - ALH担当
+    {"wbs": "3.2", "phase": "Phase 3", "category": "Execution (App)", "name": "PoC 1 (ALH): 多言語ドキュメント処理ツール", "team": "ALH", "start_date": "2025-02-17", "end_date": "2025-03-14", "deliverable": "Document Processing Tool", "status": "未開始", "is_freeze": False},
+    {"wbs": "3.3", "phase": "Phase 3", "category": "Execution (App)", "name": "PoC 2 (ALH): 対話型アシスタントUI (Chat UX)", "team": "ALH", "start_date": "2025-02-17", "end_date": "2025-03-14", "deliverable": "Chat Assistant UI", "status": "未開始", "is_freeze": False},
+
+    # Category: Execution (Core) - KC担当
+    {"wbs": "3.4", "phase": "Phase 3", "category": "Execution (Core)", "name": "PoC 3 (KC): 社内規程・マニュアル検索 (RAG)", "team": "KC", "start_date": "2025-02-17", "end_date": "2025-03-14", "deliverable": "RAG Search System", "status": "未開始", "is_freeze": False},
+    {"wbs": "3.5", "phase": "Phase 3", "category": "Execution (Core)", "name": "PoC 4 (KC): 複雑推論・分析エージェント", "team": "KC", "start_date": "2025-02-17", "end_date": "2025-03-14", "deliverable": "Analysis Agent", "status": "未開始", "is_freeze": False},
+
+    # Category: Decision (成果実演)
+    {"wbs": "3.6", "phase": "Phase 3", "category": "Decision", "name": "PoC成果実演・投資判断 (Demo Day)", "team": "Joint", "start_date": "2025-03-17", "end_date": "2025-03-31", "deliverable": "Demo Day & Investment Decision", "status": "未開始", "is_freeze": False},
+
+    # Phase 4: Scaling (4-6月) - CSV 22.csv 同期
+    # Category: Standardization (標準化)
+    {"wbs": "4.1", "phase": "Phase 4", "category": "Standardization", "name": "開発標準フレームワークの確立", "team": "ALH", "start_date": "2025-04-01", "end_date": "2025-04-18", "deliverable": "KPMG Standard Template", "status": "未開始", "is_freeze": False},
+
+    # Category: Quality (品質保証)
+    {"wbs": "4.2", "phase": "Phase 4", "category": "Quality", "name": "品質保証(QA)プロセスの自動化", "team": "KC", "start_date": "2025-04-21", "end_date": "2025-04-30", "deliverable": "QA Automation Process", "status": "未開始", "is_freeze": False},
+
+    # Category: DevOps (デプロイメント)
+    {"wbs": "4.3", "phase": "Phase 4", "category": "DevOps", "name": "デプロイメント・パイプラインの構築", "team": "ALH", "start_date": "2025-05-07", "end_date": "2025-05-23", "deliverable": "CI/CD Pipeline", "status": "未開始", "is_freeze": False},
 ]
 
-# Milestones (including Phase 1)
+# Milestones (including Phase 1) - 新增 Go/No-Go 決定点
 MILESTONES = [
     # Phase 1 里程碑
     {"name": "Phase 1 開始", "target_date": "2024-10-01",
-     "actual_date": "", "deliverable": "オンボーディング開始", "status": "未開始"},
+     "actual_date": "", "deliverable": "オンボーディング開始", "status": "完了", "type": "milestone"},
     {"name": "Prerequisites認証完了", "target_date": "2024-10-31",
-     "actual_date": "", "deliverable": "認証バッジ", "status": "未開始"},
+     "actual_date": "", "deliverable": "認証バッジ", "status": "完了", "type": "milestone"},
     {"name": "技術評価レポート完成", "target_date": "2024-11-30",
-     "actual_date": "", "deliverable": "評価レポート", "status": "未開始"},
+     "actual_date": "", "deliverable": "評価レポート", "status": "完了", "type": "milestone"},
     # Phase 2 里程碑
-    {"name": "Phase 2 開始", "target_date": "2024-12-01",
-     "actual_date": "", "deliverable": "チーム拡大", "status": "未開始"},
-    {"name": "KC組休暇開始", "target_date": "2024-12-24",
-     "actual_date": "", "deliverable": "引継ぎ完了", "status": "未開始"},
-    {"name": "ALH組休暇開始", "target_date": "2024-12-28",
-     "actual_date": "", "deliverable": "-", "status": "未開始"},
+    {"name": "Phase 2 開始", "target_date": "2024-12-09",
+     "actual_date": "", "deliverable": "チーム拡大", "status": "進行中", "type": "milestone"},
+    {"name": "年内素材完備", "target_date": "2024-12-23",
+     "actual_date": "", "deliverable": "Cookbook/環境スクリプト", "status": "未開始", "type": "milestone"},
+    {"name": "Freeze Period 開始", "target_date": "2024-12-28",
+     "actual_date": "", "deliverable": "開発凍結", "status": "未開始", "type": "milestone"},
     {"name": "全員復帰", "target_date": "2025-01-06",
-     "actual_date": "", "deliverable": "開発再開", "status": "未開始"},
-    {"name": "Onboardingサイト公開", "target_date": "2025-01-31",
-     "actual_date": "", "deliverable": "サイト稼働", "status": "未開始"},
-    {"name": "開発者コミュニティ公開", "target_date": "2025-01-31",
-     "actual_date": "", "deliverable": "コミュニティ稼働", "status": "未開始"},
-    # Phase 3 里程碑
-    {"name": "Phase 3 開始", "target_date": "2025-02-01",
-     "actual_date": "", "deliverable": "海外MF探索開始", "status": "未開始"},
-    {"name": "POC項目確定", "target_date": "2025-01-31",
-     "actual_date": "", "deliverable": "確定リスト", "status": "未開始"},
-    {"name": "POC開始", "target_date": "2025-03-01",
-     "actual_date": "", "deliverable": "POC開発開始", "status": "未開始"},
-    # Phase 4 里程碑
+     "actual_date": "", "deliverable": "開発再開", "status": "未開始", "type": "milestone"},
+    {"name": "1週間チャレンジ完了", "target_date": "2025-01-14",
+     "actual_date": "", "deliverable": "テスト観察ログ", "status": "未開始", "type": "milestone"},
+    # ★ Go/No-Go 決定点 (Phase 2)
+    {"name": "【Go/No-Go】Phase 2 Review", "target_date": "2025-01-31",
+     "actual_date": "", "deliverable": "Phase 2成果レビュー", "status": "未開始", "type": "decision",
+     "criteria": "Onboardingサイト稼働, 1週間チャレンジ達成率>80%, Betaテスターフィードバック解決"},
+    # Phase 3 里程碑 (PoC Execution)
+    {"name": "Phase 3 開始", "target_date": "2025-02-03",
+     "actual_date": "", "deliverable": "PoC Execution開始", "status": "未開始", "type": "milestone"},
+    {"name": "PoCシナリオ確定", "target_date": "2025-02-14",
+     "actual_date": "", "deliverable": "PoC Scenario & Risk Assessment", "status": "未開始", "type": "milestone"},
+    {"name": "4 PoC開発完了", "target_date": "2025-03-14",
+     "actual_date": "", "deliverable": "4 PoC Prototypes", "status": "未開始", "type": "milestone"},
+    # ★ Go/No-Go 決定点 (Phase 3)
+    {"name": "【Go/No-Go】Demo Day 投資判断", "target_date": "2025-03-31",
+     "actual_date": "", "deliverable": "PoC成果実演・投資判断", "status": "未開始", "type": "decision",
+     "criteria": "4 PoC成果比較評価, 製品化優先順位決定, 投資判断完了"},
+    # Phase 4 里程碑 (Scaling)
     {"name": "Phase 4 開始", "target_date": "2025-04-01",
-     "actual_date": "", "deliverable": "本番開発開始", "status": "未開始"},
-    {"name": "POC完成", "target_date": "2025-04-15",
-     "actual_date": "", "deliverable": "POC評価完了", "status": "未開始"},
-    {"name": "UAT完成", "target_date": "2025-05-31",
-     "actual_date": "", "deliverable": "テスト合格", "status": "未開始"},
-    {"name": "本番リリース", "target_date": "2025-05-31",
-     "actual_date": "", "deliverable": "アプリ公開", "status": "未開始"},
+     "actual_date": "", "deliverable": "Scaling開始", "status": "未開始", "type": "milestone"},
+    {"name": "開発標準フレームワーク完成", "target_date": "2025-04-18",
+     "actual_date": "", "deliverable": "KPMG Standard Template", "status": "未開始", "type": "milestone"},
+    {"name": "CI/CD Pipeline完成", "target_date": "2025-05-23",
+     "actual_date": "", "deliverable": "CI/CD Pipeline", "status": "未開始", "type": "milestone"},
     {"name": "プロジェクト完了", "target_date": "2025-06-30",
-     "actual_date": "", "deliverable": "総括レポート", "status": "未開始"},
+     "actual_date": "", "deliverable": "総括レポート", "status": "未開始", "type": "milestone"},
 ]
 
-# Holiday periods
+# Holiday periods - 新増 Freeze Period
 HOLIDAYS = [
     {"team": "KC", "start": "2024-12-24", "end": "2025-01-05", "note": "年末年始休暇"},
     {"team": "ALH", "start": "2024-12-28", "end": "2025-01-05", "note": "年末年始休暇"},
+    {"team": "ALL", "start": "2024-12-28", "end": "2025-01-05", "note": "Freeze Period (全員)", "is_freeze": True},
 ]
 
 
@@ -199,7 +210,7 @@ def get_month_last_day(year, month):
 
 
 def months_to_dates(months):
-    """月配列を開始/終了日付文字列に変換する"""
+    """月配列を開始/終了日付文字列に変換する（後方互換性用）"""
     if not months:
         return None, None
 
@@ -216,7 +227,35 @@ def months_to_dates(months):
     return start_date, end_date
 
 
-def month_to_col(month, base_col=7):
+def parse_date(date_str):
+    """YYYY-MM-DD形式の日付文字列をdatetimeオブジェクトに変換"""
+    if not date_str or date_str == "-":
+        return None
+    return datetime.strptime(date_str, "%Y-%m-%d")
+
+
+def date_to_months(start_date_str, end_date_str):
+    """開始/終了日付から該当する月のリストを返す（ガントバー描画用）"""
+    start = parse_date(start_date_str)
+    end = parse_date(end_date_str)
+    if not start or not end:
+        return []
+
+    months = []
+    current = start
+    while current <= end:
+        month = current.month
+        if month not in months:
+            months.append(month)
+        # 次の月へ
+        if current.month == 12:
+            current = datetime(current.year + 1, 1, 1)
+        else:
+            current = datetime(current.year, current.month + 1, 1)
+    return months
+
+
+def month_to_col(month, base_col=11):
     """月をガントチャートの列番号にマッピング
     月順序: 10月, 11月, 12月, 1月, 2月, 3月, 4月, 5月, 6月
     base_col: 最初の月（10月）に対応する列番号
@@ -270,7 +309,7 @@ def apply_cell_style(cell, team=None):
         elif team == "ALH":
             cell.fill = PatternFill(start_color=ALH_COLOR, end_color=ALH_COLOR, fill_type="solid")
             cell.font = Font(name='Meiryo UI', color="FFFFFF", bold=True)
-        elif "KC+ALH" in team:
+        elif team == "Joint":
             cell.fill = PatternFill(start_color=JOINT_COLOR, end_color=JOINT_COLOR, fill_type="solid")
             cell.font = Font(name='Meiryo UI', color="FFFFFF", bold=True)
 
@@ -311,7 +350,7 @@ def get_week_start_dates(start_date_str, end_date_str):
 def is_in_holiday(date, team):
     """日付がチームの休暇期間内かどうかを確認"""
     for holiday in HOLIDAYS:
-        if holiday['team'] == team or team == "KC+ALH":
+        if holiday['team'] == team or team == "Joint":
             h_start = datetime.strptime(holiday['start'], "%Y-%m-%d")
             h_end = datetime.strptime(holiday['end'], "%Y-%m-%d")
             if h_start <= date <= h_end:
@@ -320,16 +359,16 @@ def is_in_holiday(date, team):
 
 
 def create_gantt_sheet(wb):
-    """ガントチャートシートを作成（月次ビュー、WBS形式）"""
+    """ガントチャートシートを作成（月次ビュー、WBS形式）- 新構造対応"""
     ws = wb.create_sheet("ガントチャート")
 
     # 月ヘッダー (10月-6月)
     month_labels = ["10月", "11月", "12月", "1月", "2月", "3月", "4月", "5月", "6月"]
     month_values = [10, 11, 12, 1, 2, 3, 4, 5, 6]
 
-    # ヘッダー: Phase, WBS, Sub-Task, Action, Owner, 担当者, Deliverable, Status + 月
-    headers = ["Phase", "WBS", "Sub-Task", "Action", "Owner", "担当者", "Deliverable", "Status"]
-    base_month_col = len(headers) + 1
+    # 新ヘッダー: Phase, WBS, Category, Action, Start, End, Owner, 担当者, Deliverable, Status + 月
+    headers = ["Phase", "WBS", "Category", "Action", "Start", "End", "Owner", "担当者", "Deliverable", "Status"]
+    base_month_col = len(headers) + 1  # 11列目から月
 
     # ヘッダーを書き込む
     for col, header in enumerate(headers, 1):
@@ -343,35 +382,39 @@ def create_gantt_sheet(wb):
         apply_header_style(cell)
         ws.column_dimensions[get_column_letter(col)].width = 5
 
-    # 列幅を設定
+    # 列幅を設定（新構造）
     ws.column_dimensions['A'].width = 19  # Phase
-    ws.column_dimensions['B'].width = 8   # WBS
-    ws.column_dimensions['C'].width = 18  # Sub-Task
+    ws.column_dimensions['B'].width = 10  # WBS（三級WBS対応）
+    ws.column_dimensions['C'].width = 15  # Category
     ws.column_dimensions['D'].width = 40  # Action
-    ws.column_dimensions['E'].width = 10  # Owner
-    ws.column_dimensions['F'].width = 10  # 担当者
-    ws.column_dimensions['G'].width = 22  # Deliverable
-    ws.column_dimensions['H'].width = 10  # Status
+    ws.column_dimensions['E'].width = 11  # Start（新）
+    ws.column_dimensions['F'].width = 11  # End（新）
+    ws.column_dimensions['G'].width = 10  # Owner
+    ws.column_dimensions['H'].width = 10  # 担当者
+    ws.column_dimensions['I'].width = 22  # Deliverable
+    ws.column_dimensions['J'].width = 10  # Status
 
-    # セル結合のためにPhaseとSubtaskでタスクをグループ化
+    # セル結合のためにPhaseとCategoryでタスクをグループ化
     phase_groups = {}
-    subtask_groups = {}
+    category_groups = {}
     for i, task in enumerate(ALL_TASKS):
         phase = task['phase']
-        subtask_key = f"{phase}|{task['subtask']}"
+        category_key = f"{phase}|{task['category']}"
 
         if phase not in phase_groups:
             phase_groups[phase] = {'start': i, 'end': i}
         else:
             phase_groups[phase]['end'] = i
 
-        if subtask_key not in subtask_groups:
-            subtask_groups[subtask_key] = {'start': i, 'end': i}
+        if category_key not in category_groups:
+            category_groups[category_key] = {'start': i, 'end': i}
         else:
-            subtask_groups[subtask_key]['end'] = i
+            category_groups[category_key]['end'] = i
 
     # タスクを書き込む
     for row, task in enumerate(ALL_TASKS, 2):
+        is_freeze = task.get('is_freeze', False)
+
         # Phase列
         phase_cell = ws.cell(row=row, column=1, value=PHASE_DISPLAY.get(task['phase'], task['phase']))
         apply_phase_style(phase_cell, task['phase'])
@@ -380,40 +423,57 @@ def create_gantt_sheet(wb):
         ws.cell(row=row, column=2, value=task['wbs'])
         apply_cell_style(ws.cell(row=row, column=2))
 
-        # Sub-Task
-        ws.cell(row=row, column=3, value=task['subtask'])
+        # Category（旧Sub-Task）
+        ws.cell(row=row, column=3, value=task['category'])
         apply_cell_style(ws.cell(row=row, column=3))
 
         # Action（タスク名）
         ws.cell(row=row, column=4, value=task['name'])
         apply_cell_style(ws.cell(row=row, column=4))
 
+        # Start日付（新）
+        ws.cell(row=row, column=5, value=task.get('start_date', ''))
+        apply_cell_style(ws.cell(row=row, column=5))
+
+        # End日付（新）
+        ws.cell(row=row, column=6, value=task.get('end_date', ''))
+        apply_cell_style(ws.cell(row=row, column=6))
+
         # Owner（チーム）
-        team_cell = ws.cell(row=row, column=5, value=task['team'])
+        team_cell = ws.cell(row=row, column=7, value=task['team'])
         apply_cell_style(team_cell, task['team'])
 
         # 担当者（空欄、下拉選択で選択）
-        assignee_cell = ws.cell(row=row, column=6, value="")
+        assignee_cell = ws.cell(row=row, column=8, value="")
         apply_cell_style(assignee_cell)
 
         # 成果物
-        ws.cell(row=row, column=7, value=task['deliverable'])
-        apply_cell_style(ws.cell(row=row, column=7))
+        ws.cell(row=row, column=9, value=task['deliverable'])
+        apply_cell_style(ws.cell(row=row, column=9))
 
         # Status列（ガントチャートが主表、下拉選択あり）
         status = task.get('status', '未開始')
-        status_cell = ws.cell(row=row, column=8, value=status)
+        status_cell = ws.cell(row=row, column=10, value=status)
         apply_cell_style(status_cell)
         # ステータスに応じた背景色
         if status in STATUS_COLORS:
             status_cell.fill = PatternFill(start_color=STATUS_COLORS[status], end_color=STATUS_COLORS[status], fill_type="solid")
 
-        # 月別にガントバーを描画（Phaseカラーを直接設定）
+        # Freeze Period行の特殊スタイル
+        if is_freeze:
+            for col in range(1, base_month_col + len(month_values)):
+                cell = ws.cell(row=row, column=col)
+                cell.fill = PatternFill(start_color=FREEZE_COLOR, end_color=FREEZE_COLOR, fill_type="solid")
+                cell.font = Font(name='Meiryo UI', italic=True, color="666666")
+            continue  # ガントバー描画をスキップ
+
+        # 月別にガントバーを描画（start_date/end_dateから月を計算）
+        task_months = date_to_months(task.get('start_date', ''), task.get('end_date', ''))
         for i, month in enumerate(month_values):
             col = base_month_col + i
             cell = ws.cell(row=row, column=col)
 
-            if month in task['months']:
+            if month in task_months:
                 phase_color = PHASE_COLORS.get(task['phase'], KPMG_BLUE)
                 cell.fill = PatternFill(start_color=phase_color, end_color=phase_color, fill_type="solid")
 
@@ -431,8 +491,8 @@ def create_gantt_sheet(wb):
         if start_row != end_row:
             ws.merge_cells(start_row=start_row, start_column=1, end_row=end_row, end_column=1)
 
-    # Sub-Taskセルを結合
-    for key, indices in subtask_groups.items():
+    # Categoryセルを結合（旧Sub-Task）
+    for key, indices in category_groups.items():
         start_row = indices['start'] + 2
         end_row = indices['end'] + 2
         if start_row != end_row:
@@ -449,18 +509,21 @@ def create_gantt_sheet(wb):
     ws.cell(row=legend_row + 3, column=1).font = Font(name='Meiryo UI', color="FFFFFF")
     ws.cell(row=legend_row + 4, column=1, value="Phase 4").fill = PatternFill(start_color=MAGENTA_COLOR, end_color=MAGENTA_COLOR, fill_type="solid")
     ws.cell(row=legend_row + 4, column=1).font = Font(name='Meiryo UI', color="FFFFFF")
+    # Freeze Period 凡例
+    ws.cell(row=legend_row + 5, column=1, value="Freeze").fill = PatternFill(start_color=FREEZE_COLOR, end_color=FREEZE_COLOR, fill_type="solid")
+    ws.cell(row=legend_row + 5, column=1).font = Font(name='Meiryo UI', italic=True, color="666666")
 
     # 条件付き書式用の行数
     last_row = len(ALL_TASKS) + 1
 
-    # Owner列Eにデータ検証（下拉選択）を追加
+    # Owner列G（旧E）にデータ検証（下拉選択）を追加
     owner_validation = DataValidation(
         type="list",
-        formula1='"KC,ALH,KC+ALH"',
+        formula1='"KC,ALH,Joint"',  # KC+ALH → Joint に変更
         allow_blank=True
     )
     owner_validation.showDropDown = False  # False = 下拉箭頭を表示
-    owner_validation.add(f'E2:E{last_row}')
+    owner_validation.add(f'G2:G{last_row}')
     ws.add_data_validation(owner_validation)
 
     # Owner列の条件付き書式（下拉選択後も色が変わるように）
@@ -469,38 +532,38 @@ def create_gantt_sheet(wb):
     joint_fill = PatternFill(start_color=JOINT_COLOR, end_color=JOINT_COLOR, fill_type="solid")
     white_font = Font(name='Meiryo UI', color="FFFFFF", bold=True)
 
-    # KC+ALH を先に判定（"KC"が含まれるため順序重要）
+    # Joint を先に判定
     ws.conditional_formatting.add(
-        f'E2:E{last_row}',
-        FormulaRule(formula=['$E2="KC+ALH"'], fill=joint_fill, font=white_font)
+        f'G2:G{last_row}',
+        FormulaRule(formula=['$G2="Joint"'], fill=joint_fill, font=white_font)
     )
     ws.conditional_formatting.add(
-        f'E2:E{last_row}',
-        FormulaRule(formula=['$E2="KC"'], fill=kc_fill, font=white_font)
+        f'G2:G{last_row}',
+        FormulaRule(formula=['$G2="KC"'], fill=kc_fill, font=white_font)
     )
     ws.conditional_formatting.add(
-        f'E2:E{last_row}',
-        FormulaRule(formula=['$E2="ALH"'], fill=alh_fill, font=white_font)
+        f'G2:G{last_row}',
+        FormulaRule(formula=['$G2="ALH"'], fill=alh_fill, font=white_font)
     )
 
-    # 担当者列Fにデータ検証（下拉選択）を追加
+    # 担当者列H（旧F）にデータ検証（下拉選択）を追加
     assignee_validation = DataValidation(
         type="list",
         formula1='"tsuchiya,tanaka,yang,Ma"',
         allow_blank=True
     )
     assignee_validation.showDropDown = False  # False = 下拉箭頭を表示
-    assignee_validation.add(f'F2:F{len(ALL_TASKS) + 1}')
+    assignee_validation.add(f'H2:H{len(ALL_TASKS) + 1}')
     ws.add_data_validation(assignee_validation)
 
-    # Status列Hにデータ検証（下拉選択）を追加
+    # Status列J（旧H）にデータ検証（下拉選択）を追加
     status_validation = DataValidation(
         type="list",
         formula1='"未開始,進行中,完了,ブロック"',
         allow_blank=True
     )
     status_validation.showDropDown = False  # False = 下拉箭頭を表示
-    status_validation.add(f'H2:H{last_row}')
+    status_validation.add(f'J2:J{last_row}')
     ws.add_data_validation(status_validation)
 
     # Status列の条件付き書式（下拉選択後も色が変わるように）
@@ -510,47 +573,47 @@ def create_gantt_sheet(wb):
     status_red_fill = PatternFill(start_color=STATUS_COLORS["ブロック"], end_color=STATUS_COLORS["ブロック"], fill_type="solid")
 
     ws.conditional_formatting.add(
-        f'H2:H{last_row}',
-        FormulaRule(formula=['$H2="未開始"'], fill=status_gray_fill)
+        f'J2:J{last_row}',
+        FormulaRule(formula=['$J2="未開始"'], fill=status_gray_fill)
     )
     ws.conditional_formatting.add(
-        f'H2:H{last_row}',
-        FormulaRule(formula=['$H2="進行中"'], fill=status_yellow_fill)
+        f'J2:J{last_row}',
+        FormulaRule(formula=['$J2="進行中"'], fill=status_yellow_fill)
     )
     ws.conditional_formatting.add(
-        f'H2:H{last_row}',
-        FormulaRule(formula=['$H2="完了"'], fill=status_green_fill)
+        f'J2:J{last_row}',
+        FormulaRule(formula=['$J2="完了"'], fill=status_green_fill)
     )
     ws.conditional_formatting.add(
-        f'H2:H{last_row}',
-        FormulaRule(formula=['$H2="ブロック"'], fill=status_red_fill)
+        f'J2:J{last_row}',
+        FormulaRule(formula=['$J2="ブロック"'], fill=status_red_fill)
     )
 
-    # 条件付き書式：Status="完了"の場合、左側の列をグレーに（Sub-Task列Cを除く）
+    # 条件付き書式：Status="完了"の場合、左側の列をグレーに（Category列Cを除く）
     gray_fill = PatternFill(start_color="D9D9D9", end_color="D9D9D9", fill_type="solid")
-    # B列(WBS), D列(Action), E列(Owner), F列(担当者), G列(Deliverable)
-    for col_range in [f'B2:B{last_row}', f'D2:G{last_row}']:
+    # B列(WBS), D-I列(Action, Start, End, Owner, 担当者, Deliverable)
+    for col_range in [f'B2:B{last_row}', f'D2:I{last_row}']:
         ws.conditional_formatting.add(
             col_range,
             FormulaRule(
-                formula=['$H2="完了"'],
+                formula=['$J2="完了"'],
                 fill=gray_fill
             )
         )
 
-    # Sub-Task列（C列）：該当Sub-Task内の全タスクが完了した場合のみグレーに
-    for subtask_key, indices in subtask_groups.items():
+    # Category列（C列）：該当Category内の全タスクが完了した場合のみグレーに
+    for category_key, indices in category_groups.items():
         start_row = indices['start'] + 2
         end_row = indices['end'] + 2
-        # 条件：該当範囲のStatus列で"完了"の数 = 該当範囲の行数
-        formula = f'COUNTIF($H${start_row}:$H${end_row},"完了")=ROWS($H${start_row}:$H${end_row})'
+        # 条件：該当範囲のStatus列（J列）で"完了"の数 = 該当範囲の行数
+        formula = f'COUNTIF($J${start_row}:$J${end_row},"完了")=ROWS($J${start_row}:$J${end_row})'
         ws.conditional_formatting.add(
             f'C{start_row}:C{end_row}',
             FormulaRule(formula=[formula], fill=gray_fill)
         )
 
     # ペインを固定（Status列の後から）
-    ws.freeze_panes = 'I2'
+    ws.freeze_panes = 'K2'  # 旧I2→新K2
 
     return ws
 
@@ -559,8 +622,8 @@ def create_team_sheet(wb, team_name, team_filter):
     """チーム別タスクシートを作成（WBS形式）"""
     ws = wb.create_sheet(f"{team_name}組タスク")
 
-    # WBS形式のヘッダー
-    headers = ["Phase", "WBS", "Sub-Task", "Action", "Months", "Deliverable", "Status"]
+    # WBS形式のヘッダー（新構造：Start/End列追加）
+    headers = ["Phase", "WBS", "Category", "Action", "Start", "End", "Months", "Deliverable", "Status"]
 
     # ヘッダーを書き込む
     for col, header in enumerate(headers, 1):
@@ -568,27 +631,29 @@ def create_team_sheet(wb, team_name, team_filter):
         apply_header_style(cell)
 
     # 列幅を設定
-    col_widths = [18, 8, 18, 42, 15, 22, 10]
+    col_widths = [18, 8, 18, 42, 12, 12, 15, 22, 10]
     for i, width in enumerate(col_widths, 1):
         ws.column_dimensions[get_column_letter(i)].width = width
 
-    # チームでタスクをフィルタ
-    team_tasks = [t for t in ALL_TASKS if team_filter in t['team']]
+    # チームでタスクをフィルタ（Freeze Periodを除外、Joint任務は両チームに表示）
+    team_tasks = [t for t in ALL_TASKS
+                  if (team_filter in t['team'] or t['team'] == 'Joint')
+                  and not t.get('is_freeze', False)]
 
     # Phaseでグループ化（セル結合用）
     phase_groups = {}
-    subtask_groups = {}
+    category_groups = {}
     for i, task in enumerate(team_tasks):
         phase = task['phase']
-        subtask_key = f"{phase}|{task['subtask']}"
+        category_key = f"{phase}|{task['category']}"
         if phase not in phase_groups:
             phase_groups[phase] = {'start': i, 'end': i}
         else:
             phase_groups[phase]['end'] = i
-        if subtask_key not in subtask_groups:
-            subtask_groups[subtask_key] = {'start': i, 'end': i}
+        if category_key not in category_groups:
+            category_groups[category_key] = {'start': i, 'end': i}
         else:
-            subtask_groups[subtask_key]['end'] = i
+            category_groups[category_key]['end'] = i
 
     # タスクを書き込む
     for row, task in enumerate(team_tasks, 2):
@@ -600,29 +665,38 @@ def create_team_sheet(wb, team_name, team_filter):
         ws.cell(row=row, column=2, value=task['wbs'])
         apply_cell_style(ws.cell(row=row, column=2))
 
-        # Sub-Taskカテゴリ
-        ws.cell(row=row, column=3, value=task['subtask'])
+        # Category（旧Sub-Task）
+        ws.cell(row=row, column=3, value=task['category'])
         apply_cell_style(ws.cell(row=row, column=3))
 
         # Action（タスク名）
         ws.cell(row=row, column=4, value=task['name'])
         apply_cell_style(ws.cell(row=row, column=4))
 
-        # 月
-        months_str = ", ".join([f"{m}月" for m in task['months']])
-        ws.cell(row=row, column=5, value=months_str)
+        # Start日付
+        ws.cell(row=row, column=5, value=task.get('start_date', ''))
         apply_cell_style(ws.cell(row=row, column=5))
 
-        # 成果物
-        ws.cell(row=row, column=6, value=task['deliverable'])
+        # End日付
+        ws.cell(row=row, column=6, value=task.get('end_date', ''))
         apply_cell_style(ws.cell(row=row, column=6))
+
+        # 月（start_date/end_dateから生成）
+        months = date_to_months(task.get('start_date'), task.get('end_date'))
+        months_str = ", ".join([f"{m}月" for m in months]) if months else ""
+        ws.cell(row=row, column=7, value=months_str)
+        apply_cell_style(ws.cell(row=row, column=7))
+
+        # 成果物
+        ws.cell(row=row, column=8, value=task['deliverable'])
+        apply_cell_style(ws.cell(row=row, column=8))
 
         # ステータス（VLOOKUPでガントチャートから参照）
         total_tasks = len(ALL_TASKS)
-        # Status列はガントチャートのH列（列番号8）なので、B列から7列目
-        vlookup_formula = f"=VLOOKUP(B{row},'ガントチャート'!$B$2:$H${total_tasks + 1},7,FALSE)"
-        ws.cell(row=row, column=7, value=vlookup_formula)
-        apply_cell_style(ws.cell(row=row, column=7))
+        # Status列はガントチャートのJ列（列番号10）なので、B列から9列目
+        vlookup_formula = f"=VLOOKUP(B{row},'ガントチャート'!$B$2:$J${total_tasks + 1},9,FALSE)"
+        ws.cell(row=row, column=9, value=vlookup_formula)
+        apply_cell_style(ws.cell(row=row, column=9))
 
     # Phaseセルを結合
     for phase, indices in phase_groups.items():
@@ -631,32 +705,32 @@ def create_team_sheet(wb, team_name, team_filter):
         if start_row != end_row:
             ws.merge_cells(start_row=start_row, start_column=1, end_row=end_row, end_column=1)
 
-    # Sub-Taskセルを結合
-    for _, indices in subtask_groups.items():
+    # Categoryセルを結合（旧Sub-Task）
+    for _, indices in category_groups.items():
         start_row = indices['start'] + 2
         end_row = indices['end'] + 2
         if start_row != end_row:
             ws.merge_cells(start_row=start_row, start_column=3, end_row=end_row, end_column=3)
 
-    # 条件付き書式：Status="完了"の場合、左側の列をグレーに（Sub-Task列Cを除く）
+    # 条件付き書式：Status="完了"の場合、左側の列をグレーに（Category列Cを除く）
     gray_fill = PatternFill(start_color="D9D9D9", end_color="D9D9D9", fill_type="solid")
     last_row = len(team_tasks) + 1
     # B列のみ
     ws.conditional_formatting.add(
         f'B2:B{last_row}',
-        FormulaRule(formula=['$G2="完了"'], fill=gray_fill)
+        FormulaRule(formula=['$I2="完了"'], fill=gray_fill)
     )
-    # D-F列（C列Sub-Taskを除外）
+    # D-H列（C列Categoryを除外）
     ws.conditional_formatting.add(
-        f'D2:F{last_row}',
-        FormulaRule(formula=['$G2="完了"'], fill=gray_fill)
+        f'D2:H{last_row}',
+        FormulaRule(formula=['$I2="完了"'], fill=gray_fill)
     )
 
-    # Sub-Task列（C列）：該当Sub-Task内の全タスクが完了した場合のみグレーに
-    for _, indices in subtask_groups.items():
+    # Category列（C列）：該当Category内の全タスクが完了した場合のみグレーに
+    for _, indices in category_groups.items():
         start_row = indices['start'] + 2
         end_row = indices['end'] + 2
-        formula = f'COUNTIF($G${start_row}:$G${end_row},"完了")=ROWS($G${start_row}:$G${end_row})'
+        formula = f'COUNTIF($I${start_row}:$I${end_row},"完了")=ROWS($I${start_row}:$I${end_row})'
         ws.conditional_formatting.add(
             f'C{start_row}:C{end_row}',
             FormulaRule(formula=[formula], fill=gray_fill)
@@ -792,10 +866,11 @@ def create_holiday_sheet(wb):
 
 
 def create_milestone_sheet(wb):
-    """マイルストーン追跡シートを作成"""
+    """マイルストーン追跡シートを作成（Go/No-Go決定点強調付き）"""
     ws = wb.create_sheet("マイルストーン")
 
-    headers = ["マイルストーン", "予定日", "実績日", "成果物", "ステータス"]
+    # ヘッダー（新構造：タイプとCriteria列追加）
+    headers = ["マイルストーン", "タイプ", "予定日", "実績日", "成果物", "Criteria", "ステータス"]
 
     # ヘッダーを書き込む
     for col, header in enumerate(headers, 1):
@@ -803,30 +878,54 @@ def create_milestone_sheet(wb):
         apply_header_style(cell)
 
     # 列幅を設定
-    col_widths = [25, 12, 12, 25, 10]
+    col_widths = [30, 12, 12, 12, 25, 50, 10]
     for i, width in enumerate(col_widths, 1):
         ws.column_dimensions[get_column_letter(i)].width = width
 
+    # 決定点スタイル（淡赤色背景）
+    decision_fill = PatternFill(start_color=DECISION_COLOR, end_color=DECISION_COLOR, fill_type="solid")
+    decision_font = Font(name='Meiryo UI', bold=True, size=10)
+
     # マイルストーンを書き込む
     for row, milestone in enumerate(MILESTONES, 2):
+        is_decision = milestone.get('type') == 'decision'
+        type_display = "Go/No-Go" if is_decision else "マイルストーン"
+
         ws.cell(row=row, column=1, value=milestone['name'])
-        ws.cell(row=row, column=2, value=milestone['target_date'])
-        ws.cell(row=row, column=3, value=milestone['actual_date'])
-        ws.cell(row=row, column=4, value=milestone['deliverable'])
-        ws.cell(row=row, column=5, value=milestone['status'])
+        ws.cell(row=row, column=2, value=type_display)
+        ws.cell(row=row, column=3, value=milestone['target_date'])
+        ws.cell(row=row, column=4, value=milestone['actual_date'])
+        ws.cell(row=row, column=5, value=milestone['deliverable'])
+        ws.cell(row=row, column=6, value=milestone.get('criteria', ''))
+        ws.cell(row=row, column=7, value=milestone['status'])
 
         # 罫線を適用
-        for col in range(1, 6):
-            apply_cell_style(ws.cell(row=row, column=col))
+        for col in range(1, 8):
+            cell = ws.cell(row=row, column=col)
+            apply_cell_style(cell)
 
-    # ステータスにデータ検証を追加
+            # Go/No-Go決定点は淡赤色背景＋太字
+            if is_decision:
+                cell.fill = decision_fill
+                cell.font = decision_font
+
+    # ステータスにデータ検証を追加（G列に移動）
     status_validation = DataValidation(
         type="list",
         formula1='"未開始,進行中,完了,遅延"',
         allow_blank=True
     )
-    status_validation.add(f'E2:E{len(MILESTONES) + 1}')
+    status_validation.add(f'G2:G{len(MILESTONES) + 1}')
     ws.add_data_validation(status_validation)
+
+    # タイプ列にデータ検証を追加
+    type_validation = DataValidation(
+        type="list",
+        formula1='"マイルストーン,Go/No-Go"',
+        allow_blank=True
+    )
+    type_validation.add(f'B2:B{len(MILESTONES) + 1}')
+    ws.add_data_validation(type_validation)
 
     # ペインを固定
     ws.freeze_panes = 'A2'
@@ -886,7 +985,7 @@ def main():
     # サマリー
     kc_tasks = len([t for t in ALL_TASKS if t['team'] == 'KC'])
     alh_tasks = len([t for t in ALL_TASKS if t['team'] == 'ALH'])
-    joint_tasks = len([t for t in ALL_TASKS if 'KC+ALH' in t['team']])
+    joint_tasks = len([t for t in ALL_TASKS if t['team'] == 'Joint'])
 
     print(f"\nタスク統計:")
     print(f"  - KC組タスク: {kc_tasks} 件")
