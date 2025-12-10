@@ -81,8 +81,10 @@ ALL_TASKS = [
     # Category: Toolkit (開発環境)
     {"wbs": "2.1", "phase": "Phase 2", "category": "Toolkit", "name": "開発環境セットアップの自動化 (Onboarding Automation)", "team": "Joint", "start_date": "2025-12-09", "end_date": "2025-12-19", "deliverable": "Onboarding Automation Kit", "status": "未開始", "is_freeze": False},
 
-    # Category: Verification (API検証)
+    # Category: Verification (API検証・調査)
     {"wbs": "2.2", "phase": "Phase 2", "category": "Verification", "name": "Workbench API網羅的検証 (API Capability Check)", "team": "KC", "start_date": "2025-12-10", "end_date": "2025-12-25", "deliverable": "API Capability Report", "status": "未開始", "is_freeze": False},
+    {"wbs": "2.2.1", "phase": "Phase 2", "category": "Verification", "name": "既存プロダクトの把握（AIQ等）", "team": "Joint", "start_date": "2025-12-10", "end_date": "2025-12-20", "deliverable": "既存プロダクト調査レポート", "status": "未開始", "is_freeze": False},
+    {"wbs": "2.2.2", "phase": "Phase 2", "category": "Verification", "name": "カントリーホスティングのリリースゲート対応", "team": "ALH", "start_date": "2025-12-16", "end_date": "2025-12-26", "deliverable": "リリースゲート要件確認", "status": "未開始", "is_freeze": False},
 
     # Category: Toolkit (開発アセット)
     {"wbs": "2.3", "phase": "Phase 2", "category": "Toolkit", "name": "標準開発アセットの整備 (Dev Starter Kit)", "team": "KC", "start_date": "2025-12-13", "end_date": "2025-12-26", "deliverable": "Dev Starter Kit", "status": "未開始", "is_freeze": False},
@@ -97,8 +99,11 @@ ALL_TASKS = [
     {"wbs": "2.5", "phase": "Phase 2", "category": "Launch", "name": "リードタイム検証 & コミュニティ始動", "team": "Joint", "start_date": "2026-01-06", "end_date": "2026-01-31", "deliverable": "1-Week Challenge Report", "status": "未開始", "is_freeze": False},
 
     # Phase 3: PoC Execution (2-3月) - CSV 22.csv 同期
-    # Category: Strategy (計画)
+    # Category: Strategy (計画・調査)
     {"wbs": "3.1", "phase": "Phase 3", "category": "Strategy", "name": "PoCシナリオ選定 & リスク評価 (Planning)", "team": "Joint", "start_date": "2026-02-03", "end_date": "2026-02-14", "deliverable": "PoC Scenario & Risk Assessment", "status": "未開始", "is_freeze": False},
+    {"wbs": "3.1.1", "phase": "Phase 3", "category": "Strategy", "name": "グローバルへのユースケースヒアリング", "team": "ALH", "start_date": "2026-02-03", "end_date": "2026-02-10", "deliverable": "グローバルユースケース一覧", "status": "未開始", "is_freeze": False},
+    {"wbs": "3.1.2", "phase": "Phase 3", "category": "Strategy", "name": "ユースケース／プロダクト検討（ニーズ起因）", "team": "Joint", "start_date": "2026-02-03", "end_date": "2026-02-14", "deliverable": "ニーズ分析レポート", "status": "未開始", "is_freeze": False},
+    {"wbs": "3.1.3", "phase": "Phase 3", "category": "Strategy", "name": "必要コンポーネント検討（シーズ起因）", "team": "KC", "start_date": "2026-02-03", "end_date": "2026-02-14", "deliverable": "技術コンポーネント一覧", "status": "未開始", "is_freeze": False},
 
     # Category: Execution (App) - ALH担当
     {"wbs": "3.2", "phase": "Phase 3", "category": "Execution (App)", "name": "PoC 1 (ALH): 多言語ドキュメント処理ツール", "team": "ALH", "start_date": "2026-02-17", "end_date": "2026-03-14", "deliverable": "Document Processing Tool", "status": "未開始", "is_freeze": False},
