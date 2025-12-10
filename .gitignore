@@ -8,6 +8,9 @@
 ~$*.xls*
 ~$*.ppt*
 
+# 生成的Excel文件
+generated_docs/schedules/*.xlsx
+
 # Claude Code配置(本地设置)
 .claude/
 

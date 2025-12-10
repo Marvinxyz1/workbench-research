@@ -63,116 +63,116 @@ STATUS_COLORS = {
 # 新構造: category（機能別分類）, start_date/end_date（精確日期）, is_freeze（凍結期間フラグ）
 ALL_TASKS = [
     # Phase 1: オンボーディングフェーズ (10-11月) - 既存データ維持（新フィールド追加）
-    {"wbs": "1.1", "phase": "Phase 1", "category": "学習・認証", "name": "Prerequisites 認証完了", "team": "Joint", "start_date": "2024-10-01", "end_date": "2024-10-31", "deliverable": "認証バッジ", "status": "完了", "is_freeze": False},
-    {"wbs": "1.1.1", "phase": "Phase 1", "category": "学習・認証", "name": "Developer Learning Path 完了", "team": "Joint", "start_date": "2024-10-01", "end_date": "2024-11-30", "deliverable": "学習修了証", "status": "完了", "is_freeze": False},
-    {"wbs": "1.1.2", "phase": "Phase 1", "category": "学習・認証", "name": "Knowledge Badge 取得", "team": "Joint", "start_date": "2024-11-01", "end_date": "2024-11-30", "deliverable": "バッジ証明", "status": "完了", "is_freeze": False},
-    {"wbs": "1.2", "phase": "Phase 1", "category": "技術評価", "name": "Workbench 環境セットアップ", "team": "Joint", "start_date": "2024-10-01", "end_date": "2024-10-31", "deliverable": "環境構築完了", "status": "完了", "is_freeze": False},
-    {"wbs": "1.2.1", "phase": "Phase 1", "category": "技術評価", "name": "API 機能調査（Document Translation等）", "team": "Joint", "start_date": "2024-10-01", "end_date": "2024-11-30", "deliverable": "KPMG_Workbench_API一覧", "status": "完了", "is_freeze": False},
-    {"wbs": "1.3", "phase": "Phase 1", "category": "課題対応", "name": "手続上の障壁把握", "team": "Joint", "start_date": "2024-10-01", "end_date": "2024-10-31", "deliverable": "課題リスト", "status": "完了", "is_freeze": False},
-    {"wbs": "1.3.1", "phase": "Phase 1", "category": "課題対応", "name": "APIアクセス課題解決（12/1完了）", "team": "ALH", "start_date": "2024-11-01", "end_date": "2024-11-30", "deliverable": "解決策ドキュメント", "status": "完了", "is_freeze": False},
-    {"wbs": "1.3.2", "phase": "Phase 1", "category": "課題対応", "name": "Global WB Community ローンチ（11/13）", "team": "ALH", "start_date": "2024-11-01", "end_date": "2024-11-30", "deliverable": "Community稼働", "status": "完了", "is_freeze": False},
-    {"wbs": "1.4", "phase": "Phase 1", "category": "報告・計画", "name": "Onboarding簡易パワポ作成", "team": "Joint", "start_date": "2024-11-01", "end_date": "2024-11-30", "deliverable": "Onboarding簡易パワポ", "status": "完了", "is_freeze": False},
-    {"wbs": "1.4.1", "phase": "Phase 1", "category": "報告・計画", "name": "KC・ALH共同会議", "team": "Joint", "start_date": "2024-11-01", "end_date": "2024-11-30", "deliverable": "N/A", "status": "完了", "is_freeze": False},
+    {"wbs": "1.1", "phase": "Phase 1", "category": "学習・認証", "name": "Prerequisites 認証完了", "team": "Joint", "start_date": "2025-10-01", "end_date": "2025-10-31", "deliverable": "認証バッジ", "status": "完了", "is_freeze": False},
+    {"wbs": "1.1.1", "phase": "Phase 1", "category": "学習・認証", "name": "Developer Learning Path 完了", "team": "Joint", "start_date": "2025-10-01", "end_date": "2025-11-30", "deliverable": "学習修了証", "status": "完了", "is_freeze": False},
+    {"wbs": "1.1.2", "phase": "Phase 1", "category": "学習・認証", "name": "Knowledge Badge 取得", "team": "Joint", "start_date": "2025-11-01", "end_date": "2025-11-30", "deliverable": "バッジ証明", "status": "完了", "is_freeze": False},
+    {"wbs": "1.2", "phase": "Phase 1", "category": "技術評価", "name": "Workbench 環境セットアップ", "team": "Joint", "start_date": "2025-10-01", "end_date": "2025-10-31", "deliverable": "環境構築完了", "status": "完了", "is_freeze": False},
+    {"wbs": "1.2.1", "phase": "Phase 1", "category": "技術評価", "name": "API 機能調査（Document Translation等）", "team": "Joint", "start_date": "2025-10-01", "end_date": "2025-11-30", "deliverable": "KPMG_Workbench_API一覧", "status": "完了", "is_freeze": False},
+    {"wbs": "1.3", "phase": "Phase 1", "category": "課題対応", "name": "手続上の障壁把握", "team": "Joint", "start_date": "2025-10-01", "end_date": "2025-10-31", "deliverable": "課題リスト", "status": "完了", "is_freeze": False},
+    {"wbs": "1.3.1", "phase": "Phase 1", "category": "課題対応", "name": "APIアクセス課題解決（12/1完了）", "team": "ALH", "start_date": "2025-11-01", "end_date": "2025-11-30", "deliverable": "解決策ドキュメント", "status": "完了", "is_freeze": False},
+    {"wbs": "1.3.2", "phase": "Phase 1", "category": "課題対応", "name": "Global WB Community ローンチ（11/13）", "team": "ALH", "start_date": "2025-11-01", "end_date": "2025-11-30", "deliverable": "Community稼働", "status": "完了", "is_freeze": False},
+    {"wbs": "1.4", "phase": "Phase 1", "category": "報告・計画", "name": "Onboarding簡易パワポ作成", "team": "Joint", "start_date": "2025-11-01", "end_date": "2025-11-30", "deliverable": "Onboarding簡易パワポ", "status": "完了", "is_freeze": False},
+    {"wbs": "1.4.1", "phase": "Phase 1", "category": "報告・計画", "name": "KC・ALH共同会議", "team": "Joint", "start_date": "2025-11-01", "end_date": "2025-11-30", "deliverable": "N/A", "status": "完了", "is_freeze": False},
 
     # Phase 2: Onboarding (12-1月) - CSV 22.csv 同期
     # Category: 基盤 (Infrastructure) - 保留
-    {"wbs": "2.0.1", "phase": "Phase 2", "category": "基盤", "name": "共同Repository構築", "team": "ALH", "start_date": "2024-12-09", "end_date": "2024-12-10", "deliverable": "GitHub Repo", "status": "未開始", "is_freeze": False},
+    {"wbs": "2.0.1", "phase": "Phase 2", "category": "基盤", "name": "共同Repository構築", "team": "ALH", "start_date": "2025-12-09", "end_date": "2025-12-10", "deliverable": "GitHub Repo", "status": "未開始", "is_freeze": False},
 
     # Category: Toolkit (開発環境)
-    {"wbs": "2.1", "phase": "Phase 2", "category": "Toolkit", "name": "開発環境セットアップの自動化 (Onboarding Automation)", "team": "Joint", "start_date": "2024-12-09", "end_date": "2024-12-19", "deliverable": "Onboarding Automation Kit", "status": "未開始", "is_freeze": False},
+    {"wbs": "2.1", "phase": "Phase 2", "category": "Toolkit", "name": "開発環境セットアップの自動化 (Onboarding Automation)", "team": "Joint", "start_date": "2025-12-09", "end_date": "2025-12-19", "deliverable": "Onboarding Automation Kit", "status": "未開始", "is_freeze": False},
 
     # Category: Verification (API検証)
-    {"wbs": "2.2", "phase": "Phase 2", "category": "Verification", "name": "Workbench API網羅的検証 (API Capability Check)", "team": "KC", "start_date": "2024-12-10", "end_date": "2024-12-25", "deliverable": "API Capability Report", "status": "未開始", "is_freeze": False},
+    {"wbs": "2.2", "phase": "Phase 2", "category": "Verification", "name": "Workbench API網羅的検証 (API Capability Check)", "team": "KC", "start_date": "2025-12-10", "end_date": "2025-12-25", "deliverable": "API Capability Report", "status": "未開始", "is_freeze": False},
 
     # Category: Toolkit (開発アセット)
-    {"wbs": "2.3", "phase": "Phase 2", "category": "Toolkit", "name": "標準開発アセットの整備 (Dev Starter Kit)", "team": "KC", "start_date": "2024-12-13", "end_date": "2024-12-26", "deliverable": "Dev Starter Kit", "status": "未開始", "is_freeze": False},
+    {"wbs": "2.3", "phase": "Phase 2", "category": "Toolkit", "name": "標準開発アセットの整備 (Dev Starter Kit)", "team": "KC", "start_date": "2025-12-13", "end_date": "2025-12-26", "deliverable": "Dev Starter Kit", "status": "未開始", "is_freeze": False},
 
     # Category: Platform (ナレッジポータル)
-    {"wbs": "2.4", "phase": "Phase 2", "category": "Platform", "name": "セルフサービス型ナレッジポータルの構築", "team": "ALH", "start_date": "2024-12-20", "end_date": "2024-12-26", "deliverable": "Knowledge Portal", "status": "未開始", "is_freeze": False},
+    {"wbs": "2.4", "phase": "Phase 2", "category": "Platform", "name": "セルフサービス型ナレッジポータルの構築", "team": "ALH", "start_date": "2025-12-20", "end_date": "2025-12-26", "deliverable": "Knowledge Portal", "status": "未開始", "is_freeze": False},
 
     # ★ Freeze Period (年末年始休暇) - 保留
-    {"wbs": "-", "phase": "Phase 2", "category": "Freeze", "name": "年末年始休暇 (Freeze Period)", "team": "-", "start_date": "2024-12-28", "end_date": "2025-01-05", "deliverable": "-", "status": "-", "is_freeze": True},
+    {"wbs": "-", "phase": "Phase 2", "category": "Freeze", "name": "年末年始休暇 (Freeze Period)", "team": "-", "start_date": "2025-12-28", "end_date": "2026-01-05", "deliverable": "-", "status": "-", "is_freeze": True},
 
     # Category: Launch (検証・始動)
-    {"wbs": "2.5", "phase": "Phase 2", "category": "Launch", "name": "リードタイム検証 & コミュニティ始動", "team": "Joint", "start_date": "2025-01-06", "end_date": "2025-01-31", "deliverable": "1-Week Challenge Report", "status": "未開始", "is_freeze": False},
+    {"wbs": "2.5", "phase": "Phase 2", "category": "Launch", "name": "リードタイム検証 & コミュニティ始動", "team": "Joint", "start_date": "2026-01-06", "end_date": "2026-01-31", "deliverable": "1-Week Challenge Report", "status": "未開始", "is_freeze": False},
 
     # Phase 3: PoC Execution (2-3月) - CSV 22.csv 同期
     # Category: Strategy (計画)
-    {"wbs": "3.1", "phase": "Phase 3", "category": "Strategy", "name": "PoCシナリオ選定 & リスク評価 (Planning)", "team": "Joint", "start_date": "2025-02-03", "end_date": "2025-02-14", "deliverable": "PoC Scenario & Risk Assessment", "status": "未開始", "is_freeze": False},
+    {"wbs": "3.1", "phase": "Phase 3", "category": "Strategy", "name": "PoCシナリオ選定 & リスク評価 (Planning)", "team": "Joint", "start_date": "2026-02-03", "end_date": "2026-02-14", "deliverable": "PoC Scenario & Risk Assessment", "status": "未開始", "is_freeze": False},
 
     # Category: Execution (App) - ALH担当
-    {"wbs": "3.2", "phase": "Phase 3", "category": "Execution (App)", "name": "PoC 1 (ALH): 多言語ドキュメント処理ツール", "team": "ALH", "start_date": "2025-02-17", "end_date": "2025-03-14", "deliverable": "Document Processing Tool", "status": "未開始", "is_freeze": False},
-    {"wbs": "3.3", "phase": "Phase 3", "category": "Execution (App)", "name": "PoC 2 (ALH): 対話型アシスタントUI (Chat UX)", "team": "ALH", "start_date": "2025-02-17", "end_date": "2025-03-14", "deliverable": "Chat Assistant UI", "status": "未開始", "is_freeze": False},
+    {"wbs": "3.2", "phase": "Phase 3", "category": "Execution (App)", "name": "PoC 1 (ALH): 多言語ドキュメント処理ツール", "team": "ALH", "start_date": "2026-02-17", "end_date": "2026-03-14", "deliverable": "Document Processing Tool", "status": "未開始", "is_freeze": False},
+    {"wbs": "3.3", "phase": "Phase 3", "category": "Execution (App)", "name": "PoC 2 (ALH): 対話型アシスタントUI (Chat UX)", "team": "ALH", "start_date": "2026-02-17", "end_date": "2026-03-14", "deliverable": "Chat Assistant UI", "status": "未開始", "is_freeze": False},
 
     # Category: Execution (Core) - KC担当
-    {"wbs": "3.4", "phase": "Phase 3", "category": "Execution (Core)", "name": "PoC 3 (KC): 社内規程・マニュアル検索 (RAG)", "team": "KC", "start_date": "2025-02-17", "end_date": "2025-03-14", "deliverable": "RAG Search System", "status": "未開始", "is_freeze": False},
-    {"wbs": "3.5", "phase": "Phase 3", "category": "Execution (Core)", "name": "PoC 4 (KC): 複雑推論・分析エージェント", "team": "KC", "start_date": "2025-02-17", "end_date": "2025-03-14", "deliverable": "Analysis Agent", "status": "未開始", "is_freeze": False},
+    {"wbs": "3.4", "phase": "Phase 3", "category": "Execution (Core)", "name": "PoC 3 (KC): 社内規程・マニュアル検索 (RAG)", "team": "KC", "start_date": "2026-02-17", "end_date": "2026-03-14", "deliverable": "RAG Search System", "status": "未開始", "is_freeze": False},
+    {"wbs": "3.5", "phase": "Phase 3", "category": "Execution (Core)", "name": "PoC 4 (KC): 複雑推論・分析エージェント", "team": "KC", "start_date": "2026-02-17", "end_date": "2026-03-14", "deliverable": "Analysis Agent", "status": "未開始", "is_freeze": False},
 
     # Category: Decision (成果実演)
-    {"wbs": "3.6", "phase": "Phase 3", "category": "Decision", "name": "PoC成果実演・投資判断 (Demo Day)", "team": "Joint", "start_date": "2025-03-17", "end_date": "2025-03-31", "deliverable": "Demo Day & Investment Decision", "status": "未開始", "is_freeze": False},
+    {"wbs": "3.6", "phase": "Phase 3", "category": "Decision", "name": "PoC成果実演・投資判断 (Demo Day)", "team": "Joint", "start_date": "2026-03-17", "end_date": "2026-03-31", "deliverable": "Demo Day & Investment Decision", "status": "未開始", "is_freeze": False},
 
     # Phase 4: Scaling (4-6月) - CSV 22.csv 同期
     # Category: Standardization (標準化)
-    {"wbs": "4.1", "phase": "Phase 4", "category": "Standardization", "name": "開発標準フレームワークの確立", "team": "ALH", "start_date": "2025-04-01", "end_date": "2025-04-18", "deliverable": "KPMG Standard Template", "status": "未開始", "is_freeze": False},
+    {"wbs": "4.1", "phase": "Phase 4", "category": "Standardization", "name": "開発標準フレームワークの確立", "team": "ALH", "start_date": "2026-04-01", "end_date": "2026-04-18", "deliverable": "KPMG Standard Template", "status": "未開始", "is_freeze": False},
 
     # Category: Quality (品質保証)
-    {"wbs": "4.2", "phase": "Phase 4", "category": "Quality", "name": "品質保証(QA)プロセスの自動化", "team": "KC", "start_date": "2025-04-21", "end_date": "2025-04-30", "deliverable": "QA Automation Process", "status": "未開始", "is_freeze": False},
+    {"wbs": "4.2", "phase": "Phase 4", "category": "Quality", "name": "品質保証(QA)プロセスの自動化", "team": "KC", "start_date": "2026-04-21", "end_date": "2026-04-30", "deliverable": "QA Automation Process", "status": "未開始", "is_freeze": False},
 
     # Category: DevOps (デプロイメント)
-    {"wbs": "4.3", "phase": "Phase 4", "category": "DevOps", "name": "デプロイメント・パイプラインの構築", "team": "ALH", "start_date": "2025-05-07", "end_date": "2025-05-23", "deliverable": "CI/CD Pipeline", "status": "未開始", "is_freeze": False},
+    {"wbs": "4.3", "phase": "Phase 4", "category": "DevOps", "name": "デプロイメント・パイプラインの構築", "team": "ALH", "start_date": "2026-05-07", "end_date": "2026-05-23", "deliverable": "CI/CD Pipeline", "status": "未開始", "is_freeze": False},
 ]
 
 # Milestones (including Phase 1) - 新增 Go/No-Go 決定点
 MILESTONES = [
     # Phase 1 里程碑
-    {"name": "Phase 1 開始", "target_date": "2024-10-01",
+    {"name": "Phase 1 開始", "target_date": "2025-10-01",
      "actual_date": "", "deliverable": "オンボーディング開始", "status": "完了", "type": "milestone"},
-    {"name": "Prerequisites認証完了", "target_date": "2024-10-31",
+    {"name": "Prerequisites認証完了", "target_date": "2025-10-31",
      "actual_date": "", "deliverable": "認証バッジ", "status": "完了", "type": "milestone"},
-    {"name": "技術評価レポート完成", "target_date": "2024-11-30",
+    {"name": "技術評価レポート完成", "target_date": "2025-11-30",
      "actual_date": "", "deliverable": "評価レポート", "status": "完了", "type": "milestone"},
     # Phase 2 里程碑
-    {"name": "Phase 2 開始", "target_date": "2024-12-09",
+    {"name": "Phase 2 開始", "target_date": "2025-12-09",
      "actual_date": "", "deliverable": "チーム拡大", "status": "進行中", "type": "milestone"},
-    {"name": "年内素材完備", "target_date": "2024-12-23",
+    {"name": "年内素材完備", "target_date": "2025-12-23",
      "actual_date": "", "deliverable": "Cookbook/環境スクリプト", "status": "未開始", "type": "milestone"},
-    {"name": "Freeze Period 開始", "target_date": "2024-12-28",
+    {"name": "Freeze Period 開始", "target_date": "2025-12-28",
      "actual_date": "", "deliverable": "開発凍結", "status": "未開始", "type": "milestone"},
-    {"name": "全員復帰", "target_date": "2025-01-06",
+    {"name": "全員復帰", "target_date": "2026-01-06",
      "actual_date": "", "deliverable": "開発再開", "status": "未開始", "type": "milestone"},
-    {"name": "1週間チャレンジ完了", "target_date": "2025-01-14",
+    {"name": "1週間チャレンジ完了", "target_date": "2026-01-14",
      "actual_date": "", "deliverable": "テスト観察ログ", "status": "未開始", "type": "milestone"},
     # ★ Go/No-Go 決定点 (Phase 2)
-    {"name": "【Go/No-Go】Phase 2 Review", "target_date": "2025-01-31",
+    {"name": "【Go/No-Go】Phase 2 Review", "target_date": "2026-01-31",
      "actual_date": "", "deliverable": "Phase 2成果レビュー", "status": "未開始", "type": "decision",
      "criteria": "Onboardingサイト稼働, 1週間チャレンジ達成率>80%, Betaテスターフィードバック解決"},
     # Phase 3 里程碑 (PoC Execution)
-    {"name": "Phase 3 開始", "target_date": "2025-02-03",
+    {"name": "Phase 3 開始", "target_date": "2026-02-03",
      "actual_date": "", "deliverable": "PoC Execution開始", "status": "未開始", "type": "milestone"},
-    {"name": "PoCシナリオ確定", "target_date": "2025-02-14",
+    {"name": "PoCシナリオ確定", "target_date": "2026-02-14",
      "actual_date": "", "deliverable": "PoC Scenario & Risk Assessment", "status": "未開始", "type": "milestone"},
-    {"name": "4 PoC開発完了", "target_date": "2025-03-14",
+    {"name": "4 PoC開発完了", "target_date": "2026-03-14",
      "actual_date": "", "deliverable": "4 PoC Prototypes", "status": "未開始", "type": "milestone"},
     # ★ Go/No-Go 決定点 (Phase 3)
-    {"name": "【Go/No-Go】Demo Day 投資判断", "target_date": "2025-03-31",
+    {"name": "【Go/No-Go】Demo Day 投資判断", "target_date": "2026-03-31",
      "actual_date": "", "deliverable": "PoC成果実演・投資判断", "status": "未開始", "type": "decision",
      "criteria": "4 PoC成果比較評価, 製品化優先順位決定, 投資判断完了"},
     # Phase 4 里程碑 (Scaling)
-    {"name": "Phase 4 開始", "target_date": "2025-04-01",
+    {"name": "Phase 4 開始", "target_date": "2026-04-01",
      "actual_date": "", "deliverable": "Scaling開始", "status": "未開始", "type": "milestone"},
-    {"name": "開発標準フレームワーク完成", "target_date": "2025-04-18",
+    {"name": "開発標準フレームワーク完成", "target_date": "2026-04-18",
      "actual_date": "", "deliverable": "KPMG Standard Template", "status": "未開始", "type": "milestone"},
-    {"name": "CI/CD Pipeline完成", "target_date": "2025-05-23",
+    {"name": "CI/CD Pipeline完成", "target_date": "2026-05-23",
      "actual_date": "", "deliverable": "CI/CD Pipeline", "status": "未開始", "type": "milestone"},
-    {"name": "プロジェクト完了", "target_date": "2025-06-30",
+    {"name": "プロジェクト完了", "target_date": "2026-06-30",
      "actual_date": "", "deliverable": "総括レポート", "status": "未開始", "type": "milestone"},
 ]
 
 # Holiday periods - 新増 Freeze Period
 HOLIDAYS = [
-    {"team": "KC", "start": "2024-12-24", "end": "2025-01-05", "note": "年末年始休暇"},
-    {"team": "ALH", "start": "2024-12-28", "end": "2025-01-05", "note": "年末年始休暇"},
-    {"team": "ALL", "start": "2024-12-28", "end": "2025-01-05", "note": "Freeze Period (全員)", "is_freeze": True},
+    {"team": "KC", "start": "2025-12-24", "end": "2026-01-05", "note": "年末年始休暇"},
+    {"team": "ALH", "start": "2025-12-28", "end": "2026-01-05", "note": "年末年始休暇"},
+    {"team": "ALL", "start": "2025-12-28", "end": "2026-01-05", "note": "Freeze Period (全員)", "is_freeze": True},
 ]
 
 
@@ -194,11 +194,11 @@ def get_next_version(output_dir, base_name):
 
 
 def get_month_year(month):
-    """月に基づいて年を返す（10-12月は2024年、1-6月は2025年）"""
+    """月に基づいて年を返す（10-12月は2025年、1-6月は2026年）"""
     if month >= 10:
-        return 2024
-    else:
         return 2025
+    else:
+        return 2026
 
 
 def get_month_last_day(year, month):
@@ -387,8 +387,8 @@ def create_gantt_sheet(wb):
     ws.column_dimensions['B'].width = 10  # WBS（三級WBS対応）
     ws.column_dimensions['C'].width = 15  # Category
     ws.column_dimensions['D'].width = 40  # Action
-    ws.column_dimensions['E'].width = 11  # Start（新）
-    ws.column_dimensions['F'].width = 11  # End（新）
+    ws.column_dimensions['E'].width = 13  # Start（新）
+    ws.column_dimensions['F'].width = 13  # End（新）
     ws.column_dimensions['G'].width = 10  # Owner
     ws.column_dimensions['H'].width = 10  # 担当者
     ws.column_dimensions['I'].width = 22  # Deliverable
@@ -431,13 +431,19 @@ def create_gantt_sheet(wb):
         ws.cell(row=row, column=4, value=task['name'])
         apply_cell_style(ws.cell(row=row, column=4))
 
-        # Start日付（新）
-        ws.cell(row=row, column=5, value=task.get('start_date', ''))
-        apply_cell_style(ws.cell(row=row, column=5))
+        # Start日付 - 使用 parse_date (line 230) 转换为日期对象
+        start_cell = ws.cell(row=row, column=5)
+        start_date_obj = parse_date(task.get('start_date', ''))
+        start_cell.value = start_date_obj if start_date_obj else task.get('start_date', '')
+        start_cell.number_format = 'yyyy/mm/dd'
+        apply_cell_style(start_cell)
 
-        # End日付（新）
-        ws.cell(row=row, column=6, value=task.get('end_date', ''))
-        apply_cell_style(ws.cell(row=row, column=6))
+        # End日付 - 使用 parse_date (line 230) 转换为日期对象
+        end_cell = ws.cell(row=row, column=6)
+        end_date_obj = parse_date(task.get('end_date', ''))
+        end_cell.value = end_date_obj if end_date_obj else task.get('end_date', '')
+        end_cell.number_format = 'yyyy/mm/dd'
+        apply_cell_style(end_cell)
 
         # Owner（チーム）
         team_cell = ws.cell(row=row, column=7, value=task['team'])
@@ -673,13 +679,19 @@ def create_team_sheet(wb, team_name, team_filter):
         ws.cell(row=row, column=4, value=task['name'])
         apply_cell_style(ws.cell(row=row, column=4))
 
-        # Start日付
-        ws.cell(row=row, column=5, value=task.get('start_date', ''))
-        apply_cell_style(ws.cell(row=row, column=5))
+        # Start日付 - 日期格式 yyyy/mm/dd
+        start_cell = ws.cell(row=row, column=5)
+        start_date_obj = parse_date(task.get('start_date', ''))
+        start_cell.value = start_date_obj if start_date_obj else task.get('start_date', '')
+        start_cell.number_format = 'yyyy/mm/dd'
+        apply_cell_style(start_cell)
 
-        # End日付
-        ws.cell(row=row, column=6, value=task.get('end_date', ''))
-        apply_cell_style(ws.cell(row=row, column=6))
+        # End日付 - 日期格式 yyyy/mm/dd
+        end_cell = ws.cell(row=row, column=6)
+        end_date_obj = parse_date(task.get('end_date', ''))
+        end_cell.value = end_date_obj if end_date_obj else task.get('end_date', '')
+        end_cell.number_format = 'yyyy/mm/dd'
+        apply_cell_style(end_cell)
 
         # 月（start_date/end_dateから生成）
         months = date_to_months(task.get('start_date'), task.get('end_date'))
@@ -780,10 +792,10 @@ def create_holiday_sheet(wb):
 
     # === 左側：カレンダー生成 ===
 
-    # 2024年12月と2025年1月のカレンダーを生成
+    # 2025年12月と2026年1月のカレンダーを生成
     months = [
-        ("2024年12月", 2024, 12),
-        ("2025年1月", 2025, 1)
+        ("2025年12月", 2025, 12),
+        ("2026年1月", 2026, 1)
     ]
 
     start_col = 1
